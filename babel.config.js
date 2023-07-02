@@ -23,6 +23,7 @@ module.exports = {
           "@screens": "./src/screens",
           "@assets": "./src/assets",
           "@navigators": "./src/navigators",
+          "@utils": "./src/utils",
         },
       },
     ],
