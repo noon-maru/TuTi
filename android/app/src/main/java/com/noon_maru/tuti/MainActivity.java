@@ -1,4 +1,4 @@
-package com.tuti;
+package com.noon_maru.tuti;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

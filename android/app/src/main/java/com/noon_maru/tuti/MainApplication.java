@@ -1,4 +1,4 @@
-package com.tuti;
+package com.noon_maru.tuti;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
