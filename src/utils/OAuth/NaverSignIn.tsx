@@ -11,7 +11,7 @@ const consumerSecret = "gCNfVO54vy";
 const appName = "TuTi";
 const serviceUrlScheme = "tuti";
 
-const Naver = () => {
+const NaverSignIn = () => {
   const [success, setSuccessResponse] =
     useState<NaverLoginResponse["successResponse"]>();
   const [failure, setFailureResponse] =
@@ -59,4 +59,4 @@ const Naver = () => {
   );
 };
 
-export default Naver;
+export default NaverSignIn;

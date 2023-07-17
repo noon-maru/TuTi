@@ -13,7 +13,7 @@ GoogleSignin.configure({
   offlineAccess: true,
 });
 
-const Google = () => {
+const GoogleSignIn = () => {
   const googleSignIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -45,4 +45,4 @@ const Google = () => {
   );
 };
 
-export default Google;
+export default GoogleSignIn;

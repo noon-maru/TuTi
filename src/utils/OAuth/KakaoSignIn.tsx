@@ -1,7 +1,7 @@
 import { Button } from "react-native";
 import * as KakaoLogin from "@react-native-seoul/kakao-login";
 
-const Kakao = () => {
+const KakaoSignIn = () => {
   const kakaoSignin = () => {
     KakaoLogin.login()
       .then((result) => {
@@ -30,4 +30,4 @@ const Kakao = () => {
   return <Button title={"카카오 로그인"} onPress={() => kakaoSignin()} />;
 };
 
-export default Kakao;
+export default KakaoSignIn;
