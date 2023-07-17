@@ -1,9 +1,16 @@
+import { PropsWithoutRef } from "react";
 import { View } from "react-native";
+
+import SocialLoginButton from "components/SocialLoginButton";
+
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+
+interface GoogleSignInProps {
+  handleLogin: (id: string, name: string) => void;
+}
 
 GoogleSignin.configure({
   webClientId:
@@ -13,34 +20,36 @@ GoogleSignin.configure({
   offlineAccess: true,
 });
 
-const GoogleSignIn = () => {
-  const googleSignIn = async () => {
+const GoogleSignIn = ({ handleLogin }: PropsWithoutRef<GoogleSignInProps>) => {
+  const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      await GoogleSignin.signIn().then((result) => {
-        console.log(result);
-      });
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
-        alert("User cancelled the login flow !");
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        alert("Signin in progress");
-        // operation (f.e. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert("Google play services not available or outdated !");
-        // play services not available or outdated
+      const result = await GoogleSignin.signIn();
+      console.log(result);
+
+      handleLogin(result.user.id, result.user?.name ?? "");
+    } catch (e: any) {
+      if (e.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log("사용자가 로그인 과정을 취소했습니다.");
+      } else if (e.code === statusCodes.IN_PROGRESS) {
+        console.log("로그인이 이미 진행 중입니다.");
+      } else if (e.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log(
+          "Google Play 서비스를 사용할 수 없거나 오래된 버전을 사용중입니다."
+        );
       } else {
-        console.log(error);
+        console.error(e);
       }
     }
   };
 
   return (
-    <GoogleSigninButton
-      size={GoogleSigninButton.Size.Wide}
-      color={GoogleSigninButton.Color.Dark}
-      onPress={googleSignIn}
+    <SocialLoginButton
+      icon={require("assets/OAuth/Google_login_icon.png")}
+      backgroundColor={"white"}
+      text={"Google로 계속하기"}
+      textColor={"black"}
+      onPress={signIn}
     />
   );
 };

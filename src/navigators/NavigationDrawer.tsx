@@ -17,7 +17,7 @@ const Drawer = createDrawerNavigator();
 import ProfileScreen from "screens/ProfileScreen";
 import SubscribeScreen from "screens/SubscribeScreen";
 
-const CustomDrawerContent = (props) => {
+const CustomDrawerContent = (props: any) => {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem

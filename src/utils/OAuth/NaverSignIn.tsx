@@ -1,24 +1,32 @@
-import { useState } from "react";
-import { View, Text, Button } from "react-native";
+import { useState, useEffect, PropsWithoutRef } from "react";
+import { UserState } from "redux/userSlice";
+
+import SocialLoginButton from "components/SocialLoginButton";
 
 import NaverLogin, {
   NaverLoginResponse,
-  GetProfileResponse,
 } from "@react-native-seoul/naver-login";
+
+interface NaverSignInProps {
+  handleLogin: (id: string, name: string) => void;
+}
 
 const consumerKey = "7ceLJlYIB6Syx2ULoKQX";
 const consumerSecret = "gCNfVO54vy";
 const appName = "TuTi";
 const serviceUrlScheme = "tuti";
 
-const NaverSignIn = () => {
+const NaverSignIn = ({ handleLogin }: PropsWithoutRef<NaverSignInProps>) => {
   const [success, setSuccessResponse] =
     useState<NaverLoginResponse["successResponse"]>();
   const [failure, setFailureResponse] =
     useState<NaverLoginResponse["failureResponse"]>();
-  const [getProfileRes, setGetProfileRes] = useState<GetProfileResponse>();
+  const [profileRes, setProfileRes] = useState<UserState>({
+    id: "",
+    name: "",
+  });
 
-  const naverSigin = async () => {
+  const signIn = async () => {
     const { failureResponse, successResponse } = await NaverLogin.login({
       appName,
       consumerKey,
@@ -27,35 +35,53 @@ const NaverSignIn = () => {
     });
     setSuccessResponse(successResponse);
     setFailureResponse(failureResponse);
-    naverGetProfile();
   };
 
-  const naverLogout = async () => {
+  const logout = async () => {
     try {
       await NaverLogin.logout();
       setSuccessResponse(undefined);
       setFailureResponse(undefined);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
     }
   };
 
-  const naverGetProfile = async () => {
+  const getProfile = async () => {
     try {
       const profileResult = await NaverLogin.getProfile(success!.accessToken);
-      setGetProfileRes(profileResult);
-      console.log(profileResult);
-    } catch (e) {
-      setGetProfileRes(undefined);
+      setProfileRes({
+        id: profileResult!.response.id,
+        name: profileResult!.response.name,
+      });
+      // console.log(profileResult);
+    } catch (e: any) {
+      setProfileRes({
+        id: "",
+        name: "",
+      });
     }
   };
 
+  useEffect(() => {
+    getProfile();
+  }, [success]);
+
+  useEffect(() => {
+    handleLogin(profileRes.id, profileRes.name);
+  }, [profileRes]);
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Button title={"네이버 로그인"} onPress={() => naverSigin()} />
-      <Button title="Get Profile" onPress={naverGetProfile} />
-      <Button title={"네이버 로그아웃"} onPress={() => naverLogout()} />
-    </View>
+    <>
+      <SocialLoginButton
+        icon={require("assets/OAuth/Naver_login_icon.png")}
+        backgroundColor={"#03c75a"}
+        text={"네이버로 계속하기"}
+        textColor={"white"}
+        onPress={() => signIn()}
+      />
+      {/* <Button title={"네이버 로그아웃"} onPress={() => logout()} /> */}
+    </>
   );
 };
 
