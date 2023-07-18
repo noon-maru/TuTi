@@ -38,7 +38,7 @@ const NavigationDrawer = () => {
       screenOptions={{
         headerTitle: () => (
           <Logo
-            source={require("assets/icon/logo/text_logo(color).png")}
+            source={require("assets/icon/logo/textLogo(color).png")}
             resizeMode="contain"
           />
         ),

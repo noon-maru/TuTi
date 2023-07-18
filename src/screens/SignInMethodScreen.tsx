@@ -18,39 +18,33 @@ const SignInMethodScreen = () => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-        }}
-      >
+    <Container>
+      <LogoContainer>
         <Logo source={require("assets/icon/logo/logo(white).png")} />
-      </View>
-      <View style={{ marginTop: 20, marginBottom: 60 }}>
-        <TextLogo source={require("assets/icon/logo/text_logo(white).png")} />
-      </View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "flex-start",
-          alignItems: "center",
-          gap: 35,
-        }}
-      >
+        <TextLogo source={require("assets/icon/logo/textLogo(white).png")} />
+      </LogoContainer>
+      <ButtonContainer>
         <GoogleSignIn handleLogin={handleLogin} />
         <KakaoSignIn handleLogin={handleLogin} />
         <NaverSignIn handleLogin={handleLogin} />
-      </View>
-    </View>
+      </ButtonContainer>
+    </Container>
   );
 };
+
+const Container = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+`;
+
+const LogoContainer = styled.View`
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 22px;
+`;
 
 const Logo = styled.Image`
   width: 130px;
@@ -60,6 +54,13 @@ const Logo = styled.Image`
 const TextLogo = styled.Image`
   width: 100px;
   height: 32px;
+`;
+
+const ButtonContainer = styled.View`
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 35px;
 `;
 
 export default SignInMethodScreen;
