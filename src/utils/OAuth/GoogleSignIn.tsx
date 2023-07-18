@@ -9,7 +9,7 @@ import {
 } from "@react-native-google-signin/google-signin";
 
 interface GoogleSignInProps {
-  handleLogin: (id: string, name: string) => void;
+  handleLogin: (id: string, name: string, profile: string) => void;
 }
 
 GoogleSignin.configure({
@@ -27,7 +27,11 @@ const GoogleSignIn = ({ handleLogin }: PropsWithoutRef<GoogleSignInProps>) => {
       const result = await GoogleSignin.signIn();
       console.log(result);
 
-      handleLogin(result.user.id, result.user?.name ?? "");
+      handleLogin(
+        result.user.id,
+        result.user?.name ?? "",
+        result.user?.photo ?? ""
+      );
     } catch (e: any) {
       if (e.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log("사용자가 로그인 과정을 취소했습니다.");

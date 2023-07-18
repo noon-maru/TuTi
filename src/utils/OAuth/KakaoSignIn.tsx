@@ -5,7 +5,7 @@ import SocialLoginButton from "components/SocialLoginButton";
 import * as KakaoLogin from "@react-native-seoul/kakao-login";
 
 interface KakaoSignInProps {
-  handleLogin: (id: string, name: string) => void;
+  handleLogin: (id: string, name: string, profile: string) => void;
 }
 
 const KakaoSignIn = ({ handleLogin }: PropsWithoutRef<KakaoSignInProps>) => {
@@ -27,7 +27,7 @@ const KakaoSignIn = ({ handleLogin }: PropsWithoutRef<KakaoSignInProps>) => {
     try {
       const result = await KakaoLogin.getProfile();
       console.log("프로필 가져오기 성공", JSON.stringify(result));
-      handleLogin(result.id, result.nickname);
+      handleLogin(result.id, result.nickname, result.profileImageUrl);
     } catch (e: any) {
       console.log(`프로필 가져오기 실패(code:${e.code})`, e.message);
     }

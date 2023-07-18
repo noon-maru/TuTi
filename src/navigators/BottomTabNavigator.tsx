@@ -1,6 +1,8 @@
-import { Image, Text } from "react-native";
+import { Image, View } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import { styled } from "styled-components/native";
 
 // 개별 스크린 컴포넌트 임포트
 import HomeScreen from "screens/HomeScreen";
@@ -16,47 +18,50 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarStyle: { height: 70 },
         tabBarLabel: ({ focused }) => {
-          if (focused) {
-            return <Text>{route.name}</Text>; // 해당 탭이 선택된 경우에만 이름 표시
+          if (focused && route.name !== "Explore") {
+            return (
+              <SelectHighlight
+                source={require("assets/icon/circle(color).png")}
+              />
+            ); // 해당 탭이 선택된 경우에만 점 표시
           }
-          return null; // 선택되지 않은 경우에는 이름 숨김
+          return (
+            <View
+              style={{
+                width: 7,
+                height: 7,
+                marginBottom: 10,
+              }}
+            />
+          ); // 선택되지 않은 경우에는 점 숨김
         },
         tabBarIcon: ({ focused }) => {
           let iconName;
           let iconSize;
 
           if (route.name === "Home") {
-            iconName = focused
-              ? require("assets/icon/home(line-color).png")
-              : require("assets/icon/home(line-color).png");
-            iconSize = focused ? 24 : 20; // 활성화된 탭과 비활성화된 탭의 아이콘 크기 조정
+            iconName = require("assets/icon/home(line-color).png");
+            iconSize = 30;
           } else if (route.name === "Note") {
-            iconName = focused
-              ? require("assets/icon/note.png")
-              : require("assets/icon/note.png");
-            iconSize = focused ? 24 : 20;
+            iconName = require("assets/icon/note.png");
+            iconSize = 30;
           } else if (route.name === "Explore") {
-            iconName = focused
-              ? require("assets/icon/explore(color).png")
-              : require("assets/icon/explore(color).png");
-            iconSize = focused ? 24 : 20;
+            iconName = require("assets/icon/explore(color).png");
+            iconSize = 35;
           } else if (route.name === "SOL") {
-            iconName = focused
-              ? require("assets/icon/route(color).png")
-              : require("assets/icon/route(color).png");
-            iconSize = focused ? 24 : 20;
+            iconName = require("assets/icon/route(color).png");
+            iconSize = 30;
           } else if (route.name === "Box") {
-            iconName = focused
-              ? require("assets/icon/box.png")
-              : require("assets/icon/box.png");
-            iconSize = focused ? 24 : 20;
+            iconName = require("assets/icon/box.png");
+            iconSize = 30;
           }
 
           return (
             <Image
               source={iconName}
-              style={{ width: iconSize, height: iconSize }}
+              style={{ width: iconSize, height: iconSize, marginTop: 10 }}
             />
           );
         },
@@ -90,5 +95,11 @@ const BottomTabNavigator = () => {
     </Tab.Navigator>
   );
 };
+
+const SelectHighlight = styled.Image`
+  width: 7px;
+  height: 7px;
+  margin-bottom: 10px;
+`;
 
 export default BottomTabNavigator;

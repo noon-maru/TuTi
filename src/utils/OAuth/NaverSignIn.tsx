@@ -8,7 +8,7 @@ import NaverLogin, {
 } from "@react-native-seoul/naver-login";
 
 interface NaverSignInProps {
-  handleLogin: (id: string, name: string) => void;
+  handleLogin: (id: string, name: string, profile: string) => void;
 }
 
 const consumerKey = "7ceLJlYIB6Syx2ULoKQX";
@@ -24,6 +24,7 @@ const NaverSignIn = ({ handleLogin }: PropsWithoutRef<NaverSignInProps>) => {
   const [profileRes, setProfileRes] = useState<UserState>({
     id: "",
     name: "",
+    profile: "",
   });
 
   const signIn = async () => {
@@ -53,12 +54,14 @@ const NaverSignIn = ({ handleLogin }: PropsWithoutRef<NaverSignInProps>) => {
       setProfileRes({
         id: profileResult!.response.id,
         name: profileResult!.response.name,
+        profile: profileResult!.response?.profile_image ?? "",
       });
       // console.log(profileResult);
     } catch (e: any) {
       setProfileRes({
         id: "",
         name: "",
+        profile: "",
       });
     }
   };
@@ -68,7 +71,7 @@ const NaverSignIn = ({ handleLogin }: PropsWithoutRef<NaverSignInProps>) => {
   }, [success]);
 
   useEffect(() => {
-    handleLogin(profileRes.id, profileRes.name);
+    handleLogin(profileRes.id, profileRes.name, profileRes.profile);
   }, [profileRes]);
 
   return (

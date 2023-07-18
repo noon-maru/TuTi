@@ -1,6 +1,5 @@
-import { View } from "react-native";
 import { useDispatch } from "react-redux";
-import { login, logout } from "redux/userSlice";
+import { login } from "redux/userSlice";
 
 import styled from "styled-components/native";
 
@@ -11,9 +10,9 @@ import NaverSignIn from "utils/OAuth/NaverSignIn";
 const SignInMethodScreen = () => {
   const dispatch = useDispatch();
 
-  const handleLogin = (id: string, name: string) => {
+  const handleLogin = (id: string, name: string, profile: string) => {
     // 로그인 처리 후 사용자 정보 디스패치
-    const userInfo = { id: id, name: name };
+    const userInfo = { id: id, name: name, profile: profile };
     dispatch(login(userInfo));
   };
 
