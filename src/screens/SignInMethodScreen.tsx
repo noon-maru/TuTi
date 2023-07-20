@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { login } from "redux/userSlice";
+import { login } from "redux/slice/userSlice";
 
 import styled from "styled-components/native";
 
@@ -12,7 +12,7 @@ const SignInMethodScreen = () => {
 
   const handleLogin = (id: string, name: string, profile: string) => {
     // 로그인 처리 후 사용자 정보 디스패치
-    const userInfo = { id: id, name: name, profile: profile };
+    const userInfo = { id, name, profile };
     dispatch(login(userInfo));
   };
 
