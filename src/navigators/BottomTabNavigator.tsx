@@ -1,8 +1,11 @@
 import { Image, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { styled } from "styled-components/native";
+
+import CustomTabBar from "components/navigation/CustomTabBar";
 
 // 개별 스크린 컴포넌트 임포트
 import HomeScreen from "screens/HomeScreen";
@@ -10,6 +13,7 @@ import NoteScreen from "screens/NoteScreen";
 import ExploreScreen from "screens/ExploreScreen";
 import SOLScreen from "screens/SOLScreen";
 import BoxScreen from "screens/BoxScreen";
+import TourScreen from "screens/TourScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,8 +21,9 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={({ route }) => ({
-        tabBarStyle: { height: 70 },
+        headerShown: false,
         tabBarLabel: ({ focused }) => {
           if (focused && route.name !== "Explore") {
             return (
@@ -27,17 +32,9 @@ const BottomTabNavigator = () => {
               />
             ); // 해당 탭이 선택된 경우에만 점 표시
           }
-          return (
-            <View
-              style={{
-                width: 7,
-                height: 7,
-                marginBottom: 10,
-              }}
-            />
-          ); // 선택되지 않은 경우에는 점 숨김
+          return <NonSelectHighlight />; // 선택되지 않은 경우에는 점 숨김
         },
-        tabBarIcon: ({ focused }) => {
+        tabBarIcon: () => {
           let iconName;
           let iconSize;
 
@@ -67,31 +64,12 @@ const BottomTabNavigator = () => {
         },
       })}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Note"
-        component={NoteScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Explore"
-        component={ExploreScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="SOL"
-        component={SOLScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Box"
-        component={BoxScreen}
-        options={{ headerShown: false }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Note" component={NoteScreen} />
+      <Tab.Screen name="Explore" component={ExploreScreen} />
+      <Tab.Screen name="SOL" component={SOLScreen} />
+      <Tab.Screen name="Box" component={BoxScreen} />
+      <Tab.Screen name="Tour" component={TourScreen} />
     </Tab.Navigator>
   );
 };
@@ -99,7 +77,13 @@ const BottomTabNavigator = () => {
 const SelectHighlight = styled.Image`
   width: 7px;
   height: 7px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+`;
+
+const NonSelectHighlight = styled.View`
+  width: 7px;
+  height: 7px;
+  margin-bottom: 5px;
 `;
 
 export default BottomTabNavigator;

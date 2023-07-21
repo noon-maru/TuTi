@@ -7,7 +7,7 @@ export interface UserState {
   profile: string;
 }
 
-const initialState: UserState = {
+const UserInitialState: UserState = {
   id: "",
   name: "",
   profile: "",
@@ -15,13 +15,13 @@ const initialState: UserState = {
 
 const userSlice = createSlice({
   name: "user",
-  initialState,
+  initialState: UserInitialState,
   reducers: {
     login: (state, action: PayloadAction<UserState>) => {
       return action.payload;
     },
     logout: () => {
-      return initialState;
+      return UserInitialState;
     },
   },
 });

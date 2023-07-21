@@ -1,5 +1,5 @@
 import { useState, useEffect, PropsWithoutRef } from "react";
-import { UserState } from "redux/userSlice";
+import { UserState } from "~/redux/slice/userSlice";
 
 import SocialLoginButton from "components/SocialLoginButton";
 

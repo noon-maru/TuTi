@@ -6,8 +6,12 @@ import {
   TouchableOpacity,
   LayoutChangeEvent,
 } from "react-native";
+
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
+
 import { RootState } from "redux/reducers";
+import { logout } from "redux/slice/userSlice";
 
 import {
   createDrawerNavigator,
@@ -15,8 +19,6 @@ import {
   DrawerItem,
 } from "@react-navigation/drawer";
 import BottomTabNavigator from "navigators/BottomTabNavigator";
-
-import { logout } from "redux/userSlice";
 
 import styled from "styled-components/native";
 
@@ -97,11 +99,7 @@ const CustomDrawerContent = ({ navigation }: any) => {
     <DrawerContentScrollView onLayout={handleLayout}>
       <DrawerHeaderContainer dw={drawerWidth}>
         <OptionContainer>
-          <TouchableOpacity
-            onPress={() => {
-              // TODO: 세팅 로직 추가해야 됨
-            }}
-          >
+          <TouchableOpacity onPress={() => {}}>
             <Image source={require("assets/icon/setting.png")} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.closeDrawer()}>
@@ -120,9 +118,19 @@ const CustomDrawerContent = ({ navigation }: any) => {
   );
 };
 
-const CustomHeader = ({ navigation }: any) => {
+const CustomHeader = ({
+  navigation,
+  name,
+}: {
+  navigation: any;
+  name: string;
+}) => {
+  const bottomNavigation = useSelector((state: RootState) => state.navigation);
+  const screen = useSelector((state: RootState) => state.screen);
+  const insets = useSafeAreaInsets();
+
   return (
-    <HeaderContainer>
+    <HeaderContainer screenName={screen.name} marginTop={insets.top}>
       <TouchableOpacity
         onPress={() => {
           navigation.openDrawer();
@@ -134,10 +142,12 @@ const CustomHeader = ({ navigation }: any) => {
         />
       </TouchableOpacity>
 
-      <Logo source={require("assets/icon/logo/textLogo(color).png")} />
+      {screen.name !== "Home" && (
+        <Logo source={require("assets/icon/logo/textLogo(color).png")} />
+      )}
       <TouchableOpacity
         onPress={() => {
-          // TODO: 여기 진짜 뭐들어감...? 기획팀에 물어보기
+          bottomNavigation.navigate("Tour");
         }}
       >
         <Image
@@ -150,28 +160,39 @@ const CustomHeader = ({ navigation }: any) => {
 };
 
 const NavigationDrawer = () => {
+  const [name, setName] = useState<string>("");
   return (
     <Drawer.Navigator
       screenOptions={{
         drawerType: "front",
         swipeEnabled: false,
         overlayColor: "rgba(0, 0, 0, 0)",
-        header: (props) => <CustomHeader {...props} />,
+        header: (props) => <CustomHeader name={name} {...props} />,
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       initialRouteName="Main"
     >
       {/* 메인 페이지들은 BottomTabNavigator 컴포넌트를 통해 각 페이지간 이동 가능 */}
-      <Drawer.Screen name="Main" component={BottomTabNavigator} />
+      <Drawer.Screen
+        name="Main"
+        component={BottomTabNavigator}
+        options={{
+          headerTransparent: true,
+        }}
+      />
     </Drawer.Navigator>
   );
 };
 
-const HeaderContainer = styled.View`
+const HeaderContainer = styled.View<{ screenName: string; marginTop: number }>`
   width: ${SCREEN_WIDTH}px;
   height: 53px;
-  padding: 0 25px;
-  background-color: white;
+
+  margin-top: ${(props) => props.marginTop}px;
+  padding-left: 25px;
+  padding-right: 25px;
+  background-color: ${(props) =>
+    props.screenName === "Home" ? "transparent" : "white"};
 
   flex-direction: row;
 
