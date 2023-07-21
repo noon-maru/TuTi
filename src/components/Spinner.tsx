@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
-import { View, Animated, StyleSheet } from "react-native";
+import { Animated } from "react-native";
 
+import { styled } from "styled-components/native";
+
+// TODO: 스피너 이미지 새로 수정해야 됨
 const Spinner = () => {
   const opacity1 = useRef(new Animated.Value(0)).current;
   const opacity2 = useRef(new Animated.Value(0)).current;
@@ -81,7 +84,6 @@ const Spinner = () => {
         opacity5.setValue(0);
         opacity6.setValue(0);
 
-        // 애니메이션을 반복하려면 주석을 제거하세요.
         animateSpinner();
       });
     };
@@ -90,46 +92,45 @@ const Spinner = () => {
   }, [opacity1, opacity2, opacity3, opacity4, opacity5, opacity6]);
 
   return (
-    <View style={styles.spinnerContainer}>
-      <Animated.Image
+    <SpinnerContainer>
+      <SpinnerImage
         source={require("assets/spinner/loading1.png")}
-        style={[styles.spinnerImage, { opacity: opacity1 }]}
+        style={{ opacity: opacity1 }}
       />
-      <Animated.Image
+      <SpinnerImage
         source={require("assets/spinner/loading2.png")}
-        style={[styles.spinnerImage, { opacity: opacity2 }]}
+        style={{ opacity: opacity2 }}
       />
-      <Animated.Image
+      <SpinnerImage
         source={require("assets/spinner/loading3.png")}
-        style={[styles.spinnerImage, { opacity: opacity3 }]}
+        style={{ opacity: opacity3 }}
       />
-      <Animated.Image
+      <SpinnerImage
         source={require("assets/spinner/loading4.png")}
-        style={[styles.spinnerImage, { opacity: opacity4 }]}
+        style={{ opacity: opacity4 }}
       />
-      <Animated.Image
+      <SpinnerImage
         source={require("assets/spinner/loading5.png")}
-        style={[styles.spinnerImage, { opacity: opacity5 }]}
+        style={{ opacity: opacity5 }}
       />
-      <Animated.Image
+      <SpinnerImage
         source={require("assets/spinner/loading6.png")}
-        style={[styles.spinnerImage, { opacity: opacity6 }]}
+        style={{ opacity: opacity6 }}
       />
-    </View>
+    </SpinnerContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  spinnerContainer: {
-    position: "absolute",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  spinnerImage: {
-    width: 50,
-    height: 50,
-    position: "absolute",
-  },
-});
+const SpinnerContainer = styled.View`
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SpinnerImage = styled(Animated.Image)`
+  width: 50px;
+  height: 50px;
+  position: absolute;
+`;
 
 export default Spinner;
