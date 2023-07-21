@@ -3,7 +3,6 @@ import { Animated } from "react-native";
 
 import { styled } from "styled-components/native";
 
-// TODO: 스피너 이미지 새로 수정해야 됨
 const Spinner = () => {
   const opacity1 = useRef(new Animated.Value(0)).current;
   const opacity2 = useRef(new Animated.Value(0)).current;
