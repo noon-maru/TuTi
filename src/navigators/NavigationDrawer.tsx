@@ -1,13 +1,11 @@
 import { useState } from "react";
 import {
-  Dimensions,
   Alert,
   Image,
   TouchableOpacity,
   LayoutChangeEvent,
 } from "react-native";
 
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector, useDispatch } from "react-redux";
 
 import { RootState } from "redux/reducers";
@@ -20,13 +18,9 @@ import {
 } from "@react-navigation/drawer";
 import BottomTabNavigator from "navigators/BottomTabNavigator";
 
+import CustomHeader from "components/navigation/CustomHeader";
+
 import styled from "styled-components/native";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
-interface DrawerHeaderContainerProps {
-  dw: number;
-}
 
 const Drawer = createDrawerNavigator();
 
@@ -97,7 +91,7 @@ const CustomDrawerContent = ({ navigation }: any) => {
 
   return (
     <DrawerContentScrollView onLayout={handleLayout}>
-      <DrawerHeaderContainer dw={drawerWidth}>
+      <DrawerHeaderContainer width={drawerWidth}>
         <OptionContainer>
           <TouchableOpacity onPress={() => {}}>
             <Image source={require("assets/icon/setting.png")} />
@@ -118,56 +112,14 @@ const CustomDrawerContent = ({ navigation }: any) => {
   );
 };
 
-const CustomHeader = ({
-  navigation,
-  name,
-}: {
-  navigation: any;
-  name: string;
-}) => {
-  const bottomNavigation = useSelector((state: RootState) => state.navigation);
-  const screen = useSelector((state: RootState) => state.screen);
-  const insets = useSafeAreaInsets();
-
-  return (
-    <HeaderContainer screenName={screen.name} marginTop={insets.top}>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.openDrawer();
-        }}
-      >
-        <Image
-          source={require("assets/icon/profile(color).png")}
-          style={{ width: 30, height: 30 }}
-        />
-      </TouchableOpacity>
-
-      {screen.name !== "Home" && (
-        <Logo source={require("assets/icon/logo/textLogo(color).png")} />
-      )}
-      <TouchableOpacity
-        onPress={() => {
-          bottomNavigation.navigate("Tour");
-        }}
-      >
-        <Image
-          source={require("assets/icon/bag(color).png")}
-          style={{ width: 30, height: 30 }}
-        />
-      </TouchableOpacity>
-    </HeaderContainer>
-  );
-};
-
 const NavigationDrawer = () => {
-  const [name, setName] = useState<string>("");
   return (
     <Drawer.Navigator
       screenOptions={{
         drawerType: "front",
         swipeEnabled: false,
         overlayColor: "rgba(0, 0, 0, 0)",
-        header: (props) => <CustomHeader name={name} {...props} />,
+        header: (props) => <CustomHeader {...props} />,
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       initialRouteName="Main"
@@ -184,32 +136,8 @@ const NavigationDrawer = () => {
   );
 };
 
-const HeaderContainer = styled.View<{ screenName: string; marginTop: number }>`
-  width: ${SCREEN_WIDTH}px;
-  height: 53px;
-
-  margin-top: ${(props) => props.marginTop}px;
-  padding-left: 25px;
-  padding-right: 25px;
-  background-color: ${(props) =>
-    props.screenName === "Home" ? "transparent" : "white"};
-
-  flex-direction: row;
-
-  align-self: center;
-
-  justify-content: space-between;
-  align-items: center;
-`;
-
-// 헤더 로고 이미지
-const Logo = styled.Image`
-  width: 55.88px;
-  height: 18px;
-`;
-
-const DrawerHeaderContainer = styled.View<DrawerHeaderContainerProps>`
-  width: ${(props) => props.dw - props.dw * 0.15}px;
+const DrawerHeaderContainer = styled.View<{ width: number }>`
+  width: ${(props) => props.width - props.width * 0.15}px;
   height: 200px;
   border-bottom-width: 1px;
   border-bottom-color: #8583ff;
