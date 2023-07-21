@@ -9,7 +9,7 @@ const ExploreScreen = () => {
   const insets = useSafeAreaInsets();
   return (
     <>
-      {/* <StatusBar backgroundColor="white" barStyle={"dark-content"} /> */}
+      <StatusBar barStyle={"dark-content"} />
       <StatusBarBackgroundColor height={insets.top} />
       <Container paddingTop={insets.top}>
         <Text>Explore Screen</Text>

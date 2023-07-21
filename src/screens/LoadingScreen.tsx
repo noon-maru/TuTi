@@ -19,7 +19,7 @@ const LoadingScreen = ({ setIsLoading }: LoadingScreenProps) => {
   useEffect(() => {
     const animation = Animated.timing(sloganWidth, {
       toValue: SCREEN_WIDTH * 0.8,
-      duration: 1000,
+      duration: 1200,
       useNativeDriver: false,
     });
     animation.start();
@@ -31,7 +31,7 @@ const LoadingScreen = ({ setIsLoading }: LoadingScreenProps) => {
   useEffect(() => {
     const animation = Animated.timing(runnerDistance, {
       toValue: 305,
-      duration: 1000,
+      duration: 1200,
       useNativeDriver: false,
     });
 
@@ -55,7 +55,7 @@ const LoadingScreen = ({ setIsLoading }: LoadingScreenProps) => {
     const timeout = setTimeout(() => {
       clearInterval(interval);
       setIsLoading(true);
-    }, 1500);
+    }, 1800);
 
     return () => {
       clearInterval(interval);
