@@ -1,5 +1,4 @@
-import { Image, View } from "react-native";
-import { useDispatch } from "react-redux";
+import { Image } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -58,7 +57,7 @@ const BottomTabNavigator = () => {
           return (
             <Image
               source={iconName}
-              style={{ width: iconSize, height: iconSize, marginTop: 10 }}
+              style={{ width: iconSize, height: iconSize, marginTop: 15 }}
             />
           );
         },
