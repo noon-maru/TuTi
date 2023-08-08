@@ -1,5 +1,7 @@
 import { PropsWithoutRef } from "react";
-import { View } from "react-native";
+import axios from "axios";
+
+import { SERVER_URL, API } from "@env";
 
 import SocialLoginButton from "components/SocialLoginButton";
 
@@ -27,11 +29,19 @@ const GoogleSignIn = ({ handleLogin }: PropsWithoutRef<GoogleSignInProps>) => {
       const result = await GoogleSignin.signIn();
       console.log(result);
 
-      handleLogin(
-        result.user.id,
-        result.user?.name ?? "",
-        result.user?.photo ?? ""
+      const user = {
+        id: result.user.id,
+        username: result.user?.name ?? "",
+        profile: result.user?.photo ?? "",
+      };
+
+      handleLogin(user.id, user.username, user.profile);
+
+      const response = await axios.post(
+        SERVER_URL + API + "/users/login",
+        user
       );
+      console.log(response);
     } catch (e: any) {
       if (e.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log("사용자가 로그인 과정을 취소했습니다.");

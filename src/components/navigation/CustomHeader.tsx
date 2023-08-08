@@ -11,6 +11,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CustomHeader = ({ navigation }: { navigation: any }) => {
   const bottomNavigation = useSelector((state: RootState) => state.navigation);
   const screen = useSelector((state: RootState) => state.screen);
+  const theme = useSelector((state: RootState) => state.theme);
   const insets = useSafeAreaInsets();
 
   return (
@@ -20,10 +21,17 @@ const CustomHeader = ({ navigation }: { navigation: any }) => {
           navigation.openDrawer();
         }}
       >
-        <Image
-          source={require("assets/icon/profile(color).png")}
-          style={{ width: 30, height: 30 }}
-        />
+        {theme.dark ? (
+          <Image
+            source={require("assets/icon/profile(black).png")}
+            style={{ width: 30, height: 30 }}
+          />
+        ) : (
+          <Image
+            source={require("assets/icon/profile(white).png")}
+            style={{ width: 30, height: 30 }}
+          />
+        )}
       </TouchableOpacity>
 
       {screen.name !== "Home" && (
@@ -34,10 +42,17 @@ const CustomHeader = ({ navigation }: { navigation: any }) => {
           bottomNavigation.navigate("Tour");
         }}
       >
-        <Image
-          source={require("assets/icon/bag(color).png")}
-          style={{ width: 30, height: 30 }}
-        />
+        {theme.dark ? (
+          <Image
+            source={require("assets/icon/bag(black).png")}
+            style={{ width: 30, height: 30 }}
+          />
+        ) : (
+          <Image
+            source={require("assets/icon/bag(white).png")}
+            style={{ width: 30, height: 30 }}
+          />
+        )}
       </TouchableOpacity>
     </HeaderContainer>
   );
@@ -66,4 +81,5 @@ const Logo = styled.Image`
   width: 55.88px;
   height: 18px;
 `;
+
 export default CustomHeader;

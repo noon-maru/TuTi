@@ -1,4 +1,7 @@
 import { PropsWithoutRef } from "react";
+import axios from "axios";
+
+import { SERVER_URL, API } from "@env";
 
 import SocialLoginButton from "components/SocialLoginButton";
 
@@ -27,7 +30,19 @@ const KakaoSignIn = ({ handleLogin }: PropsWithoutRef<KakaoSignInProps>) => {
     try {
       const result = await KakaoLogin.getProfile();
       console.log("프로필 가져오기 성공", JSON.stringify(result));
-      handleLogin(result.id, result.nickname, result.profileImageUrl);
+
+      const user = {
+        id: result.id,
+        username: result.nickname,
+        profile: result.profileImageUrl,
+      };
+      handleLogin(user.id, user.username, user.profile);
+
+      const response = await axios.post(
+        SERVER_URL + API + "/users/login",
+        user
+      );
+      // console.log(response);
     } catch (e: any) {
       console.log(`프로필 가져오기 실패(code:${e.code})`, e.message);
     }

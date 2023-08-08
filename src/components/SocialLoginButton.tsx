@@ -1,9 +1,10 @@
 import { PropsWithoutRef } from "react";
-import { Dimensions, Image, ImageSourcePropType, Text } from "react-native";
+import { Dimensions, Image, ImageSourcePropType } from "react-native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 import styled from "styled-components/native";
+import { StyledText } from "styles/globalStyles";
 
 export interface SocialLoginButtonProps {
   icon: ImageSourcePropType;
@@ -32,7 +33,7 @@ const SocialLoginButton = ({
         style={{ width: 40, height: 40 }}
         resizeMode="contain"
       />
-      <Text style={{ color: textColor, fontSize: 19 }}>{text}</Text>
+      <LoginText textColor={textColor}>{text}</LoginText>
     </LoginButton>
   );
 };
@@ -45,9 +46,14 @@ const LoginButton = styled.TouchableOpacity<LoginButtonProps>`
   background-color: ${(props) => props.bgColor};
 
   width: ${SCREEN_WIDTH * 0.6}px;
-  height: 44px;
+  height: 45px;
 
   border-radius: 12px;
+`;
+
+const LoginText = styled(StyledText)<{ textColor: string }>`
+  color: ${(props) => props.textColor};
+  font-size: 14.5px;
 `;
 
 export default SocialLoginButton;

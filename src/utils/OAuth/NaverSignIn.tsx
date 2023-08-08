@@ -1,5 +1,9 @@
 import { useState, useEffect, PropsWithoutRef } from "react";
-import { UserState } from "~/redux/slice/userSlice";
+import axios from "axios";
+
+import { SERVER_URL, API } from "@env";
+
+import { UserState } from "redux/slice/userSlice";
 
 import SocialLoginButton from "components/SocialLoginButton";
 
@@ -71,7 +75,19 @@ const NaverSignIn = ({ handleLogin }: PropsWithoutRef<NaverSignInProps>) => {
   }, [success]);
 
   useEffect(() => {
-    handleLogin(profileRes.id, profileRes.name, profileRes.profile);
+    if (profileRes.id !== "") {
+      handleLogin(profileRes.id, profileRes.name, profileRes.profile);
+
+      (async () => {
+        const response = await axios.post(SERVER_URL + API + "/users/login", {
+          id: profileRes.id,
+          username: profileRes.name,
+          profile: profileRes.profile,
+        });
+
+        // console.log(response.data);
+      })();
+    }
   }, [profileRes]);
 
   return (
