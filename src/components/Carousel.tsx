@@ -24,7 +24,7 @@ const getCarouselData = async () => {
   try {
     const url = SERVER_URL + API + "/carousel";
     const response = await axios.get(url);
-    // console.log(response.data);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("네트워킹 오류:", error);
