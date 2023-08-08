@@ -11,6 +11,9 @@ TuTi는 React Native로 개발된 앱입니다. 소스 코드를 빌드하기 �
 - Node.js 18.16.1 LTS 이상
 - yarn 최신 버전 (2023년 7월 3일 기준 3.6.1 이상)
 
+또한 빌드를 위해서는 .env파일과 /android/gradle.properties 파일이 반드시 필요합니다!  
+해당 파일들은 보안을 위해 눈마루 단톡에서 별도로 공유중이니 단톡에서 확인해주세요!
+
 프로젝트 개발 환경을 실행하기 위해 다음 명령어를 입력하세요:
 ```
 npx react-native start
