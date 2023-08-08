@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-import { SERVER_URL, API } from "@env";
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import styled from "styled-components/native";
 
@@ -20,7 +20,11 @@ interface WishPlaceData {
 
 const getWishPlace = async (userId: string) => {
   try {
-    const url = SERVER_URL + API + `/users/${userId}/wishPlace/random`;
+    let url = "";
+    if (DEVELOP_MODE)
+      url = SERVER_URL + API + `/users/${userId}/wishPlace/random`;
+    else url = DEVELOP_SERVER_URL + API + `/users/${userId}/wishPlace/random`;
+
     const response = await axios.get(url);
     // console.log(response.data);
     return response.data;

@@ -3,7 +3,7 @@ import { View, Image, ScrollView, Dimensions } from "react-native";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 
-import { SERVER_URL, API } from "@env";
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import styled from "styled-components/native";
 
@@ -22,7 +22,10 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const getCarouselData = async () => {
   try {
-    const url = SERVER_URL + API + "/carousel";
+    let url = "";
+    if (DEVELOP_MODE) url = DEVELOP_SERVER_URL + API + "/carousel";
+    else url = SERVER_URL + API + "/carousel";
+
     const response = await axios.get(url);
     // console.log(response.data);
     return response.data;

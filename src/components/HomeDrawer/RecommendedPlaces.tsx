@@ -5,7 +5,7 @@ import axios from "axios";
 
 import { styled } from "styled-components/native";
 
-import { SERVER_URL, API } from "@env";
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import RecommendedPlace from "./RecommendedPlace";
 
@@ -24,7 +24,10 @@ interface RecommendedPlaceData {
 
 const getRecommendedPlace = async () => {
   try {
-    const url = SERVER_URL + API + `/recommendedplaces`;
+    let url = "";
+    if (DEVELOP_MODE) url = SERVER_URL + API + `/recommendedplaces`;
+    else url = DEVELOP_SERVER_URL + API + `/recommendedplaces`;
+
     const response = await axios.get(url);
     // console.log(response.data);
     return response.data;
