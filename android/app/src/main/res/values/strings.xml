@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TuTi</string>
++   <string name="kakao_app_key">4fc7a3fafc9203cca21b52cd9183ec52</string>
 </resources>
