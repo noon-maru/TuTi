@@ -43,7 +43,7 @@ const Container = styled.View<{ paddingTop: number }>`
   justify-content: center;
   align-items: center;
 
-  padding-top: 53px;
+  margin-top: 53px;
 `;
 
 export default SponserScreen;
