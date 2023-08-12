@@ -25,7 +25,7 @@ const BoxScreen = () => {
   return (
     <>
       <StatusBarBackgroundColor height={insets.top} />
-      <Container paddingTop={insets.top}>
+      <Container>
         <Text>Box Screen</Text>
       </Container>
     </>
@@ -38,7 +38,7 @@ const StatusBarBackgroundColor = styled.View<{ height: number }>`
   background-color: white;
 `;
 
-const Container = styled.View<{ paddingTop: number }>`
+const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
