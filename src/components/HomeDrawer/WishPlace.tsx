@@ -18,12 +18,14 @@ interface WishPlaceData {
   region: string;
 }
 
+const isDevelopMode = DEVELOP_MODE === "true";
+
 const getWishPlace = async (userId: string) => {
   try {
     let url = "";
-    if (DEVELOP_MODE)
-      url = SERVER_URL + API + `/users/${userId}/wishPlace/random`;
-    else url = DEVELOP_SERVER_URL + API + `/users/${userId}/wishPlace/random`;
+    if (isDevelopMode)
+      url = DEVELOP_SERVER_URL + API + `/users/${userId}/wishPlace/random`;
+    else url = SERVER_URL + API + `/users/${userId}/wishPlace/random`;
 
     const response = await axios.get(url);
     // console.log(response.data);

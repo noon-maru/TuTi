@@ -18,13 +18,16 @@ interface ImageData {
   imageUrl: string;
 }
 
+const isDevelopMode = DEVELOP_MODE === "true";
+
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const getCarouselData = async () => {
   try {
     let url = "";
-    if (DEVELOP_MODE) url = DEVELOP_SERVER_URL + API + "/carousel";
+    if (isDevelopMode) url = DEVELOP_SERVER_URL + API + "/carousel";
     else url = SERVER_URL + API + "/carousel";
+    console.log(url);
 
     const response = await axios.get(url);
     // console.log(response.data);
@@ -127,7 +130,7 @@ const Carousel = () => {
         {imageDataArray.map((imageData) => (
           <View key={imageData.imageName}>
             <Image
-              source={{ uri: SERVER_URL + imageData.imageUrl }}
+              source={{ uri: SERVER_URL + API + imageData.imageUrl }}
               style={{
                 width: SCREEN_WIDTH,
                 height: SCREEN_HEIGHT / 2,

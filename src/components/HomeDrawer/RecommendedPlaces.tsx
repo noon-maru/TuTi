@@ -9,8 +9,6 @@ import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import RecommendedPlace from "./RecommendedPlace";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
-
 interface PlaceData {
   address: string;
   image: string;
@@ -22,11 +20,15 @@ interface RecommendedPlaceData {
   place: PlaceData;
 }
 
+const isDevelopMode = DEVELOP_MODE === "true";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
 const getRecommendedPlace = async () => {
   try {
     let url = "";
-    if (DEVELOP_MODE) url = SERVER_URL + API + `/recommendedplaces`;
-    else url = DEVELOP_SERVER_URL + API + `/recommendedplaces`;
+    if (isDevelopMode) url = DEVELOP_SERVER_URL + API + `/recommendedplaces`;
+    else url = SERVER_URL + API + `/recommendedplaces`;
 
     const response = await axios.get(url);
     // console.log(response.data);
