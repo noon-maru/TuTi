@@ -1,12 +1,18 @@
 import { useCallback } from "react";
-import { Dimensions, Text } from "react-native";
+import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
+import WebView from "react-native-webview";
 
-import { styled } from "styled-components/native";
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
+
+import styled from "styled-components/native";
 
 import { setTheme } from "redux/slice/themeSlice";
+
+import ExploreDrawer from "components/ExploreDrawer";
+import SearchBox from "~/components/SearchBox";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -25,8 +31,12 @@ const ExploreScreen = () => {
   return (
     <>
       <StatusBarBackgroundColor height={insets.top} />
-      <Container paddingTop={insets.top}>
-        <Text>Explore Screen</Text>
+      <Container>
+        <KakaoMap
+          source={{ uri: "https://code.tutiserver.kro.kr/proxy/3000/" }}
+        />
+        <SearchBox />
+        <ExploreDrawer />
       </Container>
     </>
   );
@@ -38,12 +48,17 @@ const StatusBarBackgroundColor = styled.View<{ height: number }>`
   background-color: white;
 `;
 
-const Container = styled.View<{ paddingTop: number }>`
+const Container = styled.View`
   flex: 1;
-  justify-content: center;
   align-items: center;
 
-  padding-top: 53px;
+  margin-top: 53px;
+`;
+
+const KakaoMap = styled(WebView)`
+  flex: 1;
+  width: ${SCREEN_WIDTH}px;
+  align-items: center;
 `;
 
 export default ExploreScreen;

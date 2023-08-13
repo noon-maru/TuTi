@@ -24,6 +24,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@types/base-64": "^1.0.0",
     "@types/lodash": "^4.14.196",
+    "@types/react-speech-recognition": "^3.9.2",
     "axios": "^1.4.0",
     "babel-plugin-module-resolver": "^5.0.0",
     "base-64": "^1.0.0",
