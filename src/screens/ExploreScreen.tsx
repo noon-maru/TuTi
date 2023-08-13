@@ -32,9 +32,8 @@ const ExploreScreen = () => {
     <>
       <StatusBarBackgroundColor height={insets.top} />
       <Container>
-        <KakaoMap
-          source={{ uri: "https://code.tutiserver.kro.kr/proxy/3000/" }}
-        />
+        {/* react 개발 서버 url: https://code.tutiserver.kro.kr/proxy/3000/ */}
+        <KakaoMap source={{ uri: SERVER_URL }} />
         <SearchBox />
         <ExploreDrawer />
       </Container>
