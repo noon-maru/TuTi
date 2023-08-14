@@ -59,10 +59,10 @@ const GoogleSignIn = ({ handleLogin }: PropsWithoutRef<GoogleSignInProps>) => {
 
   return (
     <SocialLoginButton
-      icon={require("assets/OAuth/Google_login_icon.png")}
+      icon={require("assets/OAuth/GoogleIcon.png")}
       backgroundColor={"white"}
-      text={"Google로 계속하기"}
-      textColor={"black"}
+      text={"Google로 로그인"}
+      textColor={"#0000008a"}
       onPress={signIn}
     />
   );

@@ -50,9 +50,9 @@ const KakaoSignIn = ({ handleLogin }: PropsWithoutRef<KakaoSignInProps>) => {
 
   return (
     <SocialLoginButton
-      icon={require("assets/OAuth/Kakao_login_icon.png")}
+      icon={require("assets/OAuth/KakaoIcon.png")}
       backgroundColor={"#FEE500"}
-      text={"카카오로 계속하기"}
+      text={"카카오로 로그인"}
       textColor={"black"}
       onPress={() => signin()}
     />

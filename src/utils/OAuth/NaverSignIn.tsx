@@ -93,9 +93,9 @@ const NaverSignIn = ({ handleLogin }: PropsWithoutRef<NaverSignInProps>) => {
   return (
     <>
       <SocialLoginButton
-        icon={require("assets/OAuth/Naver_login_icon.png")}
+        icon={require("assets/OAuth/NaverIcon.png")}
         backgroundColor={"#03c75a"}
-        text={"네이버로 계속하기"}
+        text={"네이버로 로그인"}
         textColor={"white"}
         onPress={() => signIn()}
       />

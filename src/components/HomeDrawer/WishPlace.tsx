@@ -22,6 +22,8 @@ const isDevelopMode = DEVELOP_MODE === "true";
 
 const getWishPlace = async (userId: string) => {
   try {
+    if (userId === "guest") return [];
+
     let url = "";
     if (isDevelopMode)
       url = DEVELOP_SERVER_URL + API + `/users/${userId}/wishPlace/random`;
@@ -41,10 +43,13 @@ const WishPlace = () => {
 
   const [wishPlaces, setWishPlaces] = useState<[]>([]);
 
+  let flag: boolean = false;
+
   useEffect(() => {
-    if (wishPlaces.length === 0)
+    if (wishPlaces.length === 0 && flag === false)
       (async () => {
         setWishPlaces(await getWishPlace(id));
+        flag = true;
       })();
   }, []);
 
