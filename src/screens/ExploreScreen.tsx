@@ -8,11 +8,10 @@ import WebView from "react-native-webview";
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import styled from "styled-components/native";
-
 import { setTheme } from "redux/slice/themeSlice";
 
-import ExploreDrawer from "components/ExploreDrawer";
-import SearchBox from "~/components/SearchBox";
+import ExploreDrawer from "components/Explore/ExploreDrawer/ExploreDrawer";
+import SearchBox from "components/Explore/SearchBox";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 

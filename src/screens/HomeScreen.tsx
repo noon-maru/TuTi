@@ -6,10 +6,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { setNavigation } from "redux/slice/navigationSlice";
 import { setTheme } from "redux/slice/themeSlice";
 
-import { styled } from "styled-components/native";
+import styled from "styled-components/native";
 
-import Carousel from "@components/Carousel";
-import Drawer from "@components/HomeDrawer/Drawer";
+import Carousel from "components/Home/Carousel";
+import Drawer from "components/Home/HomeDrawer/Drawer";
 import { RootState } from "redux/reducers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
