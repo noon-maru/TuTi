@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { View, Image, ScrollView, Dimensions } from "react-native";
 import { useDispatch } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
@@ -16,6 +16,10 @@ interface ImageData {
   imageName: string;
   grayscaleValue: number;
   imageUrl: string;
+}
+
+interface CarouselProps {
+  flingCount: number;
 }
 
 const isDevelopMode = DEVELOP_MODE === "true";
@@ -36,7 +40,7 @@ const getCarouselData = async () => {
   }
 };
 
-const Carousel = () => {
+const Carousel = ({ flingCount }: CarouselProps) => {
   const [imageDataArray, setImageDataArray] = useState<ImageData[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
@@ -105,7 +109,21 @@ const Carousel = () => {
 
       dispatch(setTheme({ dark }));
     }
-  }, [currentPage, imageDataArray]);
+  }, [currentPage, imageDataArray, flingCount]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        imageDataArray[currentPage] &&
+        imageDataArray[currentPage].grayscaleValue
+      ) {
+        const dark = imageDataArray[currentPage].grayscaleValue >= 128;
+
+        dispatch(setTheme({ dark }));
+      }
+      return () => {}; // 필요한 경우 cleanup 함수 추가
+    }, [])
+  );
 
   const handleMomentumScrollEnd = (event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;

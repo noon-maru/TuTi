@@ -15,12 +15,12 @@ import WishPlace from "./WishPlace";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-interface DrawerProps {
+interface HomeDrawerProps {
   flingCount: number;
   setFlingCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const Drawer = ({ flingCount, setFlingCount }: DrawerProps) => {
+const HomeDrawer = ({ flingCount, setFlingCount }: HomeDrawerProps) => {
   const translateY = useRef(new Animated.Value(0)).current;
   const [currentY, setCurrentY] = useState<number>(0);
   const [wishContainerHeight, setWishContainerHeight] = useState<number>(0);
@@ -133,4 +133,4 @@ const DividingLine = styled(LinearGradient)`
   height: 2px;
 `;
 
-export default Drawer;
+export default HomeDrawer;

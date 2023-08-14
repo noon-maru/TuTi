@@ -9,7 +9,7 @@ import { setTheme } from "redux/slice/themeSlice";
 import styled from "styled-components/native";
 
 import Carousel from "components/Home/Carousel";
-import Drawer from "components/Home/HomeDrawer/Drawer";
+import HomeDrawer from "components/Home/HomeDrawer/HomeDrawer";
 import { RootState } from "redux/reducers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
@@ -42,8 +42,8 @@ const HomeScreen = ({ navigation }: any) => {
     <Container>
       <StatusBar translucent />
       {flingCount === 2 ? <StatusBarCover height={insets.top} /> : <></>}
-      <Carousel />
-      <Drawer flingCount={flingCount} setFlingCount={setFlingCount} />
+      <Carousel flingCount={flingCount} />
+      <HomeDrawer flingCount={flingCount} setFlingCount={setFlingCount} />
     </Container>
   );
 };
