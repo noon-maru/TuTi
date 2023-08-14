@@ -107,9 +107,10 @@ const Carousel = ({ flingCount }: CarouselProps) => {
     ) {
       const dark = imageDataArray[currentPage].grayscaleValue >= 128;
 
-      dispatch(setTheme({ dark }));
+      if (isFocused) dispatch(setTheme({ dark }));
+      else dispatch(setTheme({ dark: true }));
     }
-  }, [currentPage, imageDataArray, flingCount]);
+  }, [currentPage, imageDataArray, flingCount, isFocused]);
 
   useFocusEffect(
     useCallback(() => {

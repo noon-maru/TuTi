@@ -1,14 +1,10 @@
-import { useCallback } from "react";
 import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
-import { useFocusEffect } from "@react-navigation/native";
 import WebView from "react-native-webview";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import styled from "styled-components/native";
-import { setTheme } from "redux/slice/themeSlice";
 
 import ExploreDrawer from "components/Explore/ExploreDrawer/ExploreDrawer";
 import SearchBox from "components/Explore/SearchBox";
@@ -17,15 +13,6 @@ const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const ExploreScreen = () => {
   const insets = useSafeAreaInsets();
-
-  const dispatch = useDispatch();
-
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(setTheme({ dark: true }));
-      return () => {}; // 필요한 경우 cleanup 함수 추가
-    }, [])
-  );
 
   return (
     <>
