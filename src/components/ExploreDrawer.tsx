@@ -1,5 +1,26 @@
 import { Dimensions } from "react-native";
+
 import styled from "styled-components/native";
+
+const tempArray = [
+  { region: "서울" },
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+];
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 const ExploreDrawer = () => {
@@ -7,17 +28,11 @@ const ExploreDrawer = () => {
     <DrawerContainer>
       <PullBar />
       <ScrollContainer horizontal showsHorizontalScrollIndicator={false}>
-        <ScrollItem>
-          <ContentText>서울</ContentText>
-        </ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
-        <ScrollItem></ScrollItem>
+        {tempArray.map((value, index) => (
+          <ScrollItem key={index}>
+            <ContentText>{value.region}</ContentText>
+          </ScrollItem>
+        ))}
       </ScrollContainer>
     </DrawerContainer>
   );
@@ -70,8 +85,8 @@ const ScrollItem = styled.View`
 const ContentText = styled.Text`
   padding: 0;
   margin: 0;
+  font-family: "SpoqaHanSansNeo-Bold";
   font-size: 15px;
-  font-weight: 600;
   color: black;
 `;
 export default ExploreDrawer;

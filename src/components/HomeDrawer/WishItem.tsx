@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Image } from "react-native";
-import { styled } from "styled-components/native";
+
+import styled from "styled-components/native";
+import { StyledText, BoldStyledText } from "styles/globalStyles";
 
 import { SERVER_URL } from "@env";
 
@@ -84,13 +86,13 @@ const PlaceInfo = styled.View`
   gap: 2px;
 `;
 
-const PlaceName = styled.Text`
+const PlaceName = styled(BoldStyledText)`
   color: black;
   font-size: 15px;
   font-weight: 700;
 `;
 
-const RequiredTimeDestination = styled.Text`
+const RequiredTimeDestination = styled(StyledText)`
   color: #777777;
   font-size: 14px;
 `;

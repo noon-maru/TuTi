@@ -60,6 +60,7 @@ const SearchInput = styled.TextInput`
   flex: 1;
   padding: 0;
   margin: 0;
+  font-family: "SpoqaHanSansNeo-Regular";
   font-size: 17px;
 `;
 

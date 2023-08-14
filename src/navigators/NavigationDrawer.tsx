@@ -21,6 +21,7 @@ import BottomTabNavigator from "navigators/BottomTabNavigator";
 import CustomHeader from "components/navigation/CustomHeader";
 
 import styled from "styled-components/native";
+import { StyledText, BoldStyledText } from "styles/globalStyles";
 
 const Drawer = createDrawerNavigator();
 
@@ -50,13 +51,13 @@ const Profile = () => {
     margin-bottom: 15px;
   `;
 
-  const ProfileText = styled.Text`
+  const ProfileText = styled(BoldStyledText)`
     font-size: 17px;
-    font-weight: 600;
+    color: black;
     margin-bottom: 7px;
   `;
 
-  const LogoutText = styled.Text`
+  const LogoutText = styled(StyledText)`
     font-size: 10px;
     color: #808080;
     text-decoration-line: underline;

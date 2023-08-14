@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Dimensions, Image } from "react-native";
 
-import { styled } from "styled-components/native";
+import styled from "styled-components/native";
+import { BoldStyledText } from "styles/globalStyles";
 
 import { SERVER_URL } from "@env";
 
@@ -58,10 +59,9 @@ const RecommendedPlaceImage = styled.Image`
   border-radius: 30px;
 `;
 
-const PlaceName = styled.Text`
+const PlaceName = styled(BoldStyledText)`
   color: black;
   font-size: 15px;
-  font-weight: 700;
   margin-left: 10px;
 `;
 

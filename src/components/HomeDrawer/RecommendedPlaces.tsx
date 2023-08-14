@@ -3,7 +3,8 @@ import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import axios from "axios";
 
-import { styled } from "styled-components/native";
+import styled from "styled-components/native";
+import { StyledText, BoldStyledText } from "styles/globalStyles";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
@@ -100,7 +101,7 @@ const RecommendedPlaceContainer = styled.View`
   gap: 10px;
 `;
 
-const RecommendText = styled.Text`
+const RecommendText = styled(StyledText)`
   color: black;
   font-size: 15px;
 `;
@@ -110,10 +111,9 @@ const RecommendedPlaceImage = styled.Image`
   height: ${SCREEN_WIDTH - 60}px;
 `;
 
-const PlaceName = styled.Text`
+const PlaceName = styled(BoldStyledText)`
   color: black;
   font-size: 15px;
-  font-weight: 700;
   margin-left: 10px;
 `;
 

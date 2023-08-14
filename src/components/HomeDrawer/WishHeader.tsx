@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { StyledText } from "styles/globalStyles";
 
 const WishHeader = () => {
   return (
@@ -17,7 +18,7 @@ const Container = styled.View`
   justify-content: space-between;
 `;
 
-const WishPlacesTextContainer = styled.Text`
+const WishPlacesTextContainer = styled(StyledText)`
   color: black;
   flex-direction: row;
   justify-content: center;
