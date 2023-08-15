@@ -1,4 +1,5 @@
-import { Dimensions } from "react-native";
+import { useState } from "react";
+import { Dimensions, LayoutChangeEvent } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
@@ -14,14 +15,21 @@ const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 const ExploreScreen = () => {
   const insets = useSafeAreaInsets();
 
+  const [containerHeight, setContainerHeight] = useState<number>(0);
+
+  const handleContainerLayout = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    setContainerHeight(height);
+  };
+
   return (
     <>
       <StatusBarBackgroundColor height={insets.top} />
-      <Container>
+      <Container onLayout={handleContainerLayout}>
         {/* react 개발 서버 url: https://code.tutiserver.kro.kr/proxy/3000/ */}
         <KakaoMap source={{ uri: SERVER_URL }} />
         <SearchBox />
-        <ExploreDrawer />
+        <ExploreDrawer containerHeight={containerHeight} />
       </Container>
     </>
   );
