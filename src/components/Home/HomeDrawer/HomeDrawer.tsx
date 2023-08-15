@@ -100,6 +100,7 @@ const HomeDrawer = ({ flingCount, setFlingCount }: HomeDrawerProps) => {
         onHandlerStateChange={onDownFlingGesture}
       >
         <ContentsContainer style={{ transform: [{ translateY: translateY }] }}>
+          <DrawerKnob />
           <WishContainer onLayout={handleWishContainerLayout}>
             <WishPlace />
             <DividingLine
@@ -117,12 +118,25 @@ const HomeDrawer = ({ flingCount, setFlingCount }: HomeDrawerProps) => {
 
 const ContentsContainer = styled(Animated.View)`
   width: ${SCREEN_WIDTH}px;
-  padding: 40px 30px;
+  padding: 15px 30px;
 
   background-color: white;
   border-radius: 30px 30px 0px 0px;
 
   top: -65px;
+`;
+
+const DrawerKnob = styled.View`
+  align-self: center;
+
+  margin-bottom: 15px;
+
+  width: 40px;
+  height: 6px;
+
+  border-radius: 8px;
+
+  background-color: #7fcfe9;
 `;
 
 const WishContainer = styled.View``;
