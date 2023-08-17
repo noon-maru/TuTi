@@ -2,7 +2,7 @@ import { Image } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { styled } from "styled-components/native";
+import styled from "styled-components/native";
 
 import CustomTabBar from "components/navigation/CustomTabBar";
 
@@ -38,7 +38,7 @@ const BottomTabNavigator = () => {
           let iconSize;
 
           if (route.name === "Home") {
-            iconName = require("assets/icon/home(line-color).png");
+            iconName = require("assets/icon/home(black).png");
             iconSize = 30;
           } else if (route.name === "Note") {
             iconName = require("assets/icon/note.png");
@@ -47,10 +47,10 @@ const BottomTabNavigator = () => {
             iconName = require("assets/icon/explore(color).png");
             iconSize = 35;
           } else if (route.name === "SOL") {
-            iconName = require("assets/icon/route(color).png");
+            iconName = require("assets/icon/route(black).png");
             iconSize = 30;
           } else if (route.name === "Box") {
-            iconName = require("assets/icon/box.png");
+            iconName = require("assets/icon/box(black).png");
             iconSize = 30;
           }
 
