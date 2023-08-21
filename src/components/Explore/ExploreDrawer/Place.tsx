@@ -39,7 +39,9 @@ const Place = ({ placeData }: { placeData: PlaceData }) => {
             <Spinner />
           </SpinnerContainer>
         ) : (
-          <PlaceImage source={{ uri: url }} />
+          <PlaceImage
+            source={{ uri: url, cache: FastImage.cacheControl.immutable }}
+          />
         )}
         <TextContainer>
           <PlaceName>{placeData.name}</PlaceName>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, FlatList, View } from "react-native";
 
 import styled from "styled-components/native";
 import { BoldStyledText } from "styles/globalStyles";
@@ -27,6 +27,8 @@ export interface PlaceData {
   numberHearts: number;
   tags: tag[];
 }
+
+const ITEM_GAP = 17;
 
 const getPlaceData = async (region: string) => {
   try {
@@ -64,11 +66,12 @@ const PlaceList = ({ region }: { region: string }) => {
       <ListHeader>
         <ListHeadeText>추천순</ListHeadeText>
       </ListHeader>
-      <List>
-        {placeDataArray.map((value, index) => (
-          <Place placeData={value} key={index} />
-        ))}
-      </List>
+      <FlatList
+        data={placeDataArray}
+        renderItem={({ item }) => <Place placeData={item} />}
+        ItemSeparatorComponent={() => <View style={{ height: ITEM_GAP }} />}
+        keyExtractor={(item, index) => index.toString()}
+      />
     </Container>
   );
 };
@@ -94,7 +97,5 @@ const ListHeadeText = styled(BoldStyledText)`
   font-size: 11px;
   color: black;
 `;
-
-const List = styled.ScrollView``;
 
 export default PlaceList;

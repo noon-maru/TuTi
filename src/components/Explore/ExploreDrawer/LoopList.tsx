@@ -5,6 +5,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from "react-native";
+import { Shadow } from "react-native-shadow-2";
 
 import LoopListItem from "./LoopListItem";
 
@@ -85,12 +86,52 @@ const LoopList = ({ region, setRegion }: LoopListProps) => {
         keyExtractor={(item, index) => index.toString()}
         scrollEventThrottle={16}
       />
+      <View
+        style={{
+          position: "absolute",
+        }}
+      >
+        <Shadow distance={40} offset={[0, 0]} startColor="#fff">
+          <View
+            style={{
+              borderTopRightRadius: 13,
+              borderBottomRightRadius: 13,
+              width: 5,
+              height: 30,
+            }}
+          />
+        </Shadow>
+      </View>
+      <View
+        style={{
+          position: "absolute",
+          right: 0,
+        }}
+      >
+        <Shadow distance={40} offset={[0, 0]} startColor="#fff">
+          <View
+            style={{
+              borderTopLeftRadius: 13,
+              borderBottomLeftRadius: 13,
+              width: 5,
+              height: 30,
+            }}
+          />
+        </Shadow>
+      </View>
     </Container>
   );
 };
 
 const Container = styled.View`
   height: 35px; /* 그림자 공간을 생각해 5px의 여유 공간을 줌 */
+`;
+
+const OpacityBox = styled.View`
+  position: absolute;
+  width: 40px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.5);
 `;
 
 export default LoopList;
