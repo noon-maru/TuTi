@@ -9,7 +9,7 @@ import { setTheme } from "redux/slice/themeSlice";
 import styled from "styled-components/native";
 
 import Carousel from "components/Home/Carousel";
-import HomeDrawer from "components/Home/HomeDrawer/HomeDrawer";
+import HomeDrawer from "components/Home/HomeDrawer";
 import { RootState } from "redux/reducers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");

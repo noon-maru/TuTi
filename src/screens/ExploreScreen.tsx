@@ -7,7 +7,7 @@ import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import styled from "styled-components/native";
 
-import ExploreDrawer from "components/Explore/ExploreDrawer/ExploreDrawer";
+import ExploreDrawer from "components/Explore/ExploreDrawer";
 import SearchBox from "components/Explore/SearchBox";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");

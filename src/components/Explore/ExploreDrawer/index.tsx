@@ -8,9 +8,10 @@ import {
 } from "react-native-gesture-handler";
 
 import styled from "styled-components/native";
+import { StyledText } from "styles/globalStyles";
 
-import RegionList from "./RegionList";
 import PlaceList from "./PlaceList";
+import LoopList from "./LoopList";
 
 interface ExploreDrawerProps {
   containerHeight: number;
@@ -18,7 +19,6 @@ interface ExploreDrawerProps {
 
 interface ContainerProps {
   containerHeight: number;
-  isOpen: boolean;
 }
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
@@ -26,6 +26,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
   const translateY = useRef(new Animated.Value(0)).current;
 
+  const [region, setRegion] = useState<string>("서울");
   const [currentY, setCurrentY] = useState<number>(0);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
@@ -44,7 +45,7 @@ const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
     if (nativeEvent.state === State.ACTIVE) {
       if (!isDrawerOpen) {
         Animated.timing(translateY, {
-          toValue: currentY - containerHeight + 65,
+          toValue: currentY - containerHeight + 65 - 25,
           duration: 500,
           useNativeDriver: true,
           easing: Easing.inOut(Easing.quad),
@@ -59,7 +60,7 @@ const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
     if (nativeEvent.state === State.ACTIVE) {
       if (isDrawerOpen) {
         Animated.timing(translateY, {
-          toValue: currentY + containerHeight - 65,
+          toValue: currentY + containerHeight - 65 + 25,
           duration: 500,
           useNativeDriver: true,
           easing: Easing.inOut(Easing.quad),
@@ -84,11 +85,11 @@ const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
             transform: [{ translateY: translateY }],
           }}
           containerHeight={containerHeight}
-          isOpen={isDrawerOpen}
         >
           <DrawerKnob />
-          <RegionList />
-          <PlaceList />
+          <Inform>지역별 추천 장소를 확인해보세요!</Inform>
+          <LoopList region={region} setRegion={setRegion} />
+          <PlaceList region={region} />
         </Container>
       </FlingGestureHandler>
     </FlingGestureHandler>
@@ -97,16 +98,17 @@ const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
 
 const Container = styled(Animated.View)<ContainerProps>`
   position: absolute;
-  bottom: ${(props) => 65 - props.containerHeight}px;
+  bottom: ${(props) => 65 - props.containerHeight - 25}px;
 
   align-items: center;
+  gap: 15px;
 
   width: ${SCREEN_WIDTH}px;
-  height: ${(props) => props.containerHeight}px;
+  height: ${(props) => props.containerHeight + 25}px;
 
-  border-radius: ${(props) => (props.isOpen ? "0px" : "30px 30px 0 0")};
+  border-radius: 30px 30px 0 0;
 
-  padding: 8px 0;
+  padding: 15px 0;
 
   background-color: white;
 `;
@@ -115,11 +117,14 @@ const DrawerKnob = styled.View`
   width: 40px;
   height: 6px;
 
-  margin-bottom: 11px;
-
   border-radius: 50px;
 
   background-color: #7fcfe9;
+`;
+
+const Inform = styled(StyledText)`
+  font-size: 13px;
+  color: #9292b9;
 `;
 
 export default ExploreDrawer;

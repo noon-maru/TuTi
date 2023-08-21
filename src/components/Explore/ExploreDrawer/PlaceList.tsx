@@ -1,31 +1,72 @@
+import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 
 import styled from "styled-components/native";
-import { StyledText } from "styles/globalStyles";
+import { BoldStyledText } from "styles/globalStyles";
 
+import axios from "axios";
+
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
+
+import Place from "./Place";
+
+const isDevelopMode = DEVELOP_MODE === "true";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const places = [
-  { placeName: "석촌호수", numberHearts: 10 },
-  { placeName: "성수구름다리", numberHearts: 6 },
-  { placeName: "서울숲", numberHearts: 3 },
-  { placeName: "뚝섬한강공원", numberHearts: 15 },
-];
+interface tag {
+  tagName: string;
+  associatedCount: number;
+  relatedTags: any; // 관련 태그의 오브젝트id
+}
 
-const PlaceList = () => {
+export interface PlaceData {
+  region: string;
+  name: string;
+  address: string;
+  image: string;
+  numberHearts: number;
+  tags: tag[];
+}
+
+const getPlaceData = async (region: string) => {
+  try {
+    let url = "";
+    if (isDevelopMode)
+      url = DEVELOP_SERVER_URL + API + "/place/region/" + region;
+    else url = SERVER_URL + API + "/place/region/" + region;
+
+    const response = await axios.get(url);
+    return response.data;
+  } catch (err) {
+    console.error("네트워킹 오류:", err);
+    throw err;
+  }
+};
+
+const PlaceList = ({ region }: { region: string }) => {
+  const [placeDataArray, setPlaceDataArray] = useState<PlaceData[]>([]);
+
+  useEffect(() => {
+    const fetchImageData = async () => {
+      try {
+        const data = await getPlaceData(region);
+        setPlaceDataArray(data);
+      } catch (error) {
+        console.error("이미지 데이터 가져오기 오류:", error);
+      }
+    };
+
+    fetchImageData();
+  }, [region]);
+
   return (
     <Container>
-      <ListHeader></ListHeader>
+      <ListHeader>
+        <ListHeadeText>추천순</ListHeadeText>
+      </ListHeader>
       <List>
-        {places.map((value, index) => (
-          <ItemContainer key={index}>
-            {/* <PlaceImage /> */}
-            <PlaceName>{value.placeName}</PlaceName>
-            <HeartContainer>
-              <Heart source={require("assets/icon/heart(line).png")} />
-              <PlaceNumberHearts>{value.numberHearts}</PlaceNumberHearts>
-            </HeartContainer>
-          </ItemContainer>
+        {placeDataArray.map((value, index) => (
+          <Place placeData={value} key={index} />
         ))}
       </List>
     </Container>
@@ -34,34 +75,26 @@ const PlaceList = () => {
 
 const Container = styled.View`
   justify-content: center;
+
+  width: ${SCREEN_WIDTH - 60}px;
 `;
 
 const ListHeader = styled.View`
-  width: ${SCREEN_WIDTH - 30}px;
+  align-items: flex-end;
+
+  height: 25px;
+`;
+
+const ListHeadeText = styled(BoldStyledText)`
+  align-items: flex-end;
+
   height: 25px;
 
-  background-color: blue;
+  text-decoration-line: underline;
+  font-size: 11px;
+  color: black;
 `;
 
 const List = styled.ScrollView``;
-
-const ItemContainer = styled.View``;
-
-const PlaceImage = styled.Image``;
-
-const PlaceName = styled(StyledText)``;
-
-const HeartContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  gap: 3px;
-`;
-
-const Heart = styled.Image`
-  width: 10px;
-  height: 10px;
-`;
-
-const PlaceNumberHearts = styled(StyledText)``;
 
 export default PlaceList;
