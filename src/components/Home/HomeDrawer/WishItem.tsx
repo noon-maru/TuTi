@@ -89,7 +89,6 @@ const PlaceInfo = styled.View`
 const PlaceName = styled(BoldStyledText)`
   color: black;
   font-size: 15px;
-  font-weight: 700;
 `;
 
 const RequiredTimeDestination = styled(StyledText)`
