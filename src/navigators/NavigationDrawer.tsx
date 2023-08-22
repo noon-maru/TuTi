@@ -105,6 +105,7 @@ const CustomDrawerContent = ({ navigation }: any) => {
       </DrawerHeaderContainer>
       <DrawerItem
         label="구독 서비스"
+        labelStyle={{ fontFamily: "SpoqaHanSansNeo-Regular" }}
         onPress={() => {
           Alert.alert("구독 서비스 구현 예정입니다.");
         }}
