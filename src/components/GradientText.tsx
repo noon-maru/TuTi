@@ -1,4 +1,4 @@
-import { TextProps } from "react-native";
+import { TextProps, View } from "react-native";
 import MaskedView from "@react-native-masked-view/masked-view";
 import LinearGradient from "react-native-linear-gradient";
 
@@ -15,15 +15,20 @@ interface Props extends TextProps {
   end?: Coordinate;
 }
 
-const GradientText = ({ colors, style, start, end, ...props }: Props) => {
+const GradientText = ({ colors, style, start, end, children }: Props) => {
+  const key = children?.toString();
+
   return (
-    <MaskedView maskElement={<StyledText style={style} {...props} />}>
+    <MaskedView
+      key={key}
+      maskElement={<StyledText style={style}>{children}</StyledText>}
+    >
       <LinearGradient
         colors={colors}
         start={start || { x: 0, y: 0 }}
         end={end || { x: 1, y: 1 }}
       >
-        <StyledText {...props} style={[style, { opacity: 0 }]} />
+        <StyledText style={[style, { opacity: 0 }]}>{children}</StyledText>
       </LinearGradient>
     </MaskedView>
   );

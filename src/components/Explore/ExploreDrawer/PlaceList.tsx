@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 
 import styled from "styled-components/native";
-import { BoldStyledText } from "styles/globalStyles";
 
 import axios from "axios";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import Place from "./Place";
+import TouchablePopover from "./TouchablePopover";
 
 const isDevelopMode = DEVELOP_MODE === "true";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
@@ -20,6 +20,7 @@ interface tag {
 }
 
 export interface PlaceData {
+  _id: string;
   region: string;
   name: string;
   address: string;
@@ -27,6 +28,8 @@ export interface PlaceData {
   numberHearts: number;
   tags: tag[];
 }
+
+export type SortOrder = "recommend" | "recent" | "highHeart" | "lowHeart";
 
 const ITEM_GAP = 17;
 
@@ -45,8 +48,43 @@ const getPlaceData = async (region: string) => {
   }
 };
 
+const dateFromObjectId = (objectId: string) => {
+  const utcDate = new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
+  return utcDate.getTime();
+};
+
 const PlaceList = ({ region }: { region: string }) => {
   const [placeDataArray, setPlaceDataArray] = useState<PlaceData[]>([]);
+  const [sortOrder, setSortOrder] = useState<string>("추천순");
+
+  const sortData = (order: SortOrder) => {
+    switch (order) {
+      case "recent":
+        setPlaceDataArray(
+          [...placeDataArray].sort(
+            (a, b) => dateFromObjectId(a._id) - dateFromObjectId(b._id)
+          )
+        );
+        setSortOrder("최근 등록 순");
+        break;
+      case "highHeart":
+        setPlaceDataArray(
+          [...placeDataArray].sort((a, b) => b.numberHearts - a.numberHearts)
+        );
+        setSortOrder("하트 높은 순");
+        break;
+      case "lowHeart":
+        setPlaceDataArray(
+          [...placeDataArray].sort((a, b) => a.numberHearts - b.numberHearts)
+        );
+        setSortOrder("하트 낮은 순");
+        break;
+      default:
+        // 기본 추천 순이나 다른 기준으로 정렬
+        setSortOrder("추천순");
+        break;
+    }
+  };
 
   useEffect(() => {
     const fetchImageData = async () => {
@@ -64,7 +102,7 @@ const PlaceList = ({ region }: { region: string }) => {
   return (
     <Container>
       <ListHeader>
-        <ListHeadeText>추천순</ListHeadeText>
+        <TouchablePopover sortData={sortData} sortOrder={sortOrder} />
       </ListHeader>
       <FlatList
         data={placeDataArray}
@@ -86,16 +124,6 @@ const ListHeader = styled.View`
   align-items: flex-end;
 
   height: 25px;
-`;
-
-const ListHeadeText = styled(BoldStyledText)`
-  align-items: flex-end;
-
-  height: 25px;
-
-  text-decoration-line: underline;
-  font-size: 11px;
-  color: black;
 `;
 
 export default PlaceList;
