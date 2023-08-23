@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useDispatch } from "react-redux";
 import { Image } from "react-native";
 import FastImage from "react-native-fast-image";
@@ -148,4 +148,4 @@ const PlaceNumberHearts = styled(GradientText)`
   font-size: 11px;
 `;
 
-export default Place;
+export default memo(Place);

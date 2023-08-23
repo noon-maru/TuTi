@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import {
   FlatList,
   View,
@@ -60,22 +60,32 @@ const LoopList = ({ region, setRegion }: LoopListProps) => {
     }
   };
 
+  const renderLoopListItem = useCallback(
+    ({ item }: { item: string }) => (
+      <LoopListItem
+        item={item}
+        onPress={setRegion}
+        isSelected={item === region}
+      />
+    ),
+    [region, setRegion] // 의존성 배열에 region과 setRegion 추가
+  );
+
+  const renderSeparator = useCallback(
+    () => <View style={{ width: ITEM_GAP }} />,
+    []
+  );
+
   return (
     <Container>
       <FlatList
         ref={flatListRef}
         data={[...regions, ...regions, ...regions]}
-        renderItem={({ item }) => (
-          <LoopListItem
-            item={item}
-            onPress={setRegion}
-            isSelected={item === region}
-          />
-        )}
+        renderItem={renderLoopListItem}
         horizontal
         showsHorizontalScrollIndicator={false}
         // 7px의 너비를 가진 구분자 컴포넌트
-        ItemSeparatorComponent={() => <View style={{ width: ITEM_GAP }} />}
+        ItemSeparatorComponent={renderSeparator}
         onScroll={handleScroll}
         initialScrollIndex={regions.length} // 버퍼의 크기만큼 초기 스크롤
         getItemLayout={(data, index) => ({
@@ -125,13 +135,6 @@ const LoopList = ({ region, setRegion }: LoopListProps) => {
 
 const Container = styled.View`
   height: 35px; /* 그림자 공간을 생각해 5px의 여유 공간을 줌 */
-`;
-
-const OpacityBox = styled.View`
-  position: absolute;
-  width: 40px;
-  height: 30px;
-  background-color: rgba(255, 255, 255, 0.5);
 `;
 
 export default LoopList;

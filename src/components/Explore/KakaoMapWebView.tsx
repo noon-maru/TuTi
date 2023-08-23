@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Dimensions, Text, TouchableOpacity } from "react-native";
+import { Dimensions } from "react-native";
 import WebView from "react-native-webview";
 
 import styled from "styled-components/native";
@@ -27,9 +27,7 @@ const KakaoMapWebView = () => {
   return (
     // react 개발 서버 url: https://code.tutiserver.kro.kr/proxy/3000
     // <KakaoMap source={{ uri: SERVER_URL }} />
-    <>
-      <KakaoMap ref={webViewRef} source={{ uri: SERVER_URL }} />
-    </>
+    <KakaoMap ref={webViewRef} source={{ uri: SERVER_URL }} />
   );
 };
 

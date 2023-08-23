@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 
 import styled from "styled-components/native";
@@ -99,6 +99,16 @@ const PlaceList = ({ region }: { region: string }) => {
     fetchImageData();
   }, [region]);
 
+  const renderItem = useCallback(
+    ({ item }: { item: PlaceData }) => <Place placeData={item} />,
+    []
+  );
+
+  const renderSeparator = useCallback(
+    () => <View style={{ height: ITEM_GAP }} />,
+    []
+  );
+
   return (
     <Container>
       <ListHeader>
@@ -106,9 +116,9 @@ const PlaceList = ({ region }: { region: string }) => {
       </ListHeader>
       <FlatList
         data={placeDataArray}
-        renderItem={({ item }) => <Place placeData={item} />}
-        ItemSeparatorComponent={() => <View style={{ height: ITEM_GAP }} />}
-        keyExtractor={(item, index) => index.toString()}
+        renderItem={renderItem}
+        ItemSeparatorComponent={renderSeparator}
+        keyExtractor={(item) => item._id}
       />
     </Container>
   );
