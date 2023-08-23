@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Dimensions, LayoutChangeEvent } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import WebView from "react-native-webview";
-
-import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import styled from "styled-components/native";
 
-import ExploreDrawer from "components/Explore/ExploreDrawer";
+import KakaoMapWebView from "components/Explore/KakaoMapWebView";
 import SearchBox from "components/Explore/SearchBox";
+import ExploreDrawer from "components/Explore/ExploreDrawer";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -26,8 +24,7 @@ const ExploreScreen = () => {
     <>
       <StatusBarBackgroundColor height={insets.top} />
       <Container onLayout={handleContainerLayout}>
-        {/* react 개발 서버 url: https://code.tutiserver.kro.kr/proxy/3000/ */}
-        <KakaoMap source={{ uri: SERVER_URL }} />
+        <KakaoMapWebView />
         <SearchBox />
         <ExploreDrawer containerHeight={containerHeight} />
       </Container>
@@ -46,12 +43,6 @@ const Container = styled.View`
   align-items: center;
 
   margin-top: 53px;
-`;
-
-const KakaoMap = styled(WebView)`
-  flex: 1;
-  width: ${SCREEN_WIDTH}px;
-  align-items: center;
 `;
 
 export default ExploreScreen;

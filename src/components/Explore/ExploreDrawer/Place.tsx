@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Image } from "react-native";
 import FastImage from "react-native-fast-image";
 
@@ -11,9 +12,20 @@ import GradientText from "components/GradientText";
 import Spinner from "components/Spinner";
 
 import { PlaceData } from "./PlaceList";
+import { postMessage } from "redux/slice/messageSlice";
 
 const Place = ({ placeData }: { placeData: PlaceData }) => {
   const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch();
+
+  const handleSendMessage = () => {
+    const jsonData = {
+      type: "placeSelect",
+      data: { zoomLevel: 5, address: placeData.address },
+    };
+    dispatch(postMessage(JSON.stringify(jsonData)));
+  };
 
   const url = SERVER_URL + placeData.image;
 
@@ -32,7 +44,7 @@ const Place = ({ placeData }: { placeData: PlaceData }) => {
   }, [url]);
 
   return (
-    <ItemContainer>
+    <Container onPress={handleSendMessage}>
       <InformContainer>
         {loading ? (
           <SpinnerContainer>
@@ -62,11 +74,11 @@ const Place = ({ placeData }: { placeData: PlaceData }) => {
           {placeData.numberHearts}
         </PlaceNumberHearts>
       </HeartContainer>
-    </ItemContainer>
+    </Container>
   );
 };
 
-const ItemContainer = styled.View`
+const Container = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;

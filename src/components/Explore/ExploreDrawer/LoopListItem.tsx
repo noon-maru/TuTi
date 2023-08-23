@@ -39,7 +39,7 @@ const LoopListItem = ({ item, onPress, isSelected }: LoopListItemProps) => {
 const ContentText = styled(BoldStyledText)`
   padding: 0;
   margin: 0;
-  font-size: 15px;
+  font-size: 13px;
   color: black;
 `;
 
