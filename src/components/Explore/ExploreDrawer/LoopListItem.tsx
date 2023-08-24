@@ -1,21 +1,24 @@
 import { memo } from "react";
+import { useDispatch } from "react-redux";
 import { TouchableOpacity } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 
 import styled from "styled-components/native";
 import { BoldStyledText } from "styles/globalStyles";
+import { setRegion } from "redux/slice/drawerSlice";
 
 interface LoopListItemProps {
   item: string;
-  onPress: React.Dispatch<React.SetStateAction<string>>;
   isSelected: boolean;
 }
 
-const LoopListItem = ({ item, onPress, isSelected }: LoopListItemProps) => {
+const LoopListItem = ({ item, isSelected }: LoopListItemProps) => {
+  const dispatch = useDispatch();
+
   return (
     <Shadow distance={4} offset={[1, 1]}>
       <TouchableOpacity
-        onPress={() => onPress(item)}
+        onPress={() => dispatch(setRegion(item))}
         style={{
           justifyContent: "center",
           alignItems: "center",

@@ -1,5 +1,6 @@
-import { useRef, useState, useEffect } from "react";
-import { Dimensions, Animated, Easing } from "react-native";
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Dimensions, Animated } from "react-native";
 
 import {
   FlingGestureHandler,
@@ -10,12 +11,11 @@ import {
 import styled from "styled-components/native";
 import { StyledText } from "styles/globalStyles";
 
+import { RootState } from "redux/reducers";
+import { setTranslateY, animateDrawer } from "redux/slice/drawerSlice";
+
 import PlaceList from "./PlaceList";
 import LoopList from "./LoopList";
-
-interface ExploreDrawerProps {
-  containerHeight: number;
-}
 
 interface ContainerProps {
   containerHeight: number;
@@ -23,51 +23,27 @@ interface ContainerProps {
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
+const ExploreDrawer = () => {
+  const dispatch = useDispatch();
+
   const translateY = useRef(new Animated.Value(0)).current;
-
-  const [region, setRegion] = useState<string>("서울");
-  const [currentY, setCurrentY] = useState<number>(0);
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-
   useEffect(() => {
-    const id = translateY.addListener(({ value }) => {
-      setCurrentY(value);
-    });
+    dispatch(setTranslateY(translateY));
+  }, []);
 
-    // 메모리 누수 방지를 위해 다 쓴 리스너는 삭제
-    return () => {
-      translateY.removeListener(id);
-    };
-  }, [translateY]);
+  const { isDrawerOpen, exploreContainerHeight } = useSelector(
+    (state: RootState) => state.drawer
+  );
 
   const onUpFlingGesture = ({ nativeEvent }: any) => {
-    if (nativeEvent.state === State.ACTIVE) {
-      if (!isDrawerOpen) {
-        Animated.timing(translateY, {
-          toValue: currentY - containerHeight + 65 - 25,
-          duration: 500,
-          useNativeDriver: true,
-          easing: Easing.inOut(Easing.quad),
-        }).start(() => {
-          setIsDrawerOpen(true);
-        });
-      }
+    if (nativeEvent.state === State.ACTIVE && !isDrawerOpen) {
+      dispatch(animateDrawer({ direction: "UP" })); // 사가에서 애니메이션 시작
     }
   };
 
   const onDownFlingGesture = ({ nativeEvent }: any) => {
-    if (nativeEvent.state === State.ACTIVE) {
-      if (isDrawerOpen) {
-        Animated.timing(translateY, {
-          toValue: currentY + containerHeight - 65 + 25,
-          duration: 500,
-          useNativeDriver: true,
-          easing: Easing.inOut(Easing.quad),
-        }).start(() => {
-          setIsDrawerOpen(false);
-        });
-      }
+    if (nativeEvent.state === State.ACTIVE && isDrawerOpen) {
+      dispatch(animateDrawer({ direction: "DOWN" })); // 사가에서 애니메이션 시작
     }
   };
 
@@ -84,12 +60,12 @@ const ExploreDrawer = ({ containerHeight }: ExploreDrawerProps) => {
           style={{
             transform: [{ translateY: translateY }],
           }}
-          containerHeight={containerHeight}
+          containerHeight={exploreContainerHeight}
         >
           <DrawerKnob />
           <Inform>지역별 추천 장소를 확인해보세요!</Inform>
-          <LoopList region={region} setRegion={setRegion} />
-          <PlaceList region={region} />
+          <LoopList />
+          <PlaceList />
         </Container>
       </FlingGestureHandler>
     </FlingGestureHandler>

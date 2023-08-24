@@ -4,6 +4,7 @@ import screenReducer, { ScreenState } from "./slice/screenSlice";
 import navigationReducer, { NavigationState } from "./slice/navigationSlice";
 import ThemeReducer, { ThemeState } from "./slice/themeSlice";
 import MessageReducer, { MessageState } from "./slice/messageSlice";
+import DrawerReducer, { DrawerState } from "./slice/drawerSlice";
 
 export interface RootState {
   user: UserState;
@@ -11,6 +12,7 @@ export interface RootState {
   navigation: NavigationState;
   theme: ThemeState;
   message: MessageState;
+  drawer: DrawerState;
 }
 
 const rootReducer: Reducer<RootState> = combineReducers<RootState>({
@@ -19,6 +21,7 @@ const rootReducer: Reducer<RootState> = combineReducers<RootState>({
   navigation: navigationReducer,
   theme: ThemeReducer,
   message: MessageReducer,
+  drawer: DrawerReducer,
 });
 
 export default rootReducer;

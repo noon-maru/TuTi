@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Dimensions, FlatList, View } from "react-native";
 
 import styled from "styled-components/native";
@@ -6,6 +7,8 @@ import styled from "styled-components/native";
 import axios from "axios";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
+
+import { RootState } from "redux/reducers";
 
 import Place from "./Place";
 import TouchablePopover from "./TouchablePopover";
@@ -53,7 +56,9 @@ const dateFromObjectId = (objectId: string) => {
   return utcDate.getTime();
 };
 
-const PlaceList = ({ region }: { region: string }) => {
+const PlaceList = () => {
+  const { region } = useSelector((state: RootState) => state.drawer);
+
   const [placeDataArray, setPlaceDataArray] = useState<PlaceData[]>([]);
   const [sortOrder, setSortOrder] = useState<string>("추천순");
 

@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Dimensions, LayoutChangeEvent } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import styled from "styled-components/native";
+
+import { setExploreContainerHeight } from "redux/slice/drawerSlice";
 
 import KakaoMapWebView from "components/Explore/KakaoMapWebView";
 import SearchBox from "components/Explore/SearchBox";
@@ -12,12 +14,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const ExploreScreen = () => {
   const insets = useSafeAreaInsets();
-
-  const [containerHeight, setContainerHeight] = useState<number>(0);
+  const dispatch = useDispatch();
 
   const handleContainerLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
-    setContainerHeight(height);
+    dispatch(setExploreContainerHeight(height));
   };
 
   return (
@@ -26,7 +27,7 @@ const ExploreScreen = () => {
       <Container onLayout={handleContainerLayout}>
         <KakaoMapWebView />
         <SearchBox />
-        <ExploreDrawer containerHeight={containerHeight} />
+        <ExploreDrawer />
       </Container>
     </>
   );

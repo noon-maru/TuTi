@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react";
+import { useSelector } from "react-redux";
 import {
   FlatList,
   View,
@@ -7,14 +8,11 @@ import {
 } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 
-import LoopListItem from "./LoopListItem";
-
 import styled from "styled-components/native";
 
-interface LoopListProps {
-  region: string;
-  setRegion: React.Dispatch<React.SetStateAction<string>>;
-}
+import { RootState } from "redux/reducers";
+
+import LoopListItem from "./LoopListItem";
 
 const regions = [
   "서울",
@@ -39,7 +37,9 @@ const regions = [
 const ITEM_WIDTH = 45;
 const ITEM_GAP = 7;
 
-const LoopList = ({ region, setRegion }: LoopListProps) => {
+const LoopList = () => {
+  const { region } = useSelector((state: RootState) => state.drawer);
+
   const flatListRef = useRef<FlatList<string>>(null);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -62,13 +62,9 @@ const LoopList = ({ region, setRegion }: LoopListProps) => {
 
   const renderLoopListItem = useCallback(
     ({ item }: { item: string }) => (
-      <LoopListItem
-        item={item}
-        onPress={setRegion}
-        isSelected={item === region}
-      />
+      <LoopListItem item={item} isSelected={item === region} />
     ),
-    [region, setRegion] // 의존성 배열에 region과 setRegion 추가
+    [region] // 의존성 배열에 region 추가
   );
 
   const renderSeparator = useCallback(

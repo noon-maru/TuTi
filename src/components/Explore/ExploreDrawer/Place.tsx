@@ -8,11 +8,13 @@ import { BoldStyledText, StyledText } from "styles/globalStyles";
 
 import { SERVER_URL } from "@env";
 
+import { postMessage } from "redux/slice/messageSlice";
+import { animateDrawer } from "redux/slice/drawerSlice";
+
 import GradientText from "components/GradientText";
 import Spinner from "components/Spinner";
 
 import { PlaceData } from "./PlaceList";
-import { postMessage } from "redux/slice/messageSlice";
 
 const Place = ({ placeData }: { placeData: PlaceData }) => {
   const [loading, setLoading] = useState(true);
@@ -25,6 +27,7 @@ const Place = ({ placeData }: { placeData: PlaceData }) => {
       data: { zoomLevel: 5, address: placeData.address },
     };
     dispatch(postMessage(JSON.stringify(jsonData)));
+    dispatch(animateDrawer({ direction: "DOWN" }));
   };
 
   const url = SERVER_URL + placeData.image;
