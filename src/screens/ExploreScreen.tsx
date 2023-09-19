@@ -1,19 +1,22 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dimensions, LayoutChangeEvent } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import styled from "styled-components/native";
 
+import { RootState } from "redux/reducers";
 import { setExploreContainerHeight } from "redux/slice/drawerSlice";
 
 import KakaoMapWebView from "components/Explore/KakaoMapWebView";
 import SearchBox from "components/Explore/SearchBox";
 import ExploreDrawer from "components/Explore/ExploreDrawer";
+import InformBox from "components/Explore/InformBox";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const ExploreScreen = () => {
   const insets = useSafeAreaInsets();
+  const { isMarkerClicked } = useSelector((state: RootState) => state.marker);
   const dispatch = useDispatch();
 
   const handleContainerLayout = (event: LayoutChangeEvent) => {
@@ -27,6 +30,7 @@ const ExploreScreen = () => {
       <Container onLayout={handleContainerLayout}>
         <KakaoMapWebView />
         <SearchBox />
+        {isMarkerClicked ? <InformBox /> : null}
         <ExploreDrawer />
       </Container>
     </>
