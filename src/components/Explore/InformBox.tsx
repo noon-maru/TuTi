@@ -1,4 +1,4 @@
-import { Dimensions, View } from "react-native";
+import { Dimensions, View, Share, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
 
@@ -13,6 +13,27 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const InformBox = () => {
   const marker = useSelector((state: RootState) => state.marker);
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: "공유에 보이는 메세지",
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("activityType!");
+        } else {
+          console.log("Share!");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("dismissed");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Container>
       <Shadow distance={4} offset={[0, 4]}>
@@ -34,7 +55,9 @@ const InformBox = () => {
             </BoldStyledText>
             <ImageContainer>
               <Icon source={require("@assets/icon/heart(line-B).png")} />
-              <Icon source={require("@assets/icon/share.png")} />
+              <Pressable onPress={() => onShare()}>
+                <Icon source={require("@assets/icon/share.png")} />
+              </Pressable>
             </ImageContainer>
           </HeaderContainer>
           <DividingLine
@@ -50,7 +73,6 @@ const InformBox = () => {
             </DetailInformContainer>
             <InformContents>입장료 {marker.admissionFee}</InformContents>
             <InformContents>휴무일 {marker.closedDays}</InformContents>
-            <InformContents>주변 대중교통</InformContents>
             <InformContents>지하철 {marker.subwayInfo}</InformContents>
             <InformContents>
               버스 경로 {marker?.busInfo?.busRoutes}
@@ -115,6 +137,8 @@ const DetailInformContainer = styled.View`
 
 const InformContents = styled(StyledText)`
   font-size: 17px;
+  line-height: 25px;
+  color: black;
 `;
 
 export default InformBox;

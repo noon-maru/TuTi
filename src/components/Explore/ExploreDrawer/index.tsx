@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Dimensions, Animated } from "react-native";
+import { Dimensions, Animated, View } from "react-native";
 
 import {
   FlingGestureHandler,
@@ -16,6 +16,7 @@ import { setTranslateY, animateDrawer } from "redux/slice/drawerSlice";
 
 import PlaceList from "./PlaceList";
 import LoopList from "./LoopList";
+import { Shadow } from "react-native-shadow-2";
 
 interface ContainerProps {
   containerHeight: number;
@@ -57,15 +58,35 @@ const ExploreDrawer = () => {
         onHandlerStateChange={onDownFlingGesture}
       >
         <Container
+          containerHeight={exploreContainerHeight}
           style={{
             transform: [{ translateY: translateY }],
           }}
-          containerHeight={exploreContainerHeight}
         >
-          <DrawerKnob />
-          <Inform>지역별 추천 장소를 확인해보세요!</Inform>
-          <LoopList />
-          <PlaceList />
+          <Shadow distance={4} offset={[3, -4]}>
+            <View
+              style={{
+                alignItems: "center",
+                gap: 15,
+
+                width: SCREEN_WIDTH,
+                height: exploreContainerHeight + 25,
+
+                borderTopStartRadius: 30,
+                borderTopEndRadius: 30,
+
+                paddingTop: 15,
+                paddingBottom: 15,
+
+                backgroundColor: "white",
+              }}
+            >
+              <DrawerKnob />
+              <Inform>지역별 추천 장소를 확인해보세요!</Inform>
+              <LoopList />
+              <PlaceList />
+            </View>
+          </Shadow>
         </Container>
       </FlingGestureHandler>
     </FlingGestureHandler>
@@ -75,18 +96,6 @@ const ExploreDrawer = () => {
 const Container = styled(Animated.View)<ContainerProps>`
   position: absolute;
   bottom: ${(props) => 65 - props.containerHeight - 25}px;
-
-  align-items: center;
-  gap: 15px;
-
-  width: ${SCREEN_WIDTH}px;
-  height: ${(props) => props.containerHeight + 25}px;
-
-  border-radius: 30px 30px 0 0;
-
-  padding: 15px 0;
-
-  background-color: white;
 `;
 
 const DrawerKnob = styled.View`

@@ -66,16 +66,16 @@ const KakaoMapWebView = () => {
   };
 
   return (
-    // <KakaoMap
-    //   onMessage={handleOnMessage}
-    //   ref={webViewRef}
-    //   source={{ uri: SERVER_URL + "/kakaomap" }}
-    // />
     <KakaoMap
       onMessage={handleOnMessage}
       ref={webViewRef}
-      source={{ uri: "https://code.tutiserver.kro.kr/proxy/3000/kakaomap" }}
+      source={{ uri: SERVER_URL + "/kakaomap" }}
     />
+    // <KakaoMap
+    //   onMessage={handleOnMessage}
+    //   ref={webViewRef}
+    //   source={{ uri: "https://code.tutiserver.kro.kr/proxy/3000/kakaomap" }}
+    // />
   );
 };
 
