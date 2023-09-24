@@ -94,9 +94,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.noon_maru.tuti"
+    namespace "com.noonmaru.tuti"
     defaultConfig {
-        applicationId "com.noon_maru.tuti"
+        applicationId "com.noonmaru.tuti"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
