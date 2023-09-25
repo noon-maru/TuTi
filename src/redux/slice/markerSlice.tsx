@@ -6,6 +6,7 @@ interface BusInfo {
 }
 
 export interface MarkerState {
+  address: string; // 해당 마커의 주소
   markerName: string; // 해당 마커의 이름
   admissionFee: string; // 입장료
   closedDays: string[]; // 휴무일
@@ -15,6 +16,7 @@ export interface MarkerState {
 }
 
 const initialState: MarkerState = {
+  address: "",
   markerName: "",
   admissionFee: "",
   closedDays: [],

@@ -14,10 +14,16 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const InformBox = () => {
   const marker = useSelector((state: RootState) => state.marker);
 
+  const urlStringify = (address: string) => {
+    const deeplink =
+      "com.noonmaru.tuti://explore/" + address.replace(/\s+/g, "_");
+    return deeplink;
+  };
+
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: "공유에 보이는 메세지",
+        message: urlStringify(marker.address),
       });
 
       if (result.action === Share.sharedAction) {

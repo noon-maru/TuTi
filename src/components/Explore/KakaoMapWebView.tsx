@@ -1,4 +1,5 @@
-import { useRef, useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
+import { useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Dimensions } from "react-native";
 import WebView from "react-native-webview";
@@ -27,6 +28,21 @@ const KakaoMapWebView = () => {
   const { id } = useSelector((state: RootState) => state.user);
   const webViewRef = useRef<WebView | null>(null);
 
+  const [deeplink, setDeeplink] = useState<string>("");
+
+  const route = useRoute();
+  useEffect(() => {
+    if (route && route.params) {
+      const { address } = route?.params as { address?: string };
+      try {
+        const decodedString = decodeURIComponent(address!);
+        setDeeplink(decodedString);
+      } catch (error) {
+        setDeeplink(address!);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (message && webViewRef.current) {
       webViewRef.current.postMessage(message);
@@ -49,6 +65,7 @@ const KakaoMapWebView = () => {
       const infoData: MarkerState = JSON.parse(data).data;
       dispatch(
         setMarkerInfo({
+          address: infoData.address,
           markerName: infoData.markerName,
           admissionFee: infoData.admissionFee,
           closedDays: infoData.closedDays,
@@ -62,6 +79,18 @@ const KakaoMapWebView = () => {
     else if (JSON.parse(data).type === "mapClick" && webViewRef.current) {
       // 마커를 끈다.
       dispatch(setMarkerInfo({ isMarkerClicked: false }));
+    }
+    if (
+      JSON.parse(data).type === "initializationComplete" &&
+      webViewRef.current &&
+      deeplink !== ""
+    ) {
+      const jsonData = {
+        type: "placeSelect",
+        data: { zoomLevel: 6, address: deeplink },
+      };
+      webViewRef.current.postMessage(JSON.stringify(jsonData));
+      dispatch(clearMessage());
     }
   };
 

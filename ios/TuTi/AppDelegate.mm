@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTLinkingManager.h>
 
 #import <RNKakaoLogins.h>
 #import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
@@ -12,7 +13,7 @@
     options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
   
   // kakao
-  if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
+  if ([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
     return [RNKakaoLogins handleOpenUrl: url];
   }
   
@@ -21,7 +22,8 @@
     return [[NaverThirdPartyLoginConnection getSharedInstance] application:app openURL:url options:options];
   }
 
-  return NO;
+  // RCTLinkingManager 처리
+  return [RCTLinkingManager application:app openURL:url options:options];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

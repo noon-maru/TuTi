@@ -10,7 +10,7 @@ import CustomTabBar from "components/navigation/CustomTabBar";
 import HomeScreen from "screens/HomeScreen";
 import NoteScreen from "screens/NoteScreen";
 import ExploreScreen from "screens/ExploreScreen";
-import SOLScreen from "screens/SOLScreen";
+import CourseScreen from "screens/CourseScreen";
 import BoxScreen from "screens/BoxScreen";
 import TourScreen from "screens/TourScreen";
 
@@ -46,7 +46,7 @@ const BottomTabNavigator = () => {
           } else if (route.name === "Explore") {
             iconName = require("assets/icon/explore(color).png");
             iconSize = 35;
-          } else if (route.name === "SOL") {
+          } else if (route.name === "Course") {
             iconName = require("assets/icon/route(black).png");
             iconSize = 30;
           } else if (route.name === "Box") {
@@ -66,7 +66,7 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Note" component={NoteScreen} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
-      <Tab.Screen name="SOL" component={SOLScreen} />
+      <Tab.Screen name="Course" component={CourseScreen} />
       <Tab.Screen name="Box" component={BoxScreen} />
       <Tab.Screen name="Tour" component={TourScreen} />
     </Tab.Navigator>

@@ -5,14 +5,14 @@ import styled from "styled-components/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const SOLScreen = () => {
+const CourseScreen = () => {
   const insets = useSafeAreaInsets();
 
   return (
     <>
       <StatusBarBackgroundColor height={insets.top} />
       <Container>
-        <Text>SOL Screen</Text>
+        <Text>Course Screen</Text>
       </Container>
     </>
   );
@@ -32,4 +32,4 @@ const Container = styled.View`
   margin-top: 53px;
 `;
 
-export default SOLScreen;
+export default CourseScreen;

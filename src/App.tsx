@@ -1,14 +1,61 @@
 import { useState } from "react";
-import { StatusBar, ImageBackground } from "react-native";
+import { StatusBar, ImageBackground, Linking, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useRoute } from "@react-navigation/native";
 
 import { RootState } from "redux/reducers";
 
 import NavigationDrawer from "navigators/NavigationDrawer";
 import SignInMethodScreen from "screens/SignInMethodScreen";
 import LoadingScreen from "screens/LoadingScreen";
+
+const config = {
+  screens: {
+    Main: {
+      screens: {
+        Home: "home",
+        Note: "note",
+        Explore: {
+          path: "explore/:address?",
+          // URL에서 화면으로 주소 가져올 때,
+          parse: {
+            address: (address: string) => address.replace(/_/g, " "),
+          },
+          // 화면에서 URL로 주소를 변환할 때,
+          stringify: {
+            address: (address: string) => address.replace(/\s+/g, "_"),
+          },
+        },
+        Course: "course",
+        Box: "box",
+        Tour: "tour",
+      },
+    },
+  },
+};
+
+const linking = {
+  prefixes: ["com.noonmaru.tuti://", "https://tuti.noonmaru.com"],
+
+  async getInitialURL() {
+    const url = await Linking.getInitialURL();
+
+    if (url != null) return url;
+
+    return null;
+  },
+
+  // 받아준 딥링크 url을 subscribe에 넣어줘야 한다
+  subscribe(listener: any) {
+    const urlListener = Linking.addEventListener("url", (event: any) =>
+      listener(event.url)
+    );
+
+    return () => urlListener.remove();
+  },
+  config, // 네비게이션 디렉터리 정보 설정
+};
 
 // App 컴포넌트에는 앱 전반에 적용되는 레이아웃 등을 넣어준다.
 const App = () => {
@@ -44,7 +91,7 @@ const App = () => {
   // 로그인과 로딩 모두 끝난 상황
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
+      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
         <NavigationDrawer />
       </NavigationContainer>
     </SafeAreaProvider>
