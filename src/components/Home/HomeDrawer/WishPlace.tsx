@@ -12,6 +12,7 @@ import WishHeader from "./WishHeader";
 import WishItem from "./WishItem";
 
 interface WishPlaceData {
+  _id: string;
   address: string;
   image: string;
   name: string;
@@ -41,7 +42,7 @@ const getWishPlace = async (userId: string) => {
 const WishPlace = () => {
   const { id } = useSelector((state: RootState) => state.user);
 
-  const [wishPlaces, setWishPlaces] = useState<[]>([]);
+  const [wishPlaces, setWishPlaces] = useState<WishPlaceData[]>([]);
 
   let flag: boolean = false;
 
@@ -57,7 +58,7 @@ const WishPlace = () => {
     <>
       <WishHeader />
       <WishPlacesContainer>
-        {wishPlaces.map((value: WishPlaceData, index) => (
+        {wishPlaces.map((value, index) => (
           <WishItem key={index} imageUrl={value.image} name={value.name} />
         ))}
       </WishPlacesContainer>
