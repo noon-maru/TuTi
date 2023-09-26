@@ -13,6 +13,8 @@ export interface MarkerState {
   placeId: string; // 해당 장소의 ID
   address: string; // 해당 마커의 주소
   markerName: string; // 해당 마커의 이름
+  parkingInfo: string; // 해당 마커의 주차 정보
+  advice: string; // 해당 장소에 갈 때, 필요 할 만한 조언
   admissionFee: string; // 입장료
   closedDays: string[]; // 휴무일
   subwayInfo: string[]; // 지하철
@@ -25,6 +27,8 @@ const initialState: MarkerState = {
   placeId: "",
   address: "",
   markerName: "",
+  parkingInfo: "",
+  advice: "",
   admissionFee: "",
   closedDays: [],
   subwayInfo: [],

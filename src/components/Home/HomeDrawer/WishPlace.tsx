@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -44,15 +45,20 @@ const WishPlace = () => {
 
   const [wishPlaces, setWishPlaces] = useState<WishPlaceData[]>([]);
 
-  let flag: boolean = false;
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          setWishPlaces(await getWishPlace(id));
+        } catch (error) {
+          console.error("네트워킹 오류:", error);
+          throw error;
+        }
+      };
 
-  useEffect(() => {
-    if (wishPlaces.length === 0 && flag === false)
-      (async () => {
-        setWishPlaces(await getWishPlace(id));
-        flag = true;
-      })();
-  }, []);
+      fetchData();
+    }, [id])
+  );
 
   return (
     <>

@@ -103,6 +103,8 @@ const KakaoMapWebView = () => {
           placeId: infoData.placeId,
           address: infoData.address,
           markerName: infoData.markerName,
+          parkingInfo: infoData.parkingInfo,
+          advice: infoData.advice,
           admissionFee: infoData.admissionFee,
           closedDays: infoData.closedDays,
           subwayInfo: infoData.subwayInfo,

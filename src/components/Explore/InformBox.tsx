@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Dimensions, View, Share, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
@@ -17,6 +18,9 @@ const InformBox = () => {
   const dispatch = useDispatch();
   const marker = useSelector((state: RootState) => state.marker);
   const { id } = useSelector((state: RootState) => state.user);
+
+  const [isParkingToggle, setIsParkingToggle] = useState<boolean>(false);
+  const [isAdviceToggle, setIsAdviceToggle] = useState<boolean>(false);
 
   const urlStringify = (address: string) => {
     const deeplink =
@@ -88,19 +92,57 @@ const InformBox = () => {
           />
           <ContentsContainer>
             <DetailInformContainer>
-              <Icon source={require("@assets/icon/park(line-black).png")} />
-              <Icon source={require("@assets/icon/info(line).png")} />
+              <Pressable onPress={() => setIsParkingToggle((prev) => !prev)}>
+                {isParkingToggle ? (
+                  <ParkingContainer>
+                    <Icon source={require("@assets/icon/park(black).png")} />
+                    <ParkingInfoBox
+                      colors={["#4981FFB2", "#01B895B2"]} // 그라데이션 색상 배열
+                      start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
+                      end={{ x: 1, y: 0 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
+                    >
+                      <StyledText style={{ fontSize: 12, color: "white" }}>
+                        {marker.parkingInfo}
+                      </StyledText>
+                    </ParkingInfoBox>
+                  </ParkingContainer>
+                ) : (
+                  <Icon source={require("@assets/icon/park(line-black).png")} />
+                )}
+              </Pressable>
+              <Pressable onPress={() => setIsAdviceToggle((prev) => !prev)}>
+                {isAdviceToggle ? (
+                  <AdviceContainer>
+                    <Icon source={require("@assets/icon/info(black).png")} />
+                    <AdviceBox
+                      colors={["#7CA9FA", "#4DCDB5"]} // 그라데이션 색상 배열
+                      start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
+                      end={{ x: 1, y: 0 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
+                    >
+                      <StyledText style={{ fontSize: 12, color: "white" }}>
+                        {marker.advice}
+                      </StyledText>
+                    </AdviceBox>
+                  </AdviceContainer>
+                ) : (
+                  <Icon source={require("@assets/icon/info(line).png")} />
+                )}
+              </Pressable>
               <Icon source={require("@assets/icon/photo(black).png")} />
             </DetailInformContainer>
-            <InformContents>입장료 {marker.admissionFee}</InformContents>
-            <InformContents>휴무일 {marker.closedDays}</InformContents>
-            <InformContents>지하철 {marker.subwayInfo}</InformContents>
-            <InformContents>
-              버스 경로 {marker?.busInfo?.busRoutes}
-            </InformContents>
-            <InformContents>
-              버스 정류장 {marker?.busInfo?.busStops}
-            </InformContents>
+            {isAdviceToggle ? null : (
+              <>
+                <InformContents>입장료 {marker.admissionFee}</InformContents>
+                <InformContents>휴무일 {marker.closedDays}</InformContents>
+                <InformContents>지하철 {marker.subwayInfo}</InformContents>
+                <InformContents>
+                  버스 경로 {marker?.busInfo?.busRoutes}
+                </InformContents>
+                <InformContents>
+                  버스 정류장 {marker?.busInfo?.busStops}
+                </InformContents>
+              </>
+            )}
           </ContentsContainer>
         </View>
       </Shadow>
@@ -133,6 +175,39 @@ const ImageContainer = styled.View`
 const Icon = styled.Image`
   width: 20px;
   height: 20px;
+`;
+
+const ParkingContainer = styled.View`
+  flex-direction: row;
+  gap: 4px;
+`;
+
+const ParkingInfoBox = styled(LinearGradient)`
+  justify-content: center;
+  align-items: center;
+
+  width: 160px;
+  height: 20px;
+
+  border-radius: 25px;
+`;
+
+const AdviceContainer = styled.View`
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const AdviceBox = styled(LinearGradient)`
+  position: absolute;
+  top: 25px;
+  right: -30px;
+  justify-content: center;
+  align-items: center;
+
+  width: ${SCREEN_WIDTH * 0.8}px;
+  height: 120px;
+
+  border-radius: 16px;
 `;
 
 const DividingLine = styled(LinearGradient)`
