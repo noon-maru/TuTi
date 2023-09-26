@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StatusBar, ImageBackground, Linking, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { RootState } from "redux/reducers";
 

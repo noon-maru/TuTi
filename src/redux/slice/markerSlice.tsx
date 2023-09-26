@@ -1,11 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import axios from "axios";
+
+import { SERVER_URL, API } from "@env";
+
 interface BusInfo {
   busRoutes: string[];
   busStops: string[];
 }
 
 export interface MarkerState {
+  placeId: string; // 해당 장소의 ID
   address: string; // 해당 마커의 주소
   markerName: string; // 해당 마커의 이름
   admissionFee: string; // 입장료
@@ -13,9 +18,11 @@ export interface MarkerState {
   subwayInfo: string[]; // 지하철
   busInfo: BusInfo; // 버스
   isMarkerClicked: boolean; // 마커 클릭 여부
+  isWishClicked: boolean; // 찜 버튼 클릭 여부
 }
 
 const initialState: MarkerState = {
+  placeId: "",
   address: "",
   markerName: "",
   admissionFee: "",
@@ -26,6 +33,7 @@ const initialState: MarkerState = {
     busStops: [],
   },
   isMarkerClicked: false,
+  isWishClicked: false,
 };
 
 const markerSlice = createSlice({
@@ -44,10 +52,45 @@ const markerSlice = createSlice({
       // 마커 클릭 여부를 토글합니다.
       state.isMarkerClicked = !state.isMarkerClicked;
     },
+    toggleWishClick: (state, action: PayloadAction<string>) => {
+      // 찜 버튼 클릭 여부를 토글합니다.
+      const userId = action.payload;
+
+      if (state.isWishClicked) {
+        axios
+          .delete(SERVER_URL + API + `/users/${userId}/wishPlace`, {
+            headers: {
+              "Content-Type": `application/json`,
+            },
+            data: JSON.stringify({ placeId: state.placeId }),
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } else {
+        axios
+          .post(
+            SERVER_URL + API + `/users/${userId}/wishPlace`,
+            JSON.stringify({ placeId: state.placeId }),
+            {
+              headers: { "Content-Type": `application/json` },
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+      state.isWishClicked = !state.isWishClicked;
+    },
   },
 });
 
-export const { setMarkerInfo, clearMarkerInfo, toggleMarkerClick } =
-  markerSlice.actions;
+export const {
+  setMarkerInfo,
+  clearMarkerInfo,
+  toggleMarkerClick,
+  toggleWishClick,
+} = markerSlice.actions;
 
 export default markerSlice.reducer;

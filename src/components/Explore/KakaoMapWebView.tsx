@@ -6,21 +6,46 @@ import WebView from "react-native-webview";
 
 import styled from "styled-components/native";
 
-import { SERVER_URL } from "@env";
+import axios from "axios";
+
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import { RootState } from "redux/reducers";
 import { clearMessage } from "redux/slice/messageSlice";
-import {
-  MarkerState,
-  setMarkerInfo,
-  toggleMarkerClick,
-} from "redux/slice/markerSlice";
+import { MarkerState, setMarkerInfo } from "redux/slice/markerSlice";
 
+const isDevelopMode = DEVELOP_MODE === "true";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 interface NativeEvent {
   nativeEvent: { data: string };
 }
+
+interface WishPlaceData {
+  _id: string;
+  address: string;
+  image: string;
+  name: string;
+  region: string;
+}
+
+const getWishPlace = async (userId: string) => {
+  try {
+    if (userId === "guest") return [];
+
+    let url = "";
+    if (isDevelopMode)
+      url = DEVELOP_SERVER_URL + API + `/users/${userId}/wishPlace`;
+    else url = SERVER_URL + API + `/users/${userId}/wishPlace`;
+
+    const response = await axios.get(url);
+    // console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("네트워킹 오류:", error);
+    throw error;
+  }
+};
 
 const KakaoMapWebView = () => {
   const dispatch = useDispatch();
@@ -29,6 +54,7 @@ const KakaoMapWebView = () => {
   const webViewRef = useRef<WebView | null>(null);
 
   const [deeplink, setDeeplink] = useState<string>("");
+  const [wishPlaces, setWishPlaces] = useState<WishPlaceData[]>([]);
 
   const route = useRoute();
   useEffect(() => {
@@ -41,6 +67,12 @@ const KakaoMapWebView = () => {
         setDeeplink(address!);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      setWishPlaces(await getWishPlace(id));
+    })();
   }, []);
 
   useEffect(() => {
@@ -63,8 +95,12 @@ const KakaoMapWebView = () => {
     // 마커를 클릭했을 때
     else if (JSON.parse(data).type === "markerClick" && webViewRef.current) {
       const infoData: MarkerState = JSON.parse(data).data;
+      const hasMatchingPlace = wishPlaces.some(
+        (wishPlace) => wishPlace.address === infoData.address
+      );
       dispatch(
         setMarkerInfo({
+          placeId: infoData.placeId,
           address: infoData.address,
           markerName: infoData.markerName,
           admissionFee: infoData.admissionFee,
@@ -72,6 +108,7 @@ const KakaoMapWebView = () => {
           subwayInfo: infoData.subwayInfo,
           busInfo: infoData.busInfo,
           isMarkerClicked: true,
+          isWishClicked: hasMatchingPlace,
         })
       );
     }

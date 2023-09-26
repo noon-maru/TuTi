@@ -2,17 +2,21 @@ import { Dimensions, View, Share, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components/native";
+
 import { BoldStyledText, StyledText } from "styles/globalStyles";
 
 import { RootState } from "redux/reducers";
+import { toggleWishClick } from "redux/slice/markerSlice";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const InformBox = () => {
+  const dispatch = useDispatch();
   const marker = useSelector((state: RootState) => state.marker);
+  const { id } = useSelector((state: RootState) => state.user);
 
   const urlStringify = (address: string) => {
     const deeplink =
@@ -40,6 +44,11 @@ const InformBox = () => {
     }
   };
 
+  const onWish = async () => {
+    dispatch(toggleWishClick(id));
+    return marker.isWishClicked;
+  };
+
   return (
     <Container>
       <Shadow distance={4} offset={[0, 4]}>
@@ -60,7 +69,13 @@ const InformBox = () => {
               {marker.markerName}
             </BoldStyledText>
             <ImageContainer>
-              <Icon source={require("@assets/icon/heart(line-B).png")} />
+              <Pressable onPress={() => onWish()}>
+                {marker.isWishClicked ? (
+                  <Icon source={require("@assets/icon/heart(red).png")} />
+                ) : (
+                  <Icon source={require("@assets/icon/heart(line-B).png")} />
+                )}
+              </Pressable>
               <Pressable onPress={() => onShare()}>
                 <Icon source={require("@assets/icon/share.png")} />
               </Pressable>
