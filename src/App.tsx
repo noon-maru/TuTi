@@ -11,8 +11,10 @@ import SignInMethodScreen from "screens/SignInMethodScreen";
 import LoadingScreen from "screens/LoadingScreen";
 
 const config = {
+  initialRouteName: "Main", // 초기 화면 설정
   screens: {
     Main: {
+      initialRouteName: "Home", // Main 화면의 초기 화면 설정
       screens: {
         Home: "home",
         Note: "note",
@@ -32,6 +34,7 @@ const config = {
         Tour: "tour",
       },
     },
+    PlaceImage: "placeimage",
   },
 };
 
@@ -91,7 +94,7 @@ const App = () => {
   // 로그인과 로딩 모두 끝난 상황
   return (
     <SafeAreaProvider>
-      <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+      <NavigationContainer linking={linking}>
         <StatusBar
           translucent
           backgroundColor="transparent"
