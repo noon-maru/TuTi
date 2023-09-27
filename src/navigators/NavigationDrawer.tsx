@@ -19,9 +19,12 @@ import {
 import BottomTabNavigator from "navigators/BottomTabNavigator";
 
 import CustomHeader from "components/navigation/CustomHeader";
+import ImageScreenCustomHeader from "components/navigation/ImageScreenCustomHeader";
 
 import styled from "styled-components/native";
 import { StyledText, BoldStyledText } from "styles/globalStyles";
+
+import PlaceImageScreen from "screens/PlaceImageScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -132,6 +135,14 @@ const NavigationDrawer = () => {
         component={BottomTabNavigator}
         options={{
           headerTransparent: true,
+        }}
+      />
+      <Drawer.Screen
+        name="PlaceImage"
+        component={PlaceImageScreen}
+        options={{
+          header: (props) => <ImageScreenCustomHeader {...props} />, // CustomHeader 컴포넌트를 렌더링
+          headerTransparent: true, // 커스텀 헤더를 투명하게 만듭니다.
         }}
       />
     </Drawer.Navigator>

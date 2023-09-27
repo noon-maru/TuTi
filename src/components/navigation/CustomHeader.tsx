@@ -21,7 +21,7 @@ const CustomHeader = ({ navigation }: { navigation: any }) => {
           navigation.openDrawer();
         }}
       >
-        {theme.dark ? (
+        {theme.isDark ? (
           <Image
             source={require("assets/icon/profile(black).png")}
             style={{ width: 30, height: 30 }}
@@ -42,7 +42,7 @@ const CustomHeader = ({ navigation }: { navigation: any }) => {
           bottomNavigation.navigate("Tour");
         }}
       >
-        {theme.dark ? (
+        {theme.isDark ? (
           <Image
             source={require("assets/icon/bag(black).png")}
             style={{ width: 30, height: 30 }}

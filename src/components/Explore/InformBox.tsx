@@ -3,6 +3,8 @@ import { Dimensions, View, Share, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
 
+import { useNavigation } from "@react-navigation/native";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components/native";
@@ -15,6 +17,8 @@ import { toggleWishClick } from "redux/slice/markerSlice";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const InformBox = () => {
+  const navigation = useNavigation();
+
   const dispatch = useDispatch();
   const marker = useSelector((state: RootState) => state.marker);
   const { id } = useSelector((state: RootState) => state.user);
@@ -119,7 +123,7 @@ const InformBox = () => {
                       start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
                       end={{ x: 1, y: 0 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
                     >
-                      <StyledText style={{ fontSize: 12, color: "white" }}>
+                      <StyledText style={{ fontSize: 17, color: "white" }}>
                         {marker.advice}
                       </StyledText>
                     </AdviceBox>
@@ -128,7 +132,11 @@ const InformBox = () => {
                   <Icon source={require("@assets/icon/info(line).png")} />
                 )}
               </Pressable>
-              <Icon source={require("@assets/icon/photo(black).png")} />
+              <Pressable
+                onPress={() => navigation.navigate("PlaceImage" as never)}
+              >
+                <Icon source={require("@assets/icon/photo(black).png")} />
+              </Pressable>
             </DetailInformContainer>
             {isAdviceToggle ? null : (
               <>

@@ -11,10 +11,13 @@ import styled from "styled-components/native";
 import Carousel from "components/Home/Carousel";
 import HomeDrawer from "components/Home/HomeDrawer";
 import { RootState } from "redux/reducers";
+import { useIsFocused } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }: any) => {
+  const isFocused = useIsFocused();
+
   const dispatch = useDispatch();
   const theme = useSelector((state: RootState) => state.theme);
   const [flingCount, setFlingCount] = useState<number>(0);
@@ -27,20 +30,11 @@ const HomeScreen = ({ navigation }: any) => {
   }, []);
 
   useEffect(() => {
-    if (Platform.OS === "android") {
-      StatusBar.setBackgroundColor("transparent");
-    }
-    if (theme.dark || flingCount === 2) {
-      if (!theme.dark) dispatch(setTheme({ dark: true }));
-      StatusBar.setBarStyle("dark-content");
-    } else {
-      StatusBar.setBarStyle("light-content");
-    }
-  }, [theme, flingCount]);
+    if (flingCount === 2) dispatch(setTheme({ isDark: true }));
+  }, [flingCount]);
 
   return (
     <Container>
-      <StatusBar translucent />
       {flingCount === 2 ? <StatusBarCover height={insets.top} /> : <></>}
       <Carousel flingCount={flingCount} />
       <HomeDrawer flingCount={flingCount} setFlingCount={setFlingCount} />

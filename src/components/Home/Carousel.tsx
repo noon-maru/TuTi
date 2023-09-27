@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { View, Image, ScrollView, Dimensions } from "react-native";
+import { View, Image, ScrollView, Dimensions, StatusBar } from "react-native";
 import { useDispatch } from "react-redux";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
@@ -105,26 +105,12 @@ const Carousel = ({ flingCount }: CarouselProps) => {
       imageDataArray[currentPage] &&
       imageDataArray[currentPage].grayscaleValue
     ) {
-      const dark = imageDataArray[currentPage].grayscaleValue >= 128;
+      const isDark = imageDataArray[currentPage].grayscaleValue >= 128;
 
-      if (isFocused) dispatch(setTheme({ dark }));
-      else dispatch(setTheme({ dark: true }));
+      if (isFocused) dispatch(setTheme({ isDark }));
+      else dispatch(setTheme({ isDark: true }));
     }
   }, [currentPage, imageDataArray, flingCount, isFocused]);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (
-        imageDataArray[currentPage] &&
-        imageDataArray[currentPage].grayscaleValue
-      ) {
-        const dark = imageDataArray[currentPage].grayscaleValue >= 128;
-
-        dispatch(setTheme({ dark }));
-      }
-      return () => {}; // 필요한 경우 cleanup 함수 추가
-    }, [])
-  );
 
   const handleMomentumScrollEnd = (event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;

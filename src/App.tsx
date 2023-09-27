@@ -92,6 +92,11 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
+        />
         <NavigationDrawer />
       </NavigationContainer>
     </SafeAreaProvider>

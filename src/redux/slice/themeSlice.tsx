@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { StatusBar } from "react-native";
 
 export interface ThemeState {
-  dark: boolean;
+  isDark: boolean;
 }
 
 const initialState: ThemeState = {
-  dark: true,
+  isDark: true,
 };
 
 const ThemeSlice = createSlice({
@@ -13,7 +14,10 @@ const ThemeSlice = createSlice({
   initialState,
   reducers: {
     setTheme: (state, action: PayloadAction<ThemeState>) => {
-      return action.payload;
+      StatusBar.setBarStyle(
+        action.payload.isDark ? "dark-content" : "light-content"
+      );
+      state.isDark = action.payload.isDark;
     },
   },
 });
