@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Platform, StatusBar, Dimensions } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { Dimensions } from "react-native";
+import { useDispatch } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { setNavigation } from "redux/slice/navigationSlice";
@@ -10,16 +10,11 @@ import styled from "styled-components/native";
 
 import Carousel from "components/Home/Carousel";
 import HomeDrawer from "components/Home/HomeDrawer";
-import { RootState } from "redux/reducers";
-import { useIsFocused } from "@react-navigation/native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation }: any) => {
-  const isFocused = useIsFocused();
-
   const dispatch = useDispatch();
-  const theme = useSelector((state: RootState) => state.theme);
   const [flingCount, setFlingCount] = useState<number>(0);
 
   const insets = useSafeAreaInsets();
