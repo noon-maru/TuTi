@@ -51,19 +51,34 @@ const WishTabContent = ({ title, address }: WishTabContentProps) => {
             </StyledText>
           </TextContainer>
           {expanded ? (
-            <Image
-              source={require("@assets/icon/unfold.png")}
-              style={{ width: 12, height: 11.74 }}
-            />
+            <IconContainer>
+              <Image
+                source={require("@assets/icon/trash.png")}
+                style={{ width: 13, height: 13 }}
+              />
+              <Image
+                source={require("@assets/icon/unfold.png")}
+                style={{ width: 12, height: 11.74 }}
+              />
+            </IconContainer>
           ) : (
-            <Image
-              source={require("@assets/icon/open.png")}
-              style={{ width: 12, height: 11.74 }}
-            />
+            <IconContainer>
+              <Image
+                source={require("@assets/icon/trash.png")}
+                style={{ width: 13, height: 13 }}
+              />
+              <Image
+                source={require("@assets/icon/open.png")}
+                style={{ width: 12, height: 11.74 }}
+              />
+            </IconContainer>
           )}
         </Header>
       </Pressable>
-      <ContentsBox></ContentsBox>
+      <ContentsBox>
+        {/* <Image></Image>
+        <Image></Image> */}
+      </ContentsBox>
     </Container>
   );
 };
@@ -92,5 +107,10 @@ const TextContainer = styled.View`
 `;
 
 const ContentsBox = styled.View``;
+
+const IconContainer = styled.View`
+  flex-direction: row;
+  gap: 6px;
+`;
 
 export default WishTabContent;
