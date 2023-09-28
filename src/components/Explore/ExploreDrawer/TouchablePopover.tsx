@@ -38,6 +38,7 @@ const TouchablePopover = ({ sortData, sortOrder }: TouchablePopoverProps) => {
       arrowSize={{ width: 0, height: 0 }}
       verticalOffset={-(StatusBar.currentHeight ?? 0)}
       isVisible={visible}
+      onRequestClose={() => setVisible(false)}
       // statusBarTranslucent
     >
       <PopoverList>
