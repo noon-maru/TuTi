@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Pressable, View } from "react-native";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
 import { Shadow } from "react-native-shadow-2";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -11,16 +11,21 @@ import { BoldStyledText } from "styles/globalStyles";
 import STT from "components/STT";
 
 interface ModalProps {
-  ref: React.MutableRefObject<any>;
+  searchText: string;
+  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+  children: React.ReactNode;
 }
 
-const Modal = ({ ref }: ModalProps) => {
+const Modal = ({ searchText, setSearchText, children }: ModalProps) => {
   const [visible, setVisible] = useState(false);
-  const [searchText, setSearchText] = useState<string>("");
 
   return (
     <Popover
-      from={ref}
+      from={
+        <Pressable onPress={() => setVisible(true)} style={{ width: "100%" }}>
+          {children}
+        </Pressable>
+      }
       popoverStyle={{
         width: 300,
         height: 200,
