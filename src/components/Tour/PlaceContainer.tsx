@@ -41,6 +41,7 @@ const PlaceContainer = ({ placeName, isLast = false }: PlaceContainerProps) => {
             <StyledText>대충 이미지 들어갈 위치</StyledText>
           </ScrollView>
         </ScrollViewContainer>
+        {isLast ? <StyledText>코스 종료</StyledText> : null}
       </PlaceContentsContainer>
     </Container>
   );

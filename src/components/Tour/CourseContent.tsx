@@ -87,9 +87,9 @@ const CourseContent = ({ course, duration }: CourseTabContentProps) => {
       <ContentsBox onLayout={handleContentsBoxLayout}>
         {course.places.map((place, index) => (
           <PlaceContainer
+            key={index}
             placeName={place}
             isLast={index === course.places.length - 1}
-            key={index}
           />
         ))}
       </ContentsBox>
