@@ -3,7 +3,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import styled from "styled-components/native";
-import CourseTabContent from "components/Tour/CourseTabContent";
+import CourseTabContent from "components/Tour/CourseContent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
