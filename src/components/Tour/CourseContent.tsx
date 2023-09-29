@@ -89,6 +89,7 @@ const CourseContent = ({ course, duration }: CourseTabContentProps) => {
           <PlaceContainer
             placeName={place}
             isLast={index === course.places.length - 1}
+            key={index}
           />
         ))}
       </ContentsBox>
