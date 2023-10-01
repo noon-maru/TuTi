@@ -26,7 +26,7 @@ const PlaceContainer = ({ placeName, isLast = false }: PlaceContainerProps) => {
             <PlaceText>{placeName}</PlaceText>
           </TextUnderLine>
           <Image
-            source={require("@assets/icon/trash.png")}
+            source={require("@assets/icon/trash(black).png")}
             style={{ width: 15, height: 15 }}
           />
         </View>

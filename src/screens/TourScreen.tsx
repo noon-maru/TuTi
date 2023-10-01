@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -7,28 +7,43 @@ import LinearGradient from "react-native-linear-gradient";
 import { styled } from "styled-components/native";
 import { StyledText } from "styles/globalStyles";
 
-import CourseContent, { Course } from "@components/Tour/CourseContent";
+import CourseContent from "@components/Tour/CourseContent";
+
+import { Course, addCourse } from "redux/slice/courseSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "~/redux/reducers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const course: Course[] = [
-  {
-    courseName: "A 코스",
-    places: ["a 장소", "b 장소", "c 장소"],
-  },
-  {
-    courseName: "B 코스",
-
-    places: ["a 장소"],
-  },
-  {
-    courseName: "C 코스",
-    places: ["a 장소", "b 장소"],
-  },
-];
-
 const TourScreen = () => {
   const insets = useSafeAreaInsets();
+
+  const dispatch = useDispatch();
+  const { courses } = useSelector((state: RootState) => state.courses);
+
+  useEffect(() => {
+    const courses: Course[] = [
+      {
+        courseName: "A 코스",
+        duration: "TIME 30 ~ 40",
+        places: ["a 장소", "b 장소", "c 장소"],
+        isProgress: true,
+      },
+      {
+        courseName: "B 코스",
+        duration: "TIME 10 ~ 20",
+        places: ["a 장소"],
+        isProgress: false,
+      },
+      {
+        courseName: "C 코스",
+        duration: "TIME 40 ~ 60",
+        places: ["a 장소", "b 장소"],
+        isProgress: false,
+      },
+    ];
+    courses.map((course) => dispatch(addCourse(course)));
+  }, []);
 
   return (
     <>
@@ -53,8 +68,10 @@ const TourScreen = () => {
               />
             </Header>
             <CourseContent
-              course={course[0]}
-              duration={"TIME 30 ~ 40"}
+              courseName={courses[0].courseName}
+              duration={courses[0].duration}
+              places={courses[0].places}
+              isProgress={courses[0].isProgress}
             ></CourseContent>
           </CourseContainer>
           <CourseContainer
@@ -71,12 +88,16 @@ const TourScreen = () => {
               />
             </Header>
             <CourseContent
-              course={course[1]}
-              duration={"TIME 10 ~ 20"}
+              courseName={courses[1].courseName}
+              duration={courses[1].duration}
+              places={courses[1].places}
+              isProgress={courses[1].isProgress}
             ></CourseContent>
             <CourseContent
-              course={course[2]}
-              duration={"TIME 40 ~ 60"}
+              courseName={courses[2].courseName}
+              duration={courses[2].duration}
+              places={courses[2].places}
+              isProgress={courses[2].isProgress}
             ></CourseContent>
           </CourseContainer>
         </ContentsContainer>

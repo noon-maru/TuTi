@@ -9,6 +9,7 @@ import MarkerReducer, { MarkerState } from "./slice/markerSlice";
 import CourseDrawerReducer, {
   CourseDrawerState,
 } from "./slice/courseDrawerSlice";
+import CoursesReducer, { CoursesState } from "./slice/courseSlice";
 
 export interface RootState {
   user: UserState;
@@ -19,6 +20,7 @@ export interface RootState {
   drawer: DrawerState;
   marker: MarkerState;
   courseDrawer: CourseDrawerState;
+  courses: CoursesState;
 }
 
 const rootReducer: Reducer<RootState> = combineReducers<RootState>({
@@ -30,6 +32,7 @@ const rootReducer: Reducer<RootState> = combineReducers<RootState>({
   drawer: DrawerReducer,
   marker: MarkerReducer,
   courseDrawer: CourseDrawerReducer,
+  courses: CoursesReducer,
 });
 
 export default rootReducer;
