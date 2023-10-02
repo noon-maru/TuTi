@@ -7,7 +7,7 @@ import { RootState } from "redux/reducers";
 import styled from "styled-components/native";
 
 import { toggleWishClick } from "redux/slice/markerSlice";
-import { StyledText } from "~/styles/globalStyles";
+import { StyledText } from "styles/globalStyles";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 

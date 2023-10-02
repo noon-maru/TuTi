@@ -1,5 +1,9 @@
+/**
+ * @format
+ */
+
 import { useState } from "react";
-import { StatusBar, ImageBackground, Linking, Text } from "react-native";
+import { StatusBar, ImageBackground, Linking } from "react-native";
 import { useSelector } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
