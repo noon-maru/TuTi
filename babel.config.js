@@ -29,7 +29,6 @@ module.exports = {
           ".json",
         ],
         alias: {
-          "@": "./src",
           "@components": "./src/components",
           "@screens": "./src/screens",
           "@assets": "./src/assets",
@@ -37,6 +36,7 @@ module.exports = {
           "@utils": "./src/utils",
           "@redux": "./src/redux",
           "@styles": "./src/styles",
+          "@": "./src",
         },
       },
     ],
