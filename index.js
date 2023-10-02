@@ -7,9 +7,10 @@ import { AppRegistry, LogBox } from "react-native";
 import App from "./src/App";
 import { name as appName } from "./app.json";
 
-import store, { persistor } from "redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+
+import store, { persistor } from "@redux/store";
 
 const RootComponent = () => {
   // react-native-voice 모듈에서 발생하는 경고를 제거하기 위한 코드
