@@ -4,14 +4,15 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinearGradient from "react-native-linear-gradient";
 
+import { useDispatch, useSelector } from "react-redux";
+
 import styled from "styled-components/native";
-import { StyledText } from "styles/globalStyles";
+import { StyledText } from "@styles/globalStyles";
+
+import { RootState } from "@redux/reducers";
+import { Course, addCourse } from "@redux/slice/courseSlice";
 
 import CourseContent from "@components/Tour/CourseContent";
-
-import { Course, addCourse } from "redux/slice/courseSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "redux/reducers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
