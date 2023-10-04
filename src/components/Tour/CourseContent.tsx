@@ -10,11 +10,11 @@ import { Course, toggleCourse } from "redux/slice/courseSlice";
 import { useDispatch } from "react-redux";
 import CheckModal from "./CheckModal";
 
-interface CourseTabContentProps {
+interface CourseContentProps {
   course: Course;
 }
 
-const CourseContent = ({ course }: CourseTabContentProps) => {
+const CourseContent = ({ course }: CourseContentProps) => {
   const { courseName, duration, places, isProgress } = course;
 
   const dispatch = useDispatch();
