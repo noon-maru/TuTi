@@ -6,8 +6,6 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import styled from "styled-components/native";
 
-import { BoldStyledText } from "styles/globalStyles";
-
 import STT from "components/STT";
 
 interface ModalProps {

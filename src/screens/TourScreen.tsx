@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { Dimensions, Pressable } from "react-native";
+import { useEffect } from "react";
+import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinearGradient from "react-native-linear-gradient";
 
-import { styled } from "styled-components/native";
+import styled from "styled-components/native";
 import { StyledText } from "styles/globalStyles";
 
 import CourseContent from "@components/Tour/CourseContent";
 
 import { Course, addCourse } from "redux/slice/courseSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "~/redux/reducers";
+import { RootState } from "redux/reducers";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -22,7 +22,7 @@ const TourScreen = () => {
   const { courses } = useSelector((state: RootState) => state.courses);
 
   useEffect(() => {
-    const courses: Course[] = [
+    const courseArr: Course[] = [
       {
         courseName: "A 코스",
         duration: "TIME 30 ~ 40",
@@ -42,8 +42,8 @@ const TourScreen = () => {
         isProgress: false,
       },
     ];
-    courses.map((course) => dispatch(addCourse(course)));
-  }, []);
+    courseArr.map((course) => dispatch(addCourse(course)));
+  }, [dispatch]);
 
   return (
     <>
@@ -67,12 +67,11 @@ const TourScreen = () => {
                 end={{ x: 0.7, y: 0 }}
               />
             </Header>
-            <CourseContent
-              courseName={courses[0].courseName}
-              duration={courses[0].duration}
-              places={courses[0].places}
-              isProgress={courses[0].isProgress}
-            ></CourseContent>
+            {courses
+              .filter((course) => course.isProgress)
+              .map((course, index) => (
+                <CourseContent course={course} key={index} />
+              ))}
           </CourseContainer>
           <CourseContainer
             contentContainerStyle={{ gap: 10 }}
@@ -87,18 +86,11 @@ const TourScreen = () => {
                 end={{ x: 0.7, y: 0 }}
               />
             </Header>
-            <CourseContent
-              courseName={courses[1].courseName}
-              duration={courses[1].duration}
-              places={courses[1].places}
-              isProgress={courses[1].isProgress}
-            ></CourseContent>
-            <CourseContent
-              courseName={courses[2].courseName}
-              duration={courses[2].duration}
-              places={courses[2].places}
-              isProgress={courses[2].isProgress}
-            ></CourseContent>
+            {courses
+              .filter((course) => !course.isProgress)
+              .map((course, index) => (
+                <CourseContent course={course} key={index} />
+              ))}
           </CourseContainer>
         </ContentsContainer>
       </Container>

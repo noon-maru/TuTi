@@ -37,9 +37,19 @@ const coursesSlice = createSlice({
         (_, index) => index !== courseIdToDelete
       );
     },
+    toggleCourse: (state, action: PayloadAction<string>) => {
+      const courseIndex = state.courses.findIndex(
+        (course) => course.courseName === action.payload
+      );
+
+      if (courseIndex !== -1)
+        state.courses[courseIndex].isProgress =
+          !state.courses[courseIndex].isProgress;
+    },
   },
 });
 
-export const { addCourse, updateCourse, deleteCourse } = coursesSlice.actions;
+export const { addCourse, updateCourse, deleteCourse, toggleCourse } =
+  coursesSlice.actions;
 
 export default coursesSlice.reducer;

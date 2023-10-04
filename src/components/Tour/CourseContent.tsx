@@ -1,33 +1,31 @@
-import { useRef, useState } from "react";
-import {
-  Animated,
-  Image,
-  LayoutChangeEvent,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, Image, LayoutChangeEvent, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
 import { BoldStyledText, StyledText } from "styles/globalStyles";
 import PlaceContainer from "./PlaceContainer";
 
-import { Course } from "redux/slice/courseSlice";
+import { Course, toggleCourse } from "redux/slice/courseSlice";
+import { useDispatch } from "react-redux";
+import CheckModal from "./CheckModal";
 
 interface CourseTabContentProps {
   course: Course;
 }
 
-const CourseContent = ({
-  courseName,
-  duration,
-  places,
-  isProgress,
-}: Course) => {
+const CourseContent = ({ course }: CourseTabContentProps) => {
+  const { courseName, duration, places, isProgress } = course;
+
+  const dispatch = useDispatch();
+
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [ContentsBoxHeight, setContentsBoxHeight] = useState<number>(0);
   const [expanded, setExpanded] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isProgress) setExpanded(true);
+  }, [isProgress]);
 
   const toggleExpand = () => {
     if (!isProgress) {
@@ -57,8 +55,8 @@ const CourseContent = ({
   };
 
   const handleCourseProgress = () => {
-    isProgress = false;
-    console.log(isProgress);
+    setExpanded(!expanded);
+    dispatch(toggleCourse(courseName));
   };
 
   return (
@@ -82,11 +80,13 @@ const CourseContent = ({
             ) : null}
           </TitleTextContainer>
           {isProgress ? (
-            <EndButton onPress={() => handleCourseProgress()}>
-              <StyledText style={{ fontSize: 11, color: "#7FCFE9" }}>
-                종료
-              </StyledText>
-            </EndButton>
+            <CheckModal handleCourseProgress={handleCourseProgress}>
+              <EndButton>
+                <StyledText style={{ fontSize: 11, color: "#7FCFE9" }}>
+                  종료
+                </StyledText>
+              </EndButton>
+            </CheckModal>
           ) : (
             <>
               {expanded ? (
@@ -105,7 +105,7 @@ const CourseContent = ({
         </Header>
       </Pressable>
       <ContentsBox onLayout={handleContentsBoxLayout}>
-        {places.map((place, index) => (
+        {places?.map((place, index) => (
           <PlaceContainer
             key={index}
             placeName={place}
@@ -147,7 +147,7 @@ const ContentsBox = styled.View`
   padding-right: 23px;
 `;
 
-const EndButton = styled.Pressable`
+const EndButton = styled.View`
   justify-content: center;
   align-items: center;
 
