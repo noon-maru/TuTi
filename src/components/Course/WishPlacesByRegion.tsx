@@ -35,18 +35,27 @@ const WishPlacesByRegion = ({ title }: WishPlacesByRegionProps) => {
     <Container style={[animatedStyle]}>
       <Pressable onPress={toggleExpand}>
         <Header>
-          <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
-          {expanded ? (
+          <Title>
             <Image
-              source={require("@assets/icon/unfold.png")}
-              style={{ width: 12, height: 11.74 }}
+              source={require("@assets/icon/heart(red).png")}
+              style={{ width: 20, height: 20 }}
             />
-          ) : (
-            <Image
-              source={require("@assets/icon/open.png")}
-              style={{ width: 12, height: 11.74 }}
-            />
-          )}
+            <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
+          </Title>
+          <HeaderRightSide>
+            <StyledText style={{ fontSize: 10 }}>{"찜 한 장소"}</StyledText>
+            {expanded ? (
+              <Image
+                source={require("@assets/icon/unfold.png")}
+                style={{ width: 12, height: 11.74 }}
+              />
+            ) : (
+              <Image
+                source={require("@assets/icon/open.png")}
+                style={{ width: 12, height: 11.74 }}
+              />
+            )}
+          </HeaderRightSide>
         </Header>
         <GradientLine
           colors={["#518FFF", "#33E1C0"]}
@@ -55,7 +64,11 @@ const WishPlacesByRegion = ({ title }: WishPlacesByRegionProps) => {
         />
       </Pressable>
       <PlacesContainer>
-        <Place>
+        <Place
+          colors={["#C7DFFD", "#CCF0EB"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
           <StyledText style={{ fontSize: 15 }}>{`□ A 장소`}</StyledText>
           <ButtonContainer>
             <Image
@@ -96,6 +109,16 @@ const Header = styled.View`
   padding: 0 5px;
 `;
 
+const Title = styled.View`
+  flex-direction: row;
+  gap: 3px;
+`;
+
+const HeaderRightSide = styled.View`
+  flex-direction: row;
+  gap: 3px;
+`;
+
 const GradientLine = styled(LinearGradient)`
   width: 100%;
   height: 2px;
@@ -109,7 +132,7 @@ const PlacesContainer = styled.View`
   gap: 3px;
 `;
 
-const Place = styled.View`
+const Place = styled(LinearGradient)`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;

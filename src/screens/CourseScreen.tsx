@@ -2,12 +2,17 @@ import { useState } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { Dimensions, Image, LayoutChangeEvent, ScrollView } from "react-native";
+import {
+  Dimensions,
+  LayoutChangeEvent,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
-
-import { StyledText } from "styles/globalStyles";
+import { StyledText } from "@styles/globalStyles";
 
 import { setCourseContainerHeight } from "redux/slice/courseDrawerSlice";
 
@@ -38,27 +43,34 @@ const CourseScreen = () => {
           place={departure}
           setPlace={setDeparture}
         />
+        <Pressable
+          style={{
+            alignSelf: "flex-end",
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+        >
+          <AddStopoverButton
+            colors={["#C8E0FD", "#CCF0EC"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <StyledText>{"경유지 추가"}</StyledText>
+          </AddStopoverButton>
+        </Pressable>
         <PlaceSearch
           title={"도착지"}
           place={destination}
           setPlace={setDestination}
         />
-        <WishPlaceTextContainer>
-          <Image
-            source={require("@assets/icon/heart(red).png")}
-            style={{ width: 20, height: 20 }}
-          />
-          <StyledText style={{ fontSize: 17 }}>찜 한 장소</StyledText>
-        </WishPlaceTextContainer>
         <ScrollView
-          style={{ width: "100%" }}
+          style={{ width: "100%", marginTop: 50, marginBottom: 50 }}
           bounces={false}
           showsVerticalScrollIndicator={false}
         >
           <WishPlacesByRegion title={"서울"} />
           <WishPlacesByRegion title={"인천"} />
         </ScrollView>
-        <HiddenBox />
         <CourseDrawer />
       </Container>
     </>
@@ -81,17 +93,10 @@ const Container = styled.View`
   padding: 30px;
 `;
 
-const WishPlaceTextContainer = styled.View`
-  flex-direction: row;
-  justify-content: flex-end;
+const AddStopoverButton = styled(LinearGradient)`
+  padding: 2px 10px;
 
-  width: 100%;
-
-  margin-top: 27px;
-`;
-
-const HiddenBox = styled.View`
-  height: 50px;
+  border-radius: 7px;
 `;
 
 export default CourseScreen;

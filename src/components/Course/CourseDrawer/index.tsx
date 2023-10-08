@@ -12,12 +12,14 @@ import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
 
-import { BoldStyledText, StyledText } from "styles/globalStyles";
+import { StyledText } from "styles/globalStyles";
 
 import { RootState } from "redux/reducers";
 import { setTranslateY, animateDrawer } from "redux/slice/courseDrawerSlice";
 
 import { Shadow } from "react-native-shadow-2";
+
+import Course from "./Course";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
@@ -86,44 +88,28 @@ const CourseDrawer = () => {
             >
               <DrawerKnob />
               <ContentsContainer>
-                <StyledText style={{ fontSize: 15, width: "100%" }}>
-                  추천 코스
-                </StyledText>
+                <HeaderTitle>
+                  <Image
+                    source={require("@assets/icon/star.png")}
+                    style={{ width: 15, height: 15 }}
+                  />
+                  <StyledText style={{ fontSize: 15, width: "100%" }}>
+                    추천 코스
+                  </StyledText>
+                </HeaderTitle>
                 <GradientLine
                   colors={["#518FFF", "#33E1C0"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                 />
                 <ScrollView
-                  contentContainerStyle={{ gap: 40 }}
+                  contentContainerStyle={{ gap: 20 }}
                   bounces={false}
                   showsVerticalScrollIndicator={false}
                 >
-                  <CourseContainer>
-                    <Image
-                      source={require("@assets/icon/star.png")}
-                      style={{ width: 60, height: 60 }}
-                    />
-                    <BoldStyledText
-                      style={{ fontSize: 15 }}
-                    >{`A 코스`}</BoldStyledText>
-                    <ButtonContainer>
-                      <Image
-                        source={require("@assets/icon/share.png")}
-                        style={{ width: 15, height: 15 }}
-                      />
-                      <Image
-                        source={require("@assets/icon/box.png")}
-                        style={{ width: 15, height: 15 }}
-                      />
-                      <Image
-                        source={require("@assets/icon/unfold.png")}
-                        style={{ width: 15, height: 15 }}
-                      />
-                    </ButtonContainer>
-                  </CourseContainer>
-                  <CourseContainer></CourseContainer>
-                  <CourseContainer></CourseContainer>
+                  <Course />
+                  <Course />
+                  <Course />
                 </ScrollView>
               </ContentsContainer>
             </View>
@@ -153,6 +139,11 @@ const ContentsContainer = styled.View`
   margin-top: 30px;
 `;
 
+const HeaderTitle = styled.View`
+  flex-direction: row;
+  gap: 3px;
+`;
+
 const GradientLine = styled(LinearGradient)`
   width: 100%;
   height: 2px;
@@ -163,21 +154,17 @@ const GradientLine = styled(LinearGradient)`
 
 const CourseContainer = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  gap: 15px;
 
   width: 100%;
   height: 84px;
 
+  border: 1px solid #7fcfe9;
   border-radius: 10px;
 
   padding: 10px 10px;
 
-  background-color: #efeff0;
-`;
-
-const ButtonContainer = styled.View`
-  flex-direction: row;
-  gap: 5px;
+  background-color: white;
 `;
 
 export default CourseDrawer;
