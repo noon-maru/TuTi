@@ -30,7 +30,7 @@ const ExploreDrawer = () => {
   const translateY = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     dispatch(setTranslateY(translateY));
-  }, []);
+  }, [dispatch, translateY]);
 
   const { isDrawerOpen, exploreContainerHeight } = useSelector(
     (state: RootState) => state.drawer
@@ -76,7 +76,6 @@ const ExploreDrawer = () => {
                 borderTopEndRadius: 30,
 
                 paddingTop: 15,
-                paddingBottom: 15,
 
                 backgroundColor: "white",
               }}
@@ -85,6 +84,11 @@ const ExploreDrawer = () => {
               <Inform>지역별 추천 장소를 확인해보세요!</Inform>
               <LoopList />
               <PlaceList />
+              <ShadowContainer>
+                <Shadow distance={40} offset={[0, 0]} startColor="#fff">
+                  <View style={{ width: SCREEN_WIDTH }} />
+                </Shadow>
+              </ShadowContainer>
             </View>
           </Shadow>
         </Container>
@@ -110,6 +114,11 @@ const DrawerKnob = styled.View`
 const Inform = styled(StyledText)`
   font-size: 13px;
   color: #9292b9;
+`;
+
+const ShadowContainer = styled.View`
+  position: absolute;
+  bottom: 0;
 `;
 
 export default ExploreDrawer;

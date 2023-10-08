@@ -88,8 +88,10 @@ const Container = styled.TouchableOpacity`
 
   padding: 8px;
 
-  background-color: #efeff0;
+  border: 1px solid #7fcfe9;
   border-radius: 10px;
+
+  background-color: white;
 `;
 
 const SpinnerContainer = styled.View`
@@ -114,14 +116,13 @@ const InformContainer = styled.View`
 `;
 
 const TextContainer = styled.View`
-  width: 100px;
   gap: 3px;
 
   margin-top: 5px;
 `;
 
 const PlaceName = styled(BoldStyledText)`
-  font-size: 15px;
+  font-size: 17px;
   color: black;
 `;
 
@@ -130,7 +131,7 @@ const TagContainer = styled.View`
 `;
 
 const Tag = styled(StyledText)`
-  font-size: 10px;
+  font-size: 13px;
   color: #6b6b6b;
 `;
 
@@ -148,7 +149,7 @@ const Heart = styled.Image`
 `;
 
 const PlaceNumberHearts = styled(GradientText)`
-  font-size: 11px;
+  font-size: 13px;
 `;
 
 export default memo(Place);

@@ -23,14 +23,9 @@ const TouchablePopover = ({ sortData, sortOrder }: TouchablePopoverProps) => {
         </TouchableOpacity>
       }
       popoverStyle={{
-        width: 80,
-
         borderRadius: 10,
-        borderWidth: 0.5,
-        borderLeftColor: "#EFEFF0",
-        borderRightColor: "#EFEFF0",
-        borderTopColor: "#EFEFF0",
-        borderBottomColor: "#EFEFF0",
+        borderWidth: 1,
+        borderColor: "#7FCFE9",
       }}
       backgroundStyle={{ opacity: 0 }}
       placement={PopoverPlacement.BOTTOM}
@@ -80,7 +75,7 @@ const TouchablePopover = ({ sortData, sortOrder }: TouchablePopoverProps) => {
 };
 
 const PopoverList = styled.View`
-  margin: 10px;
+  margin: 15px;
 
   gap: 8px;
 `;
@@ -89,7 +84,7 @@ const ListHeaderText = styled(BoldStyledText)`
   align-items: flex-end;
 
   text-decoration-line: underline;
-  font-size: 11px;
+  font-size: 14px;
   color: black;
 `;
 
@@ -97,7 +92,7 @@ const PopoverListText = styled(BoldStyledText)`
   align-items: flex-end;
 
   text-decoration-line: underline;
-  font-size: 11px;
+  font-size: 14px;
   color: black;
 `;
 

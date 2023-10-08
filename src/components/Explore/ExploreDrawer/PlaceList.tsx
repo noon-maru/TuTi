@@ -34,7 +34,7 @@ export interface PlaceData {
 
 export type SortOrder = "recommend" | "recent" | "highHeart" | "lowHeart";
 
-const ITEM_GAP = 17;
+const ITEM_GAP = 15;
 
 const getPlaceData = async (region: string) => {
   try {
@@ -124,12 +124,14 @@ const PlaceList = () => {
         renderItem={renderItem}
         ItemSeparatorComponent={renderSeparator}
         keyExtractor={(item) => item._id}
+        showsVerticalScrollIndicator={false}
       />
     </Container>
   );
 };
 
 const Container = styled.View`
+  flex: 1;
   justify-content: center;
 
   width: ${SCREEN_WIDTH - 60}px;
@@ -138,7 +140,7 @@ const Container = styled.View`
 const ListHeader = styled.View`
   align-items: flex-end;
 
-  height: 25px;
+  height: 35px;
 `;
 
 export default PlaceList;

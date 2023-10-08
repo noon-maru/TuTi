@@ -35,7 +35,7 @@ const regions = [
 ];
 
 const ITEM_WIDTH = 45;
-const ITEM_GAP = 7;
+const ITEM_GAP = 5;
 
 const LoopList = () => {
   const { region } = useSelector((state: RootState) => state.drawer);
@@ -64,7 +64,7 @@ const LoopList = () => {
     ({ item }: { item: string }) => (
       <LoopListItem item={item} isSelected={item === region} />
     ),
-    [region] // 의존성 배열에 region 추가
+    [region]
   );
 
   const renderSeparator = useCallback(
@@ -130,7 +130,7 @@ const LoopList = () => {
 };
 
 const Container = styled.View`
-  height: 35px; /* 그림자 공간을 생각해 5px의 여유 공간을 줌 */
+  height: 40px;
 `;
 
 export default LoopList;
