@@ -34,7 +34,7 @@ const regions = [
   "제주",
 ];
 
-const ITEM_WIDTH = 45;
+const ITEM_WIDTH = 60;
 const ITEM_GAP = 5;
 
 const LoopList = () => {
