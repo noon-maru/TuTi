@@ -59,7 +59,7 @@ const BoxScreen = () => {
                 colors={
                   isCourse
                     ? ["#1F78FC80", "#33C5AD80"]
-                    : ["#00000000", "#00000000"]
+                    : ["#1F78FC40", "#33C5AD40"]
                 }
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
@@ -73,7 +73,7 @@ const BoxScreen = () => {
               <TabButton
                 colors={
                   isCourse
-                    ? ["#00000000", "#00000000"]
+                    ? ["#1F78FC40", "#33C5AD40"]
                     : ["#1F78FC80", "#33C5AD80"]
                 }
                 start={{ x: 0, y: 0 }}
@@ -81,7 +81,7 @@ const BoxScreen = () => {
               >
                 <Image
                   source={require("@assets/icon/heart(red).png")}
-                  style={{ width: 20, height: 20 }}
+                  style={{ width: 15, height: 15 }}
                 />
                 <StyledText style={{ fontSize: 17, color: "black" }}>
                   {" 찜 한 장소"}
@@ -146,8 +146,10 @@ const TabButtonContainer = styled.View`
 
 const TabButton = styled(LinearGradient)`
   flex-direction: row;
+  align-items: center;
+
   width: 100%;
-  padding: 6px 10px;
+  padding: 6px 17px;
 
   border-radius: 10px;
 `;

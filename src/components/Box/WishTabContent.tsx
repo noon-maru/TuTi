@@ -23,7 +23,6 @@ const WishTabContent = ({ title, address }: WishTabContentProps) => {
 };
 
 const Container = styled.View`
-  width: 330px;
   height: 150px;
 
   padding: 15px;
