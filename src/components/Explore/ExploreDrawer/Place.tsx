@@ -72,7 +72,7 @@ const Place = ({ placeData }: { placeData: PlaceData }) => {
         <PlaceNumberHearts
           colors={["#8EFF5A", "#605CFF"]} // 그라데이션 색상 배열
           start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
-          end={{ x: 0, y: 1 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
+          end={{ x: 1, y: 1 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
         >
           {placeData.numberHearts}
         </PlaceNumberHearts>

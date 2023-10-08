@@ -1,4 +1,8 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { Image } from "react-native";
+
+import MaskedView from "@react-native-masked-view/masked-view";
+import LinearGradient from "react-native-linear-gradient";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -20,16 +24,34 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
-      tabBar={(props) => <CustomTabBar {...props} />}
+      tabBar={(props: any) => <CustomTabBar {...props} />}
+      sceneContainerStyle={{ backgroundColor: "white" }}
       screenOptions={({ route }) => ({
         headerShown: false,
+        // 해당 탭이 선택된 경우에만 점 표시
         tabBarLabel: ({ focused }) => {
           if (focused && route.name !== "Explore") {
             return (
               <SelectHighlight
                 source={require("assets/icon/circle(color).png")}
               />
-            ); // 해당 탭이 선택된 경우에만 점 표시
+            );
+          } else if (focused && route.name === "Explore") {
+            return (
+              <ExploreHighlightContainer>
+                <MaskedView
+                  style={{ flex: 1 }}
+                  maskElement={<ExploreHighlight />}
+                >
+                  <LinearGradient
+                    colors={["#4482FF", "#00D1A9"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{ flex: 1 }}
+                  />
+                </MaskedView>
+              </ExploreHighlightContainer>
+            );
           }
           return <NonSelectHighlight />; // 선택되지 않은 경우에는 점 숨김
         },
@@ -45,7 +67,7 @@ const BottomTabNavigator = () => {
             iconSize = 30;
           } else if (route.name === "Explore") {
             iconName = require("assets/icon/explore(color).png");
-            iconSize = 35;
+            iconSize = 40;
           } else if (route.name === "Course") {
             iconName = require("assets/icon/route(black).png");
             iconSize = 30;
@@ -83,6 +105,21 @@ const NonSelectHighlight = styled.View`
   width: 7px;
   height: 7px;
   margin-bottom: 5px;
+`;
+
+const ExploreHighlightContainer = styled.View`
+  width: 50px;
+  height: 50px;
+  margin-top: -51px;
+  margin-bottom: 13px;
+`;
+
+const ExploreHighlight = styled.View`
+  width: 50px;
+  height: 50px;
+
+  border: 3px solid black;
+  border-radius: 25px;
 `;
 
 export default BottomTabNavigator;

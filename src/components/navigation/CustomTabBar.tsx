@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 import { useDispatch } from "react-redux";
@@ -22,25 +22,29 @@ const CustomTabBar = ({
 }: TabNavigationProps) => {
   const dispatch = useDispatch();
 
-  const handleNavigate = (name: string) => {
-    dispatch(navigate({ name }));
-  };
+  const handleNavigate = useCallback(
+    (name: string) => {
+      dispatch(navigate({ name }));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (state.index !== null) {
       handleNavigate(state.routes[state.index].name);
     }
-  }, [state.index]);
+  }, [state.index, state.routes, handleNavigate]);
 
   const insets = useSafeAreaInsets();
   return (
-    <BorderGradient
-      colors={["#55D31C", "#5270FF"]} // 그라데이션 색상 배열
-      start={{ x: 0.45, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
-      end={{ x: 0.75, y: 0 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
-      height={insets.bottom}
-    >
-      <Container height={insets.bottom}>
+    <>
+      <BorderGradient
+        colors={["#55D31C", "#5270FF"]} // 그라데이션 색상 배열
+        start={{ x: 0.45, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
+        end={{ x: 0.75, y: 0 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
+        height={insets.bottom}
+      />
+      <Container marginBottom={insets.bottom}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
 
@@ -69,23 +73,24 @@ const CustomTabBar = ({
           );
         })}
       </Container>
-    </BorderGradient>
+    </>
   );
 };
 
 const BorderGradient = styled(LinearGradient)<{ height: number }>`
-  height: ${(props) => props.height + 70}px;
+  height: 2px;
 `;
 
-const Container = styled.View<{ height: number }>`
-  top: 2px;
+const Container = styled.View<{ marginBottom: number }>`
   flex-direction: row;
+
   background-color: white;
-  height: ${(props) => props.height + 70}px;
+  height: 70px;
 `;
 
 const TabItemContainer = styled.TouchableOpacity`
   flex: 1;
+  justify-content: center;
   align-items: center;
   gap: 6px;
 `;

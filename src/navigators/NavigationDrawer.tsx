@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import { useState } from "react";
 import {
   Alert,
@@ -124,6 +125,7 @@ const NavigationDrawer = () => {
         drawerType: "front",
         swipeEnabled: false,
         overlayColor: "rgba(0, 0, 0, 0)",
+        sceneContainerStyle: { backgroundColor: "white" },
         header: (props) => <CustomHeader {...props} />,
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}

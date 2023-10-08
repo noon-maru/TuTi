@@ -14,7 +14,7 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
 
-  background-color: white;
+  /* background-color: white; */
 `;
 
 export default PlaceImageScreen;
