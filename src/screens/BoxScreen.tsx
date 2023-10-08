@@ -1,39 +1,116 @@
-import { Dimensions, Text } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import { useEffect, useState } from "react";
+import { Dimensions, Image, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import LinearGradient from "react-native-linear-gradient";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components/native";
-import CourseTabContent from "components/Tour/CourseContent";
+import { StyledText } from "@styles/globalStyles";
+
+import { RootState } from "@redux/reducers";
+import { Course, addCourse } from "@redux/slice/courseSlice";
+
+import CourseTabContent from "@components/Box/CourseTabContent";
+import WishTabContent from "@components/Box/WishTabContent";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
 const BoxScreen = () => {
   const insets = useSafeAreaInsets();
 
+  const dispatch = useDispatch();
+  const { courses } = useSelector((state: RootState) => state.courses);
+
+  const [isCourse, setIsCourse] = useState<boolean>(true);
+
+  useEffect(() => {
+    const courseArr: Course[] = [
+      {
+        courseName: "A 코스",
+        duration: "TIME 30 ~ 40",
+        places: ["a 장소", "b 장소", "c 장소"],
+        isProgress: true,
+      },
+      {
+        courseName: "B 코스",
+        duration: "TIME 10 ~ 20",
+        places: ["a 장소"],
+        isProgress: false,
+      },
+      {
+        courseName: "C 코스",
+        duration: "TIME 40 ~ 60",
+        places: ["a 장소", "b 장소"],
+        isProgress: false,
+      },
+    ];
+    courseArr.map((course) => dispatch(addCourse(course)));
+  }, [dispatch]);
+
   return (
     <>
       <StatusBarBackgroundColor height={insets.top} />
       <Container>
         <MainContentsContainer>
-          <TabContentsContainer
-            contentContainerStyle={{ gap: 10 }}
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            scrollEventThrottle={16}
-          >
-            <CourseTabContent
-              title={"A 코스"}
-              duration={"TIME 30 ~ 40"}
-            ></CourseTabContent>
-            <CourseTabContent
-              title={"B 코스"}
-              duration={"TIME 10 ~ 20"}
-            ></CourseTabContent>
-            <CourseTabContent
-              title={"C 코스"}
-              duration={"TIME 40 ~ 60"}
-            ></CourseTabContent>
-          </TabContentsContainer>
+          <TabButtonContainer>
+            <Pressable onPress={() => setIsCourse(true)}>
+              <TabButton
+                colors={
+                  isCourse
+                    ? ["#1F78FC80", "#33C5AD80"]
+                    : ["#00000000", "#00000000"]
+                }
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <StyledText style={{ fontSize: 17, color: "black" }}>
+                  저장된 코스
+                </StyledText>
+              </TabButton>
+            </Pressable>
+            <Pressable onPress={() => setIsCourse(false)}>
+              <TabButton
+                colors={
+                  isCourse
+                    ? ["#00000000", "#00000000"]
+                    : ["#1F78FC80", "#33C5AD80"]
+                }
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+              >
+                <Image
+                  source={require("@assets/icon/heart(red).png")}
+                  style={{ width: 20, height: 20 }}
+                />
+                <StyledText style={{ fontSize: 17, color: "black" }}>
+                  {" 찜 한 장소"}
+                </StyledText>
+              </TabButton>
+            </Pressable>
+          </TabButtonContainer>
+          {isCourse ? (
+            <TabContentsContainer
+              contentContainerStyle={{ gap: 10 }}
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              scrollEventThrottle={16}
+            >
+              {courses.map((course, index) => (
+                <CourseTabContent course={course} key={index} />
+              ))}
+            </TabContentsContainer>
+          ) : (
+            <TabContentsContainer
+              contentContainerStyle={{ gap: 10 }}
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              scrollEventThrottle={16}
+            >
+              <WishTabContent title={"A 장소"} address={"대충 적당한 주소"} />
+              <WishTabContent title={"B 장소"} address={"대충 적당한 주소"} />
+            </TabContentsContainer>
+          )}
         </MainContentsContainer>
       </Container>
     </>
@@ -54,15 +131,6 @@ const Container = styled.View`
   margin-top: 53px;
 `;
 
-const SearchBoxContainer = styled.View`
-  position: relative;
-  justify-content: flex-end;
-  align-items: center;
-
-  width: ${SCREEN_WIDTH}px;
-  height: 51px;
-`;
-
 const MainContentsContainer = styled.View`
   flex: 1;
 
@@ -77,6 +145,7 @@ const TabButtonContainer = styled.View`
 `;
 
 const TabButton = styled(LinearGradient)`
+  flex-direction: row;
   width: 100%;
   padding: 6px 10px;
 
@@ -87,20 +156,6 @@ const TabContentsContainer = styled.ScrollView`
   flex: 1;
 
   margin-top: 8px;
-`;
-
-const Submit = styled.Pressable`
-  align-self: flex-end;
-
-  justify-content: center;
-  align-items: center;
-
-  width: 90px;
-  height: 25px;
-
-  border-radius: 10px;
-
-  background-color: gray;
 `;
 
 export default BoxScreen;
