@@ -39,6 +39,7 @@ const config = {
       },
     },
     PlaceImage: "placeimage",
+    Sponser: "sponser",
   },
 };
 

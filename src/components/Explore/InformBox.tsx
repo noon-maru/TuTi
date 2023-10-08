@@ -73,9 +73,11 @@ const InformBox = () => {
           }}
         >
           <HeaderContainer>
-            <BoldStyledText style={{ fontSize: 20 }}>
-              {marker.markerName}
-            </BoldStyledText>
+            <Pressable onPress={() => navigation.navigate("Sponser" as never)}>
+              <BoldStyledText style={{ fontSize: 20 }}>
+                {marker.markerName}
+              </BoldStyledText>
+            </Pressable>
             <ImageContainer>
               <Pressable onPress={() => onWish()}>
                 {marker.isWishClicked ? (

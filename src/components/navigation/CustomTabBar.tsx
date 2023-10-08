@@ -47,8 +47,8 @@ const CustomTabBar = ({
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
 
-          // 하단 탭바에 Tour Screen은 안뜨도록 커스텀
-          if (route.name === "Tour") return null;
+          // 하단 탭바에 Tour 및 Sponser Screen은 안뜨도록 커스텀
+          if (route.name === "Tour" || route.name === "Sponser") return null;
 
           const { options } = descriptors[route.key];
 

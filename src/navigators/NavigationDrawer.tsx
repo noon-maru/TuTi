@@ -25,7 +25,8 @@ import ImageScreenCustomHeader from "components/navigation/ImageScreenCustomHead
 import styled from "styled-components/native";
 import { StyledText, BoldStyledText } from "styles/globalStyles";
 
-import PlaceImageScreen from "screens/PlaceImageScreen";
+import PlaceImageScreen from "@screens/PlaceImageScreen";
+import SponserScreen from "@screens/SponserScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -142,6 +143,14 @@ const NavigationDrawer = () => {
       <Drawer.Screen
         name="PlaceImage"
         component={PlaceImageScreen}
+        options={{
+          header: (props) => <ImageScreenCustomHeader {...props} />, // CustomHeader 컴포넌트를 렌더링
+          headerTransparent: true, // 커스텀 헤더를 투명하게 만듭니다.
+        }}
+      />
+      <Drawer.Screen
+        name="Sponser"
+        component={SponserScreen}
         options={{
           header: (props) => <ImageScreenCustomHeader {...props} />, // CustomHeader 컴포넌트를 렌더링
           headerTransparent: true, // 커스텀 헤더를 투명하게 만듭니다.
