@@ -79,8 +79,6 @@ const Container = styled.View`
   margin-top: 53px;
 
   padding: 30px;
-
-  background-color: white;
 `;
 
 const WishPlaceTextContainer = styled.View`

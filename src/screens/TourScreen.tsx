@@ -112,8 +112,6 @@ const Container = styled.View`
 
   margin-top: 53px;
   padding: 25px;
-
-  background-color: white;
 `;
 
 const ContentsContainer = styled.ScrollView`
