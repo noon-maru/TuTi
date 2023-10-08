@@ -42,7 +42,6 @@ const CustomTabBar = ({
         colors={["#55D31C", "#5270FF"]} // 그라데이션 색상 배열
         start={{ x: 0.45, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
         end={{ x: 0.75, y: 0 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
-        height={insets.bottom}
       />
       <Container marginBottom={insets.bottom}>
         {state.routes.map((route, index) => {
@@ -77,7 +76,7 @@ const CustomTabBar = ({
   );
 };
 
-const BorderGradient = styled(LinearGradient)<{ height: number }>`
+const BorderGradient = styled(LinearGradient)`
   height: 2px;
 `;
 
