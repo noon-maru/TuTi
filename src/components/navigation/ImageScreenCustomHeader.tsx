@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "redux/reducers";
 
 import styled from "styled-components/native";
+import { StyledText } from "@styles/globalStyles";
 
-import { toggleWishClick } from "redux/slice/markerSlice";
-import { StyledText } from "styles/globalStyles";
+import { toggleWishClick } from "@redux/slice/markerSlice";
+import { postMessage } from "@redux/slice/messageSlice";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -20,6 +21,11 @@ const ImageScreenCustomHeader = ({ navigation }: { navigation: any }) => {
 
   const onWish = async () => {
     dispatch(toggleWishClick(id));
+    const jsonData = {
+      type: "wishClick",
+      data: {},
+    };
+    dispatch(postMessage(JSON.stringify(jsonData)));
     return marker.isWishClicked;
   };
 

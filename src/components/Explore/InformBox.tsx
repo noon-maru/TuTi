@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions, View, Share, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { Shadow } from "react-native-shadow-2";
@@ -9,10 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styled from "styled-components/native";
 
-import { BoldStyledText, StyledText } from "styles/globalStyles";
+import { BoldStyledText, StyledText } from "@styles/globalStyles";
 
-import { RootState } from "redux/reducers";
-import { toggleWishClick } from "redux/slice/markerSlice";
+import { RootState } from "@redux/reducers";
+import { setMarkerInfo, toggleWishClick } from "@redux/slice/markerSlice";
+import { postMessage } from "@redux/slice/messageSlice";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -56,6 +57,17 @@ const InformBox = () => {
     dispatch(toggleWishClick(id));
     return marker.isWishClicked;
   };
+
+  useEffect(() => {
+    if (marker.isLoading === true) {
+      dispatch(setMarkerInfo({ isLoading: false }));
+      const jsonData = {
+        type: "wishClick",
+        data: {},
+      };
+      dispatch(postMessage(JSON.stringify(jsonData)));
+    }
+  }, [dispatch, marker.placeId, marker.isLoading]);
 
   return (
     <Container>

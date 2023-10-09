@@ -50,6 +50,7 @@ const getWishPlace = async (userId: string) => {
 const KakaoMapWebView = () => {
   const dispatch = useDispatch();
   const message = useSelector((state: RootState) => state.message.message);
+  const { isWishClicked } = useSelector((state: RootState) => state.marker);
   const { id } = useSelector((state: RootState) => state.user);
   const webViewRef = useRef<WebView | null>(null);
 
@@ -67,13 +68,13 @@ const KakaoMapWebView = () => {
         setDeeplink(address!);
       }
     }
-  }, []);
+  }, [route]);
 
   useEffect(() => {
     (async () => {
       setWishPlaces(await getWishPlace(id));
     })();
-  }, []);
+  }, [id, isWishClicked]);
 
   useEffect(() => {
     if (message && webViewRef.current) {
@@ -138,12 +139,8 @@ const KakaoMapWebView = () => {
       onMessage={handleOnMessage}
       ref={webViewRef}
       source={{ uri: SERVER_URL + "/kakaomap" }}
+      // source={{ uri: "https://code.tutiserver.kro.kr/proxy/3000/kakaomap" }}
     />
-    // <KakaoMap
-    //   onMessage={handleOnMessage}
-    //   ref={webViewRef}
-    //   source={{ uri: "https://code.tutiserver.kro.kr/proxy/3000/kakaomap" }}
-    // />
   );
 };
 
