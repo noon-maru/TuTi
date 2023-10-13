@@ -21,7 +21,7 @@ const PlaceSearch = ({ title, place, setPlace }: PlaceSearchProps) => {
         <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
         {/* TODO: onPress에 코스에 등록된 장소 제거 기능 추가해야 됨 */}
         <Pressable onPress={() => {}}>
-          <Icon name="minuscircleo" size={15} />
+          <Icon name="minuscircleo" size={15} color="black" />
         </Pressable>
       </HeaderContainer>
       <GradientLine
