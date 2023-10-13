@@ -94,7 +94,7 @@ const Container = styled.View`
 `;
 
 const AddStopoverButton = styled(LinearGradient)`
-  padding: 2px 10px;
+  padding: 5px 12px;
 
   border-radius: 7px;
 `;

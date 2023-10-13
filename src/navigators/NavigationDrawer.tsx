@@ -1,11 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import { useState } from "react";
-import {
-  Alert,
-  Image,
-  TouchableOpacity,
-  LayoutChangeEvent,
-} from "react-native";
+import { Alert, TouchableOpacity, LayoutChangeEvent } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -100,7 +96,7 @@ const CustomDrawerContent = ({ navigation }: any) => {
       <DrawerHeaderContainer width={drawerWidth}>
         <OptionContainer>
           <TouchableOpacity onPress={() => {}}>
-            <Image source={require("assets/icon/setting.png")} />
+            <Icon name="settings" size={22} color="black" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.closeDrawer()}>
             <Arrow source={require("assets/icon/arrow.png")} />

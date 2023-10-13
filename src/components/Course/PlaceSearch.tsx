@@ -1,5 +1,6 @@
-import Icon from "react-native-vector-icons/FontAwesome";
+import { Image, Pressable } from "react-native";
 
+import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
@@ -16,7 +17,13 @@ interface PlaceSearchProps {
 const PlaceSearch = ({ title, place, setPlace }: PlaceSearchProps) => {
   return (
     <Container>
-      <StyledText style={{ fontSize: 15, width: "100%" }}>{title}</StyledText>
+      <HeaderContainer>
+        <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
+        {/* TODO: onPress에 코스에 등록된 장소 제거 기능 추가해야 됨 */}
+        <Pressable onPress={() => {}}>
+          <Icon name="minuscircleo" size={15} />
+        </Pressable>
+      </HeaderContainer>
       <GradientLine
         colors={["#518FFF", "#33E1C0"]}
         start={{ x: 0, y: 0 }}
@@ -24,7 +31,10 @@ const PlaceSearch = ({ title, place, setPlace }: PlaceSearchProps) => {
       />
       <Modal searchText={place} setSearchText={setPlace}>
         <SearchBox>
-          <Icon name="search" size={20} color="gray" />
+          <Image
+            source={require("@assets/icon/search.png")}
+            style={{ width: 20, height: 20 }}
+          />
         </SearchBox>
       </Modal>
     </Container>
@@ -38,6 +48,13 @@ const Container = styled.View`
   width: 100%;
 
   margin-top: 10px;
+`;
+
+const HeaderContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
 `;
 
 const GradientLine = styled(LinearGradient)`

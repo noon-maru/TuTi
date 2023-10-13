@@ -1,6 +1,6 @@
 import { Dimensions, Image, LayoutChangeEvent } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Entypo";
 
 import { useDispatch } from "react-redux";
 
@@ -36,7 +36,7 @@ const SponserScreen = () => {
         </MainImageFrame>
         <ContentsContainer>
           <Location>
-            <Icon name="map-pin" size={22} color="black" />
+            <Icon name="location-pin" size={22} color="black" />
             <StyledText style={{ fontSize: 17 }}>{"대충 주소"}</StyledText>
           </Location>
           <RatingContainer>
