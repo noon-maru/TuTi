@@ -1,26 +1,49 @@
+import { useState } from "react";
 import { Image, Pressable } from "react-native";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
+import { BoldStyledText, StyledText } from "@styles/globalStyles";
+
+import { SERVER_URL } from "@env";
+
+import { Course } from "@redux/slice/courseSlice";
 
 import Modal from "./Modal";
-import { StyledText } from "styles/globalStyles";
+import FastImage from "react-native-fast-image";
 
 interface PlaceSearchProps {
+  index: number;
   title: string;
-  place: string;
-  setPlace: React.Dispatch<React.SetStateAction<string>>;
+  course: Course | null;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }
 
-const PlaceSearch = ({ title, place, setPlace }: PlaceSearchProps) => {
+const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
+  const [place, setPlace] = useState<string>("");
+
+  const handlePlaceOust = () => {
+    setCourse((prev) => ({
+      ...prev,
+      places: prev.places.map((value, i) => {
+        if (i === index) {
+          // 해당 장소의 name을 빈 문자열("")로 변경
+          return { ...value, name: "" };
+        } else {
+          // 다른 장소는 그대로 유지
+          return value;
+        }
+      }),
+    }));
+  };
+
   return (
     <Container>
       <HeaderContainer>
         <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
-        {/* TODO: onPress에 코스에 등록된 장소 제거 기능 추가해야 됨 */}
-        <Pressable onPress={() => {}}>
+        <Pressable onPress={handlePlaceOust}>
           <Icon name="minuscircleo" size={15} color="black" />
         </Pressable>
       </HeaderContainer>
@@ -31,10 +54,25 @@ const PlaceSearch = ({ title, place, setPlace }: PlaceSearchProps) => {
       />
       <Modal searchText={place} setSearchText={setPlace}>
         <SearchBox>
-          <Image
-            source={require("@assets/icon/search.png")}
-            style={{ width: 20, height: 20 }}
-          />
+          {course?.places[index]?.name ? (
+            <ContentsContainer>
+              <InformContainer>
+                <FastImage
+                  source={{
+                    uri: SERVER_URL + course.places[index].image,
+                    cache: FastImage.cacheControl.immutable,
+                  }}
+                  style={{ width: 70, height: 70, borderRadius: 6 }}
+                />
+                <BoldStyledText>{course.places[index].name}</BoldStyledText>
+              </InformContainer>
+            </ContentsContainer>
+          ) : (
+            <Image
+              source={require("@assets/icon/search.png")}
+              style={{ width: 20, height: 20 }}
+            />
+          )}
         </SearchBox>
       </Modal>
     </Container>
@@ -66,6 +104,7 @@ const GradientLine = styled(LinearGradient)`
 `;
 
 const SearchBox = styled.View`
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 
@@ -76,6 +115,20 @@ const SearchBox = styled.View`
   border-radius: 10px;
 
   background-color: white;
+`;
+
+const ContentsContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+
+  padding: 0 10px;
+`;
+
+const InformContainer = styled.View`
+  flex-direction: row;
+  gap: 13px;
 `;
 
 export default PlaceSearch;

@@ -2,8 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Course {
   courseName: string;
-  duration: string;
-  places: string[];
+  travelTime: number[];
+  places: Place[];
+  totalFee: number;
   isProgress: boolean;
 }
 
@@ -19,6 +20,9 @@ const coursesSlice = createSlice({
   name: "courses",
   initialState,
   reducers: {
+    setCourses: (state, action: PayloadAction<Course[]>) => {
+      state.courses = action.payload;
+    },
     addCourse: (state, action: PayloadAction<Course>) => {
       state.courses = [...state.courses, action.payload];
     },
@@ -49,7 +53,12 @@ const coursesSlice = createSlice({
   },
 });
 
-export const { addCourse, updateCourse, deleteCourse, toggleCourse } =
-  coursesSlice.actions;
+export const {
+  setCourses,
+  addCourse,
+  updateCourse,
+  deleteCourse,
+  toggleCourse,
+} = coursesSlice.actions;
 
 export default coursesSlice.reducer;

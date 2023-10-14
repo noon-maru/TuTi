@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Pressable, View } from "react-native";
+import { useCallback, useState } from "react";
+import { FlatList, Pressable, View } from "react-native";
 import Popover, { PopoverPlacement } from "react-native-popover-view";
 import { Shadow } from "react-native-shadow-2";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -16,6 +16,11 @@ interface ModalProps {
 
 const Modal = ({ searchText, setSearchText, children }: ModalProps) => {
   const [visible, setVisible] = useState(false);
+
+  const renderSeparator = useCallback(
+    () => <View style={{ height: 10 }} />,
+    []
+  );
 
   return (
     <Popover
@@ -70,6 +75,13 @@ const Modal = ({ searchText, setSearchText, children }: ModalProps) => {
             </View>
           </Shadow>
         </SearchBoxContainer>
+        <FlatList
+          data={[]}
+          renderItem={() => {}}
+          renderSeparator={renderSeparator}
+          keyExtractor={(item) => item}
+          showsVerticalScrollIndicator={false}
+        />
       </PopoverContainer>
     </Popover>
   );

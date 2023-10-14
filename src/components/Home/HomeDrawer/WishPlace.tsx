@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
+
 import axios from "axios";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
@@ -11,14 +12,6 @@ import { RootState } from "redux/reducers";
 
 import WishHeader from "./WishHeader";
 import WishItem from "./WishItem";
-
-interface WishPlaceData {
-  _id: string;
-  address: string;
-  image: string;
-  name: string;
-  region: string;
-}
 
 const isDevelopMode = DEVELOP_MODE === "true";
 
@@ -43,7 +36,7 @@ const getWishPlace = async (userId: string) => {
 const WishPlace = () => {
   const { id } = useSelector((state: RootState) => state.user);
 
-  const [wishPlaces, setWishPlaces] = useState<WishPlaceData[]>([]);
+  const [wishPlaces, setWishPlaces] = useState<WishPlace[]>([]);
 
   useFocusEffect(
     useCallback(() => {

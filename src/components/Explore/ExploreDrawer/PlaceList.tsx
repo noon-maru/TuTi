@@ -16,22 +16,6 @@ import TouchablePopover from "./TouchablePopover";
 const isDevelopMode = DEVELOP_MODE === "true";
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-interface tag {
-  tagName: string;
-  associatedCount: number;
-  relatedTags: any; // 관련 태그의 오브젝트id
-}
-
-export interface PlaceData {
-  _id: string;
-  region: string;
-  name: string;
-  address: string;
-  image: string;
-  numberHearts: number;
-  tags: tag[];
-}
-
 export type SortOrder = "recommend" | "recent" | "highHeart" | "lowHeart";
 
 const ITEM_GAP = 15;
@@ -59,7 +43,7 @@ const dateFromObjectId = (objectId: string) => {
 const PlaceList = () => {
   const { region } = useSelector((state: RootState) => state.drawer);
 
-  const [placeDataArray, setPlaceDataArray] = useState<PlaceData[]>([]);
+  const [placeDataArray, setPlaceDataArray] = useState<Place[]>([]);
   const [sortOrder, setSortOrder] = useState<string>("추천순");
 
   const sortData = (order: SortOrder) => {
@@ -105,7 +89,7 @@ const PlaceList = () => {
   }, [region]);
 
   const renderItem = useCallback(
-    ({ item }: { item: PlaceData }) => <Place placeData={item} />,
+    ({ item }: { item: Place }) => <Place placeData={item} />,
     []
   );
 

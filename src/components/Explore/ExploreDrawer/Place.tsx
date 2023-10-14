@@ -14,9 +14,7 @@ import { animateDrawer } from "redux/slice/drawerSlice";
 import GradientText from "components/GradientText";
 import Spinner from "components/Spinner";
 
-import { PlaceData } from "./PlaceList";
-
-const Place = ({ placeData }: { placeData: PlaceData }) => {
+const Place = ({ placeData }: { placeData: Place }) => {
   const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();

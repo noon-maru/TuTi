@@ -13,7 +13,7 @@ interface CourseContentProps {
 }
 
 const CourseTabContent = ({ course }: CourseContentProps) => {
-  const { courseName, duration, places, isProgress } = course;
+  const { courseName, travelTime, places, isProgress } = course;
 
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [ContentsBoxHeight, setContentsBoxHeight] = useState<number>(0);
@@ -58,7 +58,7 @@ const CourseTabContent = ({ course }: CourseContentProps) => {
             >{`□ ${courseName}`}</BoldStyledText>
             {isProgress ? (
               <StyledText style={{ fontSize: 13, color: "white" }}>
-                {duration}
+                {travelTime}
               </StyledText>
             ) : null}
           </TitleTextContainer>
@@ -79,7 +79,7 @@ const CourseTabContent = ({ course }: CourseContentProps) => {
         {places?.map((place, index) => (
           <PlaceContainer
             key={index}
-            placeName={place}
+            placeName={place.name}
             isLast={index === places.length - 1}
           />
         ))}

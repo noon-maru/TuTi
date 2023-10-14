@@ -15,7 +15,7 @@ interface CourseContentProps {
 }
 
 const CourseContent = ({ course }: CourseContentProps) => {
-  const { courseName, duration, places, isProgress } = course;
+  const { courseName, travelTime, places, isProgress } = course;
 
   const dispatch = useDispatch();
 
@@ -75,7 +75,7 @@ const CourseContent = ({ course }: CourseContentProps) => {
             >{`□ ${courseName}`}</BoldStyledText>
             {isProgress ? (
               <StyledText style={{ fontSize: 13, color: "white" }}>
-                {duration}
+                {travelTime}
               </StyledText>
             ) : null}
           </TitleTextContainer>
@@ -108,7 +108,7 @@ const CourseContent = ({ course }: CourseContentProps) => {
         {places?.map((place, index) => (
           <PlaceContainer
             key={index}
-            placeName={place}
+            placeName={place.name}
             isLast={index === places.length - 1}
           />
         ))}

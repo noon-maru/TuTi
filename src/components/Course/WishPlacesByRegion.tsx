@@ -1,16 +1,21 @@
 import { useRef, useState } from "react";
-import { Animated, Image, Pressable } from "react-native";
+import { Animated, Image, LayoutChangeEvent, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import styled from "styled-components/native";
 
-import { StyledText } from "styles/globalStyles";
+import styled from "styled-components/native";
+import { StyledText } from "@styles/globalStyles";
 
 interface WishPlacesByRegionProps {
-  title: string;
+  region: string;
+  wishPlaces: WishPlace[];
 }
 
-const WishPlacesByRegion = ({ title }: WishPlacesByRegionProps) => {
-  const [expanded, setExpanded] = useState(false);
+const WishPlacesByRegion = ({
+  region,
+  wishPlaces,
+}: WishPlacesByRegionProps) => {
+  const [expandBoxHeight, setExpandBoxHeight] = useState<number>(0);
+  const [expanded, setExpanded] = useState<boolean>(false);
   const dynamicHeight = useRef(new Animated.Value(0)).current;
 
   const toggleExpand = () => {
@@ -27,8 +32,13 @@ const WishPlacesByRegion = ({ title }: WishPlacesByRegionProps) => {
   const animatedStyle = {
     height: dynamicHeight.interpolate({
       inputRange: [0, 1],
-      outputRange: [28, 360], // 버튼의 높이를 확장하려면 이 값을 조절
+      outputRange: [28, expandBoxHeight + 40], // 버튼의 높이를 확장하려면 이 값을 조절
     }),
+  };
+
+  const handleContainerLayout = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    setExpandBoxHeight(height);
   };
 
   return (
@@ -38,21 +48,21 @@ const WishPlacesByRegion = ({ title }: WishPlacesByRegionProps) => {
           <Title>
             <Image
               source={require("@assets/icon/heart(red).png")}
-              style={{ width: 20, height: 20 }}
+              style={{ width: 15, height: 15 }}
             />
-            <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
+            <StyledText style={{ fontSize: 15 }}>{region}</StyledText>
           </Title>
           <HeaderRightSide>
             <StyledText style={{ fontSize: 10 }}>{"찜 한 장소"}</StyledText>
             {expanded ? (
               <Image
                 source={require("@assets/icon/unfold.png")}
-                style={{ width: 12, height: 11.74 }}
+                style={{ width: 15, height: 15 }}
               />
             ) : (
               <Image
                 source={require("@assets/icon/open.png")}
-                style={{ width: 12, height: 11.74 }}
+                style={{ width: 15, height: 15 }}
               />
             )}
           </HeaderRightSide>
@@ -63,28 +73,31 @@ const WishPlacesByRegion = ({ title }: WishPlacesByRegionProps) => {
           end={{ x: 1, y: 0 }}
         />
       </Pressable>
-      <PlacesContainer>
-        <Place
-          colors={["#C7DFFD", "#CCF0EB"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-        >
-          <StyledText style={{ fontSize: 15 }}>{`□ A 장소`}</StyledText>
-          <ButtonContainer>
-            <Image
-              source={require("@assets/icon/star.png")}
-              style={{ width: 15, height: 15 }}
-            />
-            <Image
-              source={require("@assets/icon/star.png")}
-              style={{ width: 15, height: 15 }}
-            />
-            <Image
-              source={require("@assets/icon/star.png")}
-              style={{ width: 15, height: 15 }}
-            />
-          </ButtonContainer>
-        </Place>
+      <PlacesContainer onLayout={handleContainerLayout}>
+        {wishPlaces.map((wishPlace, index) => (
+          <Place
+            key={index}
+            colors={["#C7DFFD", "#CCF0EB"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+          >
+            <StyledText>{`□ ${wishPlace.name}`}</StyledText>
+            <ButtonContainer>
+              <Image
+                source={require("@assets/icon/star.png")}
+                style={{ width: 15, height: 15 }}
+              />
+              <Image
+                source={require("@assets/icon/star.png")}
+                style={{ width: 15, height: 15 }}
+              />
+              <Image
+                source={require("@assets/icon/star.png")}
+                style={{ width: 15, height: 15 }}
+              />
+            </ButtonContainer>
+          </Place>
+        ))}
       </PlacesContainer>
     </Container>
   );
@@ -103,6 +116,7 @@ const Container = styled(Animated.View)`
 const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 
   height: 22px;
 
@@ -111,12 +125,14 @@ const Header = styled.View`
 
 const Title = styled.View`
   flex-direction: row;
+  align-items: center;
   gap: 3px;
 `;
 
 const HeaderRightSide = styled.View`
   flex-direction: row;
-  gap: 3px;
+  align-items: center;
+  gap: 7px;
 `;
 
 const GradientLine = styled(LinearGradient)`

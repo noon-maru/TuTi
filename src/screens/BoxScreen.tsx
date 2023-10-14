@@ -5,48 +5,62 @@ import LinearGradient from "react-native-linear-gradient";
 
 import { useDispatch, useSelector } from "react-redux";
 
+import axios from "axios";
+
 import styled from "styled-components/native";
 import { StyledText } from "@styles/globalStyles";
 
+import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
+
 import { RootState } from "@redux/reducers";
-import { Course, addCourse } from "@redux/slice/courseSlice";
+import { setCourses } from "@redux/slice/courseSlice";
 
 import CourseTabContent from "@components/Box/CourseTabContent";
 import WishTabContent from "@components/Box/WishTabContent";
 
+const isDevelopMode = DEVELOP_MODE === "true";
+
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
+
+const getCourse = async (userId: string) => {
+  try {
+    if (userId === "guest") return [];
+
+    let url = "";
+    if (isDevelopMode) url = DEVELOP_SERVER_URL + API + `/course/${userId}`;
+    else url = SERVER_URL + API + `/course/${userId}`;
+
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("네트워킹 오류:", error);
+    throw error;
+  }
+};
 
 const BoxScreen = () => {
   const insets = useSafeAreaInsets();
 
   const dispatch = useDispatch();
+
+  const { id } = useSelector((state: RootState) => state.user);
   const { courses } = useSelector((state: RootState) => state.courses);
 
   const [isCourse, setIsCourse] = useState<boolean>(true);
 
   useEffect(() => {
-    const courseArr: Course[] = [
-      {
-        courseName: "A 코스",
-        duration: "TIME 30 ~ 40",
-        places: ["a 장소", "b 장소", "c 장소"],
-        isProgress: true,
-      },
-      {
-        courseName: "B 코스",
-        duration: "TIME 10 ~ 20",
-        places: ["a 장소"],
-        isProgress: false,
-      },
-      {
-        courseName: "C 코스",
-        duration: "TIME 40 ~ 60",
-        places: ["a 장소", "b 장소"],
-        isProgress: false,
-      },
-    ];
-    courseArr.map((course) => dispatch(addCourse(course)));
-  }, [dispatch]);
+    const fetchData = async () => {
+      try {
+        const response = await getCourse(id);
+        dispatch(setCourses(response));
+      } catch (error) {
+        console.error("네트워킹 오류:", error);
+        throw error;
+      }
+    };
+
+    fetchData();
+  }, [id, dispatch]);
 
   return (
     <>
