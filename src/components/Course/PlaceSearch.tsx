@@ -17,7 +17,7 @@ import FastImage from "react-native-fast-image";
 interface PlaceSearchProps {
   index: number;
   title: string;
-  course: Course | null;
+  course: Course;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }
 
@@ -25,27 +25,37 @@ const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
   const [place, setPlace] = useState<string>("");
 
   const handlePlaceOust = () => {
-    setCourse((prev) => ({
-      ...prev,
-      places: prev.places.map((value, i) => {
-        if (i === index) {
-          // 해당 장소의 name을 빈 문자열("")로 변경
-          return { ...value, name: "" };
-        } else {
-          // 다른 장소는 그대로 유지
-          return value;
-        }
-      }),
-    }));
+    if (course.places[index].name) {
+      setCourse((prev) => ({
+        ...prev,
+        places: prev.places.map((value, i) => {
+          if (i === index) {
+            // 해당 장소의 name을 빈 문자열("")로 변경
+            return { ...value, name: "" };
+          } else {
+            // 다른 장소는 그대로 유지
+            return value;
+          }
+        }),
+      }));
+    } else {
+      setCourse((prev) => ({
+        ...prev,
+        places: prev.places.filter((_, i) => i !== index),
+      }));
+    }
   };
 
   return (
     <Container>
       <HeaderContainer>
         <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
-        <Pressable onPress={handlePlaceOust}>
-          <Icon name="minuscircleo" size={15} color="black" />
-        </Pressable>
+        {course?.places[index].name ||
+        (index > 0 && index < course?.places.length - 1) ? (
+          <Pressable onPress={handlePlaceOust}>
+            <Icon name="minuscircleo" size={15} color="black" />
+          </Pressable>
+        ) : null}
       </HeaderContainer>
       <GradientLine
         colors={["#518FFF", "#33E1C0"]}
