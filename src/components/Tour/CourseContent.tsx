@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import { BoldStyledText, StyledText } from "styles/globalStyles";
 import PlaceContainer from "./PlaceContainer";
 
-import { Course, toggleCourse } from "redux/slice/courseSlice";
+import { toggleCourse } from "redux/slice/courseSlice";
 import { useDispatch } from "react-redux";
 import CheckModal from "./CheckModal";
 

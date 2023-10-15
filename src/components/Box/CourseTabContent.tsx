@@ -6,8 +6,6 @@ import styled from "styled-components/native";
 import { BoldStyledText, StyledText } from "styles/globalStyles";
 import PlaceContainer from "@components/Tour/PlaceContainer";
 
-import { Course } from "redux/slice/courseSlice";
-
 interface CourseContentProps {
   course: Course;
 }

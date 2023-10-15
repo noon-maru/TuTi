@@ -10,8 +10,6 @@ import { SERVER_URL } from "@env";
 
 import { animateDrawer } from "@redux/slice/courseDrawerSlice";
 
-import { Course } from "@redux/slice/courseSlice";
-
 interface CourseItemProps {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
   thumbnail: string;

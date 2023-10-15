@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import LinearGradient from "react-native-linear-gradient";
 
 import { useDispatch, useSelector } from "react-redux";
+
+import { useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios";
 
@@ -45,19 +47,21 @@ const TourScreen = () => {
   const { id } = useSelector((state: RootState) => state.user);
   const { courses } = useSelector((state: RootState) => state.courses);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getCourse(id);
-        dispatch(setCourses(response));
-      } catch (error) {
-        console.error("네트워킹 오류:", error);
-        throw error;
-      }
-    };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        try {
+          const response = await getCourse(id);
+          dispatch(setCourses(response));
+        } catch (error) {
+          console.error("네트워킹 오류:", error);
+          throw error;
+        }
+      };
 
-    fetchData();
-  }, [id, dispatch]);
+      fetchData();
+    }, [id, dispatch])
+  );
 
   return (
     <>

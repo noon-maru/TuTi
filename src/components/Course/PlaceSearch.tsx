@@ -9,9 +9,7 @@ import { BoldStyledText, StyledText } from "@styles/globalStyles";
 
 import { SERVER_URL } from "@env";
 
-import { Course } from "@redux/slice/courseSlice";
-
-import Modal from "./Modal";
+import AddPlacetoCourseModal from "./AddPlacetoCourseModal";
 import FastImage from "react-native-fast-image";
 
 interface PlaceSearchProps {
@@ -62,7 +60,12 @@ const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       />
-      <Modal searchText={place} setSearchText={setPlace}>
+      <AddPlacetoCourseModal
+        index={index}
+        setCourse={setCourse}
+        searchText={place}
+        setSearchText={setPlace}
+      >
         <SearchBox>
           {course?.places[index]?.name ? (
             <ContentsContainer>
@@ -84,7 +87,7 @@ const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
             />
           )}
         </SearchBox>
-      </Modal>
+      </AddPlacetoCourseModal>
     </Container>
   );
 };

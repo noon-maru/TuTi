@@ -21,7 +21,6 @@ import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import { RootState } from "redux/reducers";
 import { setTranslateY, animateDrawer } from "@redux/slice/courseDrawerSlice";
-import { Course } from "@redux/slice/courseSlice";
 
 import CourseItem from "./CourseItem";
 

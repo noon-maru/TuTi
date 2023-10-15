@@ -1,21 +1,43 @@
 import { useState } from "react";
 import { Modal, Pressable } from "react-native";
 
-import styled from "styled-components/native";
+import { useSelector } from "react-redux";
 
+import styled from "styled-components/native";
 import { StyledText } from "@styles/globalStyles";
 
-interface ModalProps {
-  handleCourseProgress: () => void;
+import { RootState } from "@redux/reducers";
+
+interface CourseRegistrationModalProps {
+  handleCourseRegistration: (
+    userId: string,
+    courseName: string
+  ) => Promise<any>;
+
   children: React.ReactNode;
 }
 
-const CheckModal = ({ handleCourseProgress, children }: ModalProps) => {
+const CourseRegistrationModal = ({
+  handleCourseRegistration,
+  children,
+}: CourseRegistrationModalProps) => {
+  const { id } = useSelector((state: RootState) => state.user);
+
   const [visible, setVisible] = useState(false);
+  const [courseName, setCourseName] = useState<string>("");
 
   return (
     <>
-      <Pressable onPress={() => setVisible(true)}>{children}</Pressable>
+      <Pressable
+        onPress={() => setVisible(true)}
+        style={{
+          alignSelf: "flex-end",
+          marginTop: 30,
+          marginBottom: 20,
+        }}
+      >
+        {children}
+      </Pressable>
       <Modal
         animationType={"fade"}
         transparent={true}
@@ -26,19 +48,25 @@ const CheckModal = ({ handleCourseProgress, children }: ModalProps) => {
         <Container onPress={() => setVisible(false)}>
           <ModalWindowContainer>
             <StyledText style={{ fontSize: 16 }}>
-              {"정말로 해당 코스를 종료하시겠습니까?"}
+              {"등록할 코스의 이름을 지어주세요!"}
             </StyledText>
+            <CourseNameInput
+              placeholder="ex) 맑은 날 한강공원 나들이"
+              placeholderTextColor={"#3C3C43"}
+              onChangeText={(text: string) => setCourseName(text)}
+              value={courseName}
+            />
             <ButtonContainer>
               <SelectionButton onPress={() => setVisible(false)}>
-                <StyledText>코스 유지</StyledText>
+                <StyledText>취소</StyledText>
               </SelectionButton>
               <SelectionButton
                 onPress={() => {
                   setVisible(false);
-                  handleCourseProgress();
+                  handleCourseRegistration(id, courseName);
                 }}
               >
-                <StyledText>코스 종료</StyledText>
+                <StyledText>코스 등록</StyledText>
               </SelectionButton>
             </ButtonContainer>
           </ModalWindowContainer>
@@ -59,18 +87,26 @@ const ModalWindowContainer = styled.Pressable`
   justify-content: center;
   align-items: center;
 
-  width: 300px;
-  height: 150px;
-
   border-radius: 30px;
   border-width: 0.5px;
   border-color: #efeff0;
 
-  padding: 10px;
+  padding: 30px;
 
   gap: 20px;
 
   background-color: white;
+`;
+
+const CourseNameInput = styled.TextInput`
+  font-family: "SpoqaHanSansNeo-Regular";
+  font-size: 17px;
+
+  width: 250px;
+
+  border-radius: 20px;
+
+  background-color: #e4e4e4;
 `;
 
 const ButtonContainer = styled.View`
@@ -90,4 +126,4 @@ const SelectionButton = styled.Pressable`
   background-color: white;
 `;
 
-export default CheckModal;
+export default CourseRegistrationModal;

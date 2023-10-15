@@ -8,7 +8,6 @@ import {
   LayoutChangeEvent,
   Pressable,
   ScrollView,
-  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
@@ -16,17 +15,17 @@ import LinearGradient from "react-native-linear-gradient";
 import axios from "axios";
 
 import styled from "styled-components/native";
-import { StyledText } from "@styles/globalStyles";
+import { BoldStyledText, StyledText } from "@styles/globalStyles";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
 import { RootState } from "@redux/reducers";
 import { setCourseContainerHeight } from "@redux/slice/courseDrawerSlice";
-import { Course } from "@redux/slice/courseSlice";
 
 import PlaceSearch from "@components/Course/PlaceSearch";
 import WishPlacesByRegion from "@components/Course/WishPlacesByRegion";
 import CourseDrawer from "@components/Course/CourseDrawer";
+import CourseRegistrationModal from "@components/Course/CourseRegistrationModal";
 
 const isDevelopMode = DEVELOP_MODE === "true";
 
@@ -88,6 +87,7 @@ const CourseScreen = () => {
         address: "",
         image: "",
         numberHearts: 0,
+        tourismInfo: null,
         tags: [],
       },
       {
@@ -97,6 +97,7 @@ const CourseScreen = () => {
         address: "",
         image: "",
         numberHearts: 0,
+        tourismInfo: null,
         tags: [],
       },
     ],
@@ -120,6 +121,7 @@ const CourseScreen = () => {
         address: "",
         image: "",
         numberHearts: 0,
+        tourismInfo: null,
         tags: [],
       });
 
@@ -128,6 +130,42 @@ const CourseScreen = () => {
         places: newPlaces,
       };
     });
+  };
+
+  const handleCourseRegistration = async (
+    userId: string,
+    courseName: string
+  ) => {
+    try {
+      let url = "";
+      if (isDevelopMode) url = DEVELOP_SERVER_URL + API + `/course/${userId}`;
+      else url = SERVER_URL + API + `/course/${userId}`;
+
+      const jsonData = {
+        courseName,
+        placesId: course.places.map((place) => place._id),
+        // TODO: travelTime 값 동적으로 받아오도록 수정해야 됨
+        travelTime: course.travelTime,
+        // 각 장소의 admissionFee를 전부 합한 값
+        // admissionFee는 "성인: 1000원, 아이: 500원" 형태의 문자열이므로,
+        // match(/\d+/g)를 통해 숫자만 따로 분리해준 뒤,
+        // 각 첫번째 값(일반적으로 성인 요금)을 숫자로 변환하여 더해준다.
+        totalFee: course.places
+          .map((place) =>
+            Number(place.tourismInfo.admissionFee.match(/\d+/g)[0])
+          )
+          .reduce((accumulator, currentValue) => accumulator + currentValue),
+      };
+
+      const response = await axios.post(url, JSON.stringify(jsonData), {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("네트워킹 오류:", error);
+      throw error;
+    }
   };
 
   useFocusEffect(
@@ -169,7 +207,17 @@ const CourseScreen = () => {
                 setCourse={setCourse}
               />
               {index === array.length - 1 ? (
-                <View style={{ height: 40 }} />
+                <CourseRegistrationModal
+                  handleCourseRegistration={handleCourseRegistration}
+                >
+                  <AddStopoverButton
+                    colors={["#C8E0FD", "#CCF0EC"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                  >
+                    <BoldStyledText>{"코스 등록"}</BoldStyledText>
+                  </AddStopoverButton>
+                </CourseRegistrationModal>
               ) : (
                 <Pressable
                   onPress={() => handleAddStopover(index)}

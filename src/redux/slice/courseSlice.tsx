@@ -1,13 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface Course {
-  courseName: string;
-  travelTime: number[];
-  places: Place[];
-  totalFee: number;
-  isProgress: boolean;
-}
-
 export interface CoursesState {
   courses: Course[];
 }
