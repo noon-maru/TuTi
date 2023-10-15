@@ -5,5 +5,6 @@ interface Place {
   address: string;
   image: string;
   numberHearts: number;
+  tourismInfo: any;
   tags: tag[];
 }
