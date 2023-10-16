@@ -160,7 +160,6 @@ const CourseScreen = () => {
       const response = await axios.post(url, JSON.stringify(jsonData), {
         headers: { "Content-Type": "application/json" },
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("네트워킹 오류:", error);
