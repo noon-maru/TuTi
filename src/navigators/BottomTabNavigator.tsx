@@ -89,7 +89,11 @@ const BottomTabNavigator = () => {
       <Tab.Screen name="Note" component={NoteScreen} />
       <Tab.Screen name="Explore" component={ExploreScreen} />
       <Tab.Screen name="Course" component={CourseScreen} />
-      <Tab.Screen name="Box" component={BoxScreen} />
+      <Tab.Screen
+        name="Box"
+        component={BoxScreen}
+        initialParams={{ fromHome: false }}
+      />
       <Tab.Screen name="Tour" component={TourScreen} />
     </Tab.Navigator>
   );

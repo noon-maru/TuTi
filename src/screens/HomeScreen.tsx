@@ -3,7 +3,6 @@ import { Dimensions } from "react-native";
 import { useDispatch } from "react-redux";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { setNavigation } from "redux/slice/navigationSlice";
 import { setTheme } from "redux/slice/themeSlice";
 
 import styled from "styled-components/native";
@@ -13,20 +12,15 @@ import HomeDrawer from "components/Home/HomeDrawer";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
-const HomeScreen = ({ navigation }: any) => {
+const HomeScreen = () => {
   const dispatch = useDispatch();
   const [flingCount, setFlingCount] = useState<number>(0);
 
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    // 드로어 헤더에 하단 탭바 네비게이션을 전달하기 위한 세팅
-    dispatch(setNavigation(navigation));
-  }, []);
-
-  useEffect(() => {
     if (flingCount === 2) dispatch(setTheme({ isDark: true }));
-  }, [flingCount]);
+  }, [flingCount, dispatch]);
 
   return (
     <Container>

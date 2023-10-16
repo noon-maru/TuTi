@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Dimensions, Image, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
@@ -40,7 +40,25 @@ const getCourse = async (userId: string) => {
   }
 };
 
-const BoxScreen = () => {
+const getWishPlace = async (userId: string) => {
+  try {
+    if (userId === "guest") return [];
+
+    let url = "";
+    if (isDevelopMode)
+      url = DEVELOP_SERVER_URL + API + `/users/${userId}/wishPlace`;
+    else url = SERVER_URL + API + `/users/${userId}/wishPlace`;
+
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("네트워킹 오류:", error);
+    throw error;
+  }
+};
+
+const BoxScreen = ({ route }: any) => {
+  const { fromHome } = route.params;
   const insets = useSafeAreaInsets();
 
   const dispatch = useDispatch();
@@ -48,14 +66,19 @@ const BoxScreen = () => {
   const { id } = useSelector((state: RootState) => state.user);
   const { courses } = useSelector((state: RootState) => state.courses);
 
-  const [isCourse, setIsCourse] = useState<boolean>(true);
+  const [wishPlaces, setWishPlaces] = useState<Place[]>();
+  const [isCourse, setIsCourse] = useState<boolean>(!fromHome);
+
+  useEffect(() => {
+    setIsCourse(!fromHome);
+  }, [fromHome]);
 
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
         try {
-          const response = await getCourse(id);
-          dispatch(setCourses(response));
+          dispatch(setCourses(await getCourse(id)));
+          setWishPlaces(await getWishPlace(id));
         } catch (error) {
           console.error("네트워킹 오류:", error);
           throw error;
@@ -125,8 +148,13 @@ const BoxScreen = () => {
               showsVerticalScrollIndicator={false}
               scrollEventThrottle={16}
             >
-              <WishTabContent title={"A 장소"} address={"대충 적당한 주소"} />
-              <WishTabContent title={"B 장소"} address={"대충 적당한 주소"} />
+              {wishPlaces?.map((wishPlace, index) => (
+                <WishTabContent
+                  key={index}
+                  title={wishPlace.name}
+                  address={wishPlace.address}
+                />
+              ))}
             </TabContentsContainer>
           )}
         </MainContentsContainer>

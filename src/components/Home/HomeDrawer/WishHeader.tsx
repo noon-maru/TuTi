@@ -1,16 +1,25 @@
+import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { StyledText } from "styles/globalStyles";
 
+interface MyNavigation {
+  navigate: (screen: string, params: { fromHome: boolean }) => void;
+}
+
 const WishHeader = () => {
+  const navigation = useNavigation<MyNavigation>();
+
   return (
     <Container>
       <WishPlacesTextContainer>
         <WishIcon source={require("@assets/icon/heart(color).png")} />
-        <WishPlacesText> 찜 한 장소 보기</WishPlacesText>
+        <WishPlacesText>{"찜 한 장소 보기"}</WishPlacesText>
       </WishPlacesTextContainer>
-      <TouchableOpacity>
-        <MoreDetails>더보기</MoreDetails>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Box", { fromHome: true })}
+      >
+        <MoreDetails>{"더보기"}</MoreDetails>
       </TouchableOpacity>
     </Container>
   );
@@ -21,9 +30,9 @@ const Container = styled.View`
   justify-content: space-between;
 `;
 
-const WishPlacesTextContainer = styled(StyledText)`
-  color: black;
+const WishPlacesTextContainer = styled.View`
   flex-direction: row;
+  gap: 5px;
   justify-content: center;
   align-items: center;
 `;
