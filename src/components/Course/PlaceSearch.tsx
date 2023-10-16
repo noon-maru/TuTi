@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, Pressable } from "react-native";
+import { Image, Pressable, View } from "react-native";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import LinearGradient from "react-native-linear-gradient";
@@ -63,7 +63,19 @@ const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
   return (
     <Container>
       <HeaderContainer>
-        <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
+        <View style={{ flexDirection: "row", gap: 3, alignItems: "center" }}>
+          <Image
+            source={
+              index === 0
+                ? require("@assets/icon/course/departure.png")
+                : index === course.places.length - 1
+                ? require("@assets/icon/course/destination.png")
+                : require("@assets/icon/course/stopover.png")
+            }
+            style={{ width: 15, height: 15 }}
+          />
+          <StyledText style={{ fontSize: 15 }}>{title}</StyledText>
+        </View>
         {course?.places[index].name ||
         (index > 0 && index < course?.places.length - 1) ? (
           <Pressable onPress={handlePlaceOust}>
