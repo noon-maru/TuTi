@@ -83,7 +83,7 @@ const BoxScreen = () => {
                 end={{ x: 1, y: 1 }}
               >
                 <StyledText style={{ fontSize: 17, color: "black" }}>
-                  저장된 코스
+                  {"저장된 코스"}
                 </StyledText>
               </TabButton>
             </Pressable>
@@ -102,7 +102,7 @@ const BoxScreen = () => {
                   style={{ width: 15, height: 15 }}
                 />
                 <StyledText style={{ fontSize: 17, color: "black" }}>
-                  {" 찜 한 장소"}
+                  {"찜 한 장소"}
                 </StyledText>
               </TabButton>
             </Pressable>
@@ -164,6 +164,7 @@ const TabButtonContainer = styled.View`
 
 const TabButton = styled(LinearGradient)`
   flex-direction: row;
+  gap: 5px;
   align-items: center;
 
   width: 100%;

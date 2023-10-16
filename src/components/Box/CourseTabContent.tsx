@@ -3,7 +3,7 @@ import { Animated, Image, LayoutChangeEvent, Pressable } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
-import { BoldStyledText, StyledText } from "styles/globalStyles";
+import { BoldStyledText } from "styles/globalStyles";
 import PlaceContainer from "@components/Tour/PlaceContainer";
 
 interface CourseContentProps {
@@ -11,7 +11,7 @@ interface CourseContentProps {
 }
 
 const CourseTabContent = ({ course }: CourseContentProps) => {
-  const { courseName, travelTime, places, isProgress } = course;
+  const { courseName, places } = course;
 
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [ContentsBoxHeight, setContentsBoxHeight] = useState<number>(0);
@@ -54,11 +54,6 @@ const CourseTabContent = ({ course }: CourseContentProps) => {
             <BoldStyledText
               style={{ fontSize: 15, color: "black" }}
             >{`□ ${courseName}`}</BoldStyledText>
-            {isProgress ? (
-              <StyledText style={{ fontSize: 13, color: "white" }}>
-                {travelTime}
-              </StyledText>
-            ) : null}
           </TitleTextContainer>
           {expanded ? (
             <Image

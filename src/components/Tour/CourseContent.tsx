@@ -22,6 +22,16 @@ const CourseContent = ({ course }: CourseContentProps) => {
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [ContentsBoxHeight, setContentsBoxHeight] = useState<number>(0);
   const [expanded, setExpanded] = useState<boolean>(false);
+  const [totalTime, setTotalTime] = useState<number>(0);
+
+  useEffect(() => {
+    if (travelTime.length)
+      setTotalTime(
+        travelTime.reduce(
+          (accumulator, currentValue) => accumulator + currentValue
+        )
+      );
+  }, [travelTime]);
 
   useEffect(() => {
     if (isProgress) setExpanded(true);
@@ -75,7 +85,11 @@ const CourseContent = ({ course }: CourseContentProps) => {
             >{`□ ${courseName}`}</BoldStyledText>
             {isProgress ? (
               <StyledText style={{ fontSize: 13, color: "white" }}>
-                {travelTime}
+                {`${
+                  Math.floor(totalTime / 60)
+                    ? `${Math.floor(totalTime / 60)} 시간`
+                    : ""
+                } ${totalTime % 60} 분`}
               </StyledText>
             ) : null}
           </TitleTextContainer>
