@@ -8,6 +8,7 @@ import {
   LayoutChangeEvent,
   Pressable,
   ScrollView,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
@@ -206,17 +207,21 @@ const CourseScreen = () => {
                 setCourse={setCourse}
               />
               {index === array.length - 1 ? (
-                <CourseRegistrationModal
-                  handleCourseRegistration={handleCourseRegistration}
-                >
-                  <AddStopoverButton
-                    colors={["#C8E0FD", "#CCF0EC"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                array.every((place) => !!place.name) ? (
+                  <CourseRegistrationModal
+                    handleCourseRegistration={handleCourseRegistration}
                   >
-                    <BoldStyledText>{"코스 등록"}</BoldStyledText>
-                  </AddStopoverButton>
-                </CourseRegistrationModal>
+                    <AddStopoverButton
+                      colors={["#C8E0FD", "#CCF0EC"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                    >
+                      <BoldStyledText>{"코스 등록"}</BoldStyledText>
+                    </AddStopoverButton>
+                  </CourseRegistrationModal>
+                ) : (
+                  <View style={{ height: 50 }} />
+                )
               ) : (
                 <Pressable
                   onPress={() => handleAddStopover(index)}
