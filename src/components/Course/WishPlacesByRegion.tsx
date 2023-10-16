@@ -6,11 +6,13 @@ import styled from "styled-components/native";
 import { StyledText } from "@styles/globalStyles";
 
 interface WishPlacesByRegionProps {
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
   region: string;
-  wishPlaces: WishPlace[];
+  wishPlaces: Place[];
 }
 
 const WishPlacesByRegion = ({
+  setCourse,
   region,
   wishPlaces,
 }: WishPlacesByRegionProps) => {
@@ -39,6 +41,27 @@ const WishPlacesByRegion = ({
   const handleContainerLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setExpandBoxHeight(height);
+  };
+
+  const handleButtonClick = (wishPlace: Place, type: string) => {
+    if (type === "stopover") {
+      setCourse((prev) => ({
+        ...prev,
+        places: [
+          ...prev.places.slice(0, prev.places.length - 1),
+          wishPlace,
+          ...prev.places.slice(prev.places.length - 1),
+        ],
+      }));
+    } else {
+      setCourse((prev) => ({
+        ...prev,
+        places: prev.places.map((place, i) => {
+          if (type === "departure") return i === 0 ? wishPlace : place;
+          else return i === prev.places.length - 1 ? wishPlace : place;
+        }),
+      }));
+    }
   };
 
   return (
@@ -83,18 +106,33 @@ const WishPlacesByRegion = ({
           >
             <StyledText>{`□ ${wishPlace.name}`}</StyledText>
             <ButtonContainer>
-              <Image
-                source={require("@assets/icon/star.png")}
-                style={{ width: 15, height: 15 }}
-              />
-              <Image
-                source={require("@assets/icon/star.png")}
-                style={{ width: 15, height: 15 }}
-              />
-              <Image
-                source={require("@assets/icon/star.png")}
-                style={{ width: 15, height: 15 }}
-              />
+              <ButtonBox
+                style={{ borderColor: "#00C8A9" }}
+                onPress={() => handleButtonClick(wishPlace, "departure")}
+              >
+                <Image
+                  source={require("@assets/icon/course/departure.png")}
+                  style={{ width: 15, height: 15 }}
+                />
+              </ButtonBox>
+              <ButtonBox
+                style={{ borderColor: "#9FA0A0" }}
+                onPress={() => handleButtonClick(wishPlace, "stopover")}
+              >
+                <Image
+                  source={require("@assets/icon/course/stopover.png")}
+                  style={{ width: 15, height: 15 }}
+                />
+              </ButtonBox>
+              <ButtonBox
+                style={{ borderColor: "#FF82A3" }}
+                onPress={() => handleButtonClick(wishPlace, "destination")}
+              >
+                <Image
+                  source={require("@assets/icon/course/destination.png")}
+                  style={{ width: 15, height: 15 }}
+                />
+              </ButtonBox>
             </ButtonContainer>
           </Place>
         ))}
@@ -166,6 +204,17 @@ const Place = styled(LinearGradient)`
 const ButtonContainer = styled.View`
   flex-direction: row;
   gap: 10px;
+`;
+
+const ButtonBox = styled.Pressable`
+  justify-content: center;
+  align-items: center;
+
+  width: 19px;
+  height: 19px;
+
+  border-width: 1px;
+  border-radius: 3px;
 `;
 
 export default WishPlacesByRegion;

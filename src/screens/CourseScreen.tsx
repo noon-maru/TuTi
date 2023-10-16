@@ -74,7 +74,7 @@ const CourseScreen = () => {
 
   const { id } = useSelector((state: RootState) => state.user);
 
-  const [wishPlaces, setWishPlaces] = useState<WishPlace[]>([]);
+  const [wishPlaces, setWishPlaces] = useState<Place[]>([]);
 
   const [course, setCourse] = useState<Course>({
     courseName: "",
@@ -245,6 +245,7 @@ const CourseScreen = () => {
             .map((region, index) => (
               <WishPlacesByRegion
                 key={index}
+                setCourse={setCourse}
                 region={region}
                 wishPlaces={wishPlaces.filter(
                   (wishPlace) => wishPlace.region === region

@@ -44,6 +44,22 @@ const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
     }
   };
 
+  const swapArrayElements = (arr: Place[], index1: number, index2: number) => {
+    const swappedArray = [...arr];
+    [swappedArray[index1], swappedArray[index2]] = [
+      swappedArray[index2],
+      swappedArray[index1],
+    ];
+    return swappedArray;
+  };
+
+  const handlePlaceSwap = (index1: number, index2: number) => {
+    setCourse((prev) => ({
+      ...prev,
+      places: swapArrayElements(prev.places, index1, index2),
+    }));
+  };
+
   return (
     <Container>
       <HeaderContainer>
@@ -79,6 +95,24 @@ const PlaceSearch = ({ index, title, course, setCourse }: PlaceSearchProps) => {
                 />
                 <BoldStyledText>{course.places[index].name}</BoldStyledText>
               </InformContainer>
+              <ControllerContainer>
+                {index !== 0 ? (
+                  <Pressable onPress={() => handlePlaceSwap(index, index - 1)}>
+                    <Image
+                      source={require("@assets/icon/unfold.png")}
+                      style={{ width: 16, height: 16 }}
+                    />
+                  </Pressable>
+                ) : null}
+                {index !== course.places.length - 1 ? (
+                  <Pressable onPress={() => handlePlaceSwap(index, index + 1)}>
+                    <Image
+                      source={require("@assets/icon/open.png")}
+                      style={{ width: 16, height: 16 }}
+                    />
+                  </Pressable>
+                ) : null}
+              </ControllerContainer>
             </ContentsContainer>
           ) : (
             <Image
@@ -137,6 +171,13 @@ const ContentsContainer = styled.View`
   width: 100%;
 
   padding: 0 10px;
+`;
+
+const ControllerContainer = styled.View`
+  align-self: center;
+  gap: 5px;
+
+  margin-right: 5px;
 `;
 
 const InformContainer = styled.View`
