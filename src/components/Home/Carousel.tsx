@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { View, Image, ScrollView, Dimensions, StatusBar } from "react-native";
+import { useState, useEffect, useRef } from "react";
+import { View, Image, ScrollView, Dimensions } from "react-native";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -45,7 +45,7 @@ const Carousel = ({ flingCount }: CarouselProps) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   const scrollRef = useRef<ScrollView | null>(null);
-  const intervalId = useRef<number | null>(null);
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
   const isFocused = useIsFocused();
 
   const dispatch = useDispatch();
@@ -110,7 +110,7 @@ const Carousel = ({ flingCount }: CarouselProps) => {
       if (isFocused) dispatch(setTheme({ isDark }));
       else dispatch(setTheme({ isDark: true }));
     }
-  }, [currentPage, imageDataArray, flingCount, isFocused]);
+  }, [currentPage, imageDataArray, flingCount, isFocused, dispatch]);
 
   const handleMomentumScrollEnd = (event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;

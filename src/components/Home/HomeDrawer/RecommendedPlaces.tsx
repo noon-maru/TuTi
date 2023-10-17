@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import axios from "axios";
 
 import styled from "styled-components/native";
-import { StyledText, BoldStyledText } from "styles/globalStyles";
+import { StyledText } from "styles/globalStyles";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
@@ -23,16 +23,15 @@ interface RecommendedPlaceData {
 
 const isDevelopMode = DEVELOP_MODE === "true";
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const getRecommendedPlace = async () => {
   try {
     let url = "";
-    if (isDevelopMode) url = DEVELOP_SERVER_URL + API + `/recommendedplaces`;
-    else url = SERVER_URL + API + `/recommendedplaces`;
+    if (isDevelopMode) url = DEVELOP_SERVER_URL + API + "/recommendedplaces";
+    else url = SERVER_URL + API + "/recommendedplaces";
 
     const response = await axios.get(url);
-    // console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("네트워킹 오류:", error);
@@ -43,20 +42,22 @@ const getRecommendedPlace = async () => {
 const RecommendedPlaces = () => {
   const insets = useSafeAreaInsets();
 
-  const [recommendedPlaces, setRecommendedPlaces] = useState<[]>([]);
+  const [recommendedPlaces, setRecommendedPlaces] = useState<
+    RecommendedPlaceData[]
+  >([]);
 
   useEffect(() => {
     if (recommendedPlaces.length === 0)
       (async () => {
         setRecommendedPlaces(await getRecommendedPlace());
       })();
-  }, []);
+  }, [recommendedPlaces.length]);
 
   return (
     <>
       <HeaderTextContainer>
         <StarIcon source={require("@assets/icon/star.png")} />
-        <RecommendText> 추천 장소 보기</RecommendText>
+        <StyledText>{"추천 장소 보기"}</StyledText>
       </HeaderTextContainer>
       <RecommendedPlaceScrollContainer
         insetsTop={insets.top}
@@ -64,7 +65,7 @@ const RecommendedPlaces = () => {
         bounces={false}
         showsVerticalScrollIndicator={false}
       >
-        {recommendedPlaces.map((value: RecommendedPlaceData, index) => (
+        {recommendedPlaces.map((value, index) => (
           <RecommendedPlace
             key={index}
             imageUrl={value.place.image}
@@ -79,6 +80,7 @@ const RecommendedPlaces = () => {
 
 const HeaderTextContainer = styled.View`
   flex-direction: row;
+  gap: 3px;
   align-items: center;
   margin-bottom: 10px;
 `;
@@ -94,27 +96,6 @@ const RecommendedPlaceScrollContainer = styled.ScrollView<{
 }>`
   height: ${(props) =>
     SCREEN_HEIGHT - (props.insetsBottom + 70) - (props.insetsTop + 53)}px;
-`;
-
-const RecommendedPlaceContainer = styled.View`
-  margin-bottom: 50px;
-  gap: 10px;
-`;
-
-const RecommendText = styled(StyledText)`
-  color: black;
-  font-size: 15px;
-`;
-
-const RecommendedPlaceImage = styled.Image`
-  width: ${SCREEN_WIDTH - 60}px;
-  height: ${SCREEN_WIDTH - 60}px;
-`;
-
-const PlaceName = styled(BoldStyledText)`
-  color: black;
-  font-size: 15px;
-  margin-left: 10px;
 `;
 
 const Padding = styled.View`
