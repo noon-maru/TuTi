@@ -4,11 +4,6 @@ import LinearGradient from "react-native-linear-gradient";
 
 import { StyledText } from "styles/globalStyles";
 
-interface Coordinate {
-  x: number;
-  y: number;
-}
-
 interface GradientTextProps extends TextProps {
   colors: string[];
   start?: Coordinate;

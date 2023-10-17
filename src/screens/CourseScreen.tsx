@@ -1,4 +1,6 @@
 import { useCallback, useState } from "react";
+import Toast from "react-native-toast-message";
+
 import { useFocusEffect } from "@react-navigation/native";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -13,12 +15,18 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LinearGradient from "react-native-linear-gradient";
 
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import styled from "styled-components/native";
 import { BoldStyledText, StyledText } from "@styles/globalStyles";
 
-import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
+import {
+  SERVER_URL,
+  DEVELOP_SERVER_URL,
+  DEVELOP_MODE,
+  API,
+  KAKAO_REST_API_KEY,
+} from "@env";
 
 import { RootState } from "@redux/reducers";
 import { setCourseContainerHeight } from "@redux/slice/courseDrawerSlice";
@@ -69,6 +77,85 @@ const getWishPlace = async (userId: string) => {
   }
 };
 
+const getTrafficReport = async (points: Coordinate[]) => {
+  try {
+    // 자동차 길찾기 URL
+    const carDirectionsURL =
+      "https://apis-navi.kakaomobility.com/v1/directions";
+    // 다중 경유지 길찾기 URL
+    const waypointsURL =
+      "https://apis-navi.kakaomobility.com/v1/waypoints/directions";
+
+    const jsonData: { [key: string]: any } = {
+      priority: "RECOMMEND",
+      car_fuel: "GASOLINE",
+      car_hipass: false,
+      alternatives: false,
+      road_details: false,
+    };
+
+    if (points.length === 2) {
+      jsonData.origin = `${points[0].x},${points[0].y}`;
+      jsonData.destination = `${points[points.length - 1].x},${
+        points[points.length - 1].y
+      }`;
+
+      const response: AxiosResponse = await axios.get(carDirectionsURL, {
+        params: jsonData,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
+        },
+      });
+
+      return response.data;
+    } else {
+      jsonData.origin = {
+        x: points[0].x,
+        y: points[0].y,
+      };
+
+      jsonData.destination = {
+        x: points[points.length - 1].x,
+        y: points[points.length - 1].y,
+      };
+
+      jsonData.waypoints = points.slice(1, -1);
+
+      const response: AxiosResponse = await axios.post(
+        waypointsURL,
+        JSON.stringify(jsonData),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `KakaoAK ${KAKAO_REST_API_KEY}`,
+          },
+        }
+      );
+
+      return response.data;
+    }
+  } catch (error) {
+    console.error("네트워킹 오류:", error);
+  }
+};
+
+const getTravelTime = async (points: Coordinate[]) => {
+  const trafficReport = await getTrafficReport(points);
+
+  if (trafficReport.routes[0].result_code === 0)
+    return trafficReport.routes[0].sections.map(
+      // duration이 초 단위로 오기 때문에 분 단위로 절삭 후 반올림
+      (section: { duration: number }) => Math.round(section.duration / 60)
+    );
+  else {
+    return [
+      trafficReport.routes[0].result_code,
+      trafficReport.routes[0].result_msg,
+    ];
+  }
+};
+
 const CourseScreen = () => {
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
@@ -80,28 +167,7 @@ const CourseScreen = () => {
   const [course, setCourse] = useState<Course>({
     courseName: "",
     travelTime: [],
-    places: [
-      {
-        _id: "",
-        region: "",
-        name: "",
-        address: "",
-        image: "",
-        numberHearts: 0,
-        tourismInfo: null,
-        tags: [],
-      },
-      {
-        _id: "",
-        region: "",
-        name: "",
-        address: "",
-        image: "",
-        numberHearts: 0,
-        tourismInfo: null,
-        tags: [],
-      },
-    ],
+    places: [{} as Place, {} as Place],
     totalFee: 0,
     isProgress: false,
   });
@@ -114,17 +180,7 @@ const CourseScreen = () => {
   const handleAddStopover = (index: number) => {
     setCourse((prev) => {
       const newPlaces = [...prev.places]; // 원본 배열을 복사
-
-      newPlaces.splice(index + 1, 0, {
-        _id: "",
-        region: "",
-        name: "",
-        address: "",
-        image: "",
-        numberHearts: 0,
-        tourismInfo: null,
-        tags: [],
-      });
+      newPlaces.splice(index + 1, 0, {} as Place);
 
       return {
         ...prev,
@@ -145,8 +201,13 @@ const CourseScreen = () => {
       const jsonData = {
         courseName,
         placesId: course.places.map((place) => place._id),
-        // TODO: travelTime 값 동적으로 받아오도록 수정해야 됨
-        travelTime: course.travelTime,
+        // 카카오 모빌리티 다중 경유지 길찾기 API를 통해 실시간으로 이동 시간을 받아온다.
+        travelTime: await getTravelTime(
+          course.places.map((place) => ({
+            x: place.longitude,
+            y: place.latitude,
+          }))
+        ),
         // 각 장소의 admissionFee를 전부 합한 값
         // admissionFee는 "성인: 1000원, 아이: 500원" 형태의 문자열이므로,
         // match(/\d+/g)를 통해 숫자만 따로 분리해준 뒤,
@@ -158,13 +219,46 @@ const CourseScreen = () => {
           .reduce((accumulator, currentValue) => accumulator + currentValue),
       };
 
+      const isArrayOfTypeNumber = (arr: any[]): arr is number[] => {
+        return arr.every((item) => typeof item === "number");
+      };
+
+      if (!isArrayOfTypeNumber(jsonData.travelTime))
+        throw new Error(`${jsonData.travelTime[0]}, ${jsonData.travelTime[1]}`);
+
       const response = await axios.post(url, JSON.stringify(jsonData), {
         headers: { "Content-Type": "application/json" },
       });
+
+      Toast.show({
+        type: "success",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "코스 등록 성공!", // 메시지 제목
+        text2: `정상적으로 ${courseName} 코스를 등록했습니다!`, // 메시지 내용
+        visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+      });
+
       return response.data;
-    } catch (error) {
-      console.error("네트워킹 오류:", error);
-      throw error;
+    } catch (error: any) {
+      if (Number(error.message.match(/\d+/g)) === 409)
+        Toast.show({
+          type: "error",
+          position: "bottom", // 토스트 메시지 위치 (top, bottom)
+          text1: "중복 오류", // 메시지 제목
+          text2: "등록을 시도한 코스와 중복된 장소를 가지는 코스가 있습니다!", // 메시지 내용
+          visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+        });
+      else if (Number(error.message.match(/\d+/g)) <= 304) {
+        Toast.show({
+          type: "error",
+          position: "bottom", // 토스트 메시지 위치 (top, bottom)
+          text1: "이동 시간 계산 실패", // 메시지 제목
+          text2: `code ${error.message}`, // 메시지 내용
+          visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+        });
+      } else {
+        console.error("네트워킹 오류:", error);
+      }
     }
   };
 
