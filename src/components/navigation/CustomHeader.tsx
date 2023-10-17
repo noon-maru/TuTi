@@ -9,7 +9,6 @@ import styled from "styled-components/native";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const CustomHeader = ({ navigation }: { navigation: any }) => {
-  const bottomNavigation = useSelector((state: RootState) => state.navigation);
   const screen = useSelector((state: RootState) => state.screen);
   const theme = useSelector((state: RootState) => state.theme);
   const insets = useSafeAreaInsets();
@@ -39,7 +38,7 @@ const CustomHeader = ({ navigation }: { navigation: any }) => {
       )}
       <TouchableOpacity
         onPress={() => {
-          bottomNavigation.navigate("Tour");
+          navigation.navigate("Tour");
         }}
       >
         {theme.isDark ? (
