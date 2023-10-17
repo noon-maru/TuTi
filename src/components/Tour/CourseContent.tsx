@@ -122,7 +122,7 @@ const CourseContent = ({ course }: CourseContentProps) => {
         {places?.map((place, index) => (
           <PlaceContainer
             key={index}
-            placeName={place.name}
+            place={place}
             isLast={index === places.length - 1}
           />
         ))}
