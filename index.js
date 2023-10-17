@@ -7,6 +7,8 @@ import { AppRegistry, LogBox } from "react-native";
 import App from "./src/App";
 import { name as appName } from "./app.json";
 
+import Toast from "react-native-toast-message";
+
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -29,6 +31,7 @@ const RootComponent = () => {
       <PersistGate loading={null} persistor={persistor}>
         <App />
       </PersistGate>
+      <Toast />
     </Provider>
   );
 };
