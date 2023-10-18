@@ -9,6 +9,12 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react-native/no-inline-styles": "off",
     curly: "off",
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
 
     // "prettier/prettier": [
     //   "error",
