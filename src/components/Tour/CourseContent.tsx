@@ -122,7 +122,9 @@ const CourseContent = ({ course }: CourseContentProps) => {
         {places?.map((place, index) => (
           <PlaceContainer
             key={index}
+            courseId={course._id}
             place={place}
+            recordedImages={course.recordImages}
             isLast={index === places.length - 1}
           />
         ))}

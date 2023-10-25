@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { Image, Pressable, ScrollView, View } from "react-native";
+import {
+  Image,
+  ImageURISource,
+  Pressable,
+  ScrollView,
+  View,
+} from "react-native";
 
 import FastImage from "react-native-fast-image";
 import {
+  Asset,
   ImageLibraryOptions,
-  launchCamera,
   launchImageLibrary,
 } from "react-native-image-picker";
 
@@ -15,39 +21,215 @@ import axios from "axios";
 import styled from "styled-components/native";
 import { StyledText } from "@styles/globalStyles";
 
-import { SERVER_URL } from "@env";
+import { SERVER_URL, API } from "@env";
+
+import { RootState } from "@redux/reducers";
+import { useSelector } from "react-redux";
+import Spinner from "@components/Spinner";
+import ImageCheckModal from "./ImageCheckModal";
+import PlaceDropCheckModal from "./PlaceDropCheckModal";
 
 interface PlaceContainerProps {
+  courseId: string;
   place: Place;
+  recordedImages: string[];
   isLast?: boolean;
 }
 
-const PlaceContainer = ({ place, isLast = false }: PlaceContainerProps) => {
-  const [image, setImage] = useState<string>("");
-  const [imageWidth, setImageWidth] = useState<number[]>([]);
+const PlaceContainer = ({
+  courseId,
+  place,
+  recordedImages,
+  isLast = false,
+}: PlaceContainerProps) => {
+  const { id: userId } = useSelector((state: RootState) => state.user);
 
-  const pickImage = async () => {
-    const result = await launchImageLibrary({} as ImageLibraryOptions);
+  const [recordImages, setRecordImages] = useState<ImageURISource[]>([]);
+  const [recordImageWidth, setRecordImageWidth] = useState<number[]>([]);
+  const [tempImageWidth, setTempImageWidth] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const pickImageDrop = async (index: number) => {
+    const imageUrl = recordImages[index].uri;
+    if (!imageUrl) {
+      console.error("유효하지 않은 index입니다.");
+      return;
+    }
+    const imageName = imageUrl!.split("/")[6];
+
+    try {
+      const response = await axios.delete(
+        SERVER_URL +
+          API +
+          `/course/userimage/${userId}/${courseId}/${place._id}/${imageName}`
+      );
+      if (response.status === 200) {
+        setRecordImages((prev) =>
+          prev.filter(
+            (imagePath) =>
+              imagePath.uri !==
+              `/static/userimage/${userId}/${courseId}/${place._id}/${imageName}`
+          )
+        );
+      }
+    } catch (error) {
+      console.error("네트워크 오류:", error);
+      throw error;
+    }
+  };
+
+  const pickImageChange = async (index: number) => {
+    const imageUrl = recordImages[index].uri;
+    if (!imageUrl) {
+      console.error("유효하지 않은 index입니다.");
+      return;
+    }
+    const imageName = imageUrl!.split("/")[6];
+
+    const option: ImageLibraryOptions = {
+      mediaType: "photo",
+    };
+    const result = await launchImageLibrary(option);
 
     if (result.didCancel) {
       console.log("사용자가 이미지 선택을 취소했습니다.");
     } else if (result.errorCode) {
-      console.log("ImagePicker Error: ", result.errorMessage);
+      console.error("ImagePicker Error: ", result.errorMessage);
     } else {
-      const source = { uri: result.uri };
-      setImage(source.uri);
+      const source: Asset = result.assets![0];
+
+      try {
+        const formData = new FormData();
+        formData.append("image", {
+          uri: source.uri,
+          type: "image/jpeg",
+          name: "filename.jpg",
+        });
+        const response = await axios.put(
+          SERVER_URL +
+            API +
+            `/course/userimage/${userId}/${courseId}/${place._id}/${imageName}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setLoading(true);
+        setTimeout(() => {
+          setRecordImages((prev) =>
+            prev.map((imageUri, i) =>
+              i === index ? { uri: response.data.recordImagePath } : imageUri
+            )
+          );
+        }, 500);
+      } catch (error) {
+        console.error("네트워크 오류:", error);
+        throw error;
+      }
+    }
+  };
+
+  const pickImagePush = async () => {
+    const option: ImageLibraryOptions = {
+      mediaType: "photo",
+    };
+    const result = await launchImageLibrary(option);
+
+    if (result.didCancel) {
+      console.log("사용자가 이미지 선택을 취소했습니다.");
+    } else if (result.errorCode) {
+      console.error("ImagePicker Error: ", result.errorMessage);
+    } else {
+      const source: Asset = result.assets![0];
+
+      try {
+        const formData = new FormData();
+        formData.append("image", {
+          uri: source.uri,
+          type: "image/jpeg",
+          name: "filename.jpg",
+        });
+        const response = await axios.post(
+          SERVER_URL +
+            API +
+            `/course/userimage/${userId}/${courseId}/${place._id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setLoading(true);
+        setTimeout(() => {
+          setRecordImages((prev) => [
+            ...prev,
+            { uri: response.data.recordImage },
+          ]);
+        }, 500);
+      } catch (error) {
+        console.error("네트워크 오류:", error);
+        throw error;
+      }
     }
   };
 
   useEffect(() => {
-    Image.getSize(SERVER_URL + place.image, (width, height) => {
-      // 원본 비율 계산
-      const originalAspectRatio = width / height;
+    const fetchData = async () => {
+      try {
+        const filteredRecordedImage = recordedImages.filter(
+          (recordedImageUrl) =>
+            // 문자열을 /를 기준으로 분리하고, 현재 장소의 ID와 같은 placeId들만 필터링
+            place._id === recordedImageUrl.split("/")[5]
+        );
+        if (!filteredRecordedImage.length) return;
 
-      // 이미지를 화면에 표시하고 높이는 90px로 고정, 너비는 원본 비율에 따라 조절
-      setImageWidth((prev) => [...prev, 90 * originalAspectRatio]);
-    });
+        setRecordImages(filteredRecordedImage.map((uri) => ({ uri })));
+      } catch (error) {
+        console.error("네트워킹 오류:", error);
+        throw error;
+      }
+    };
+
+    fetchData();
+  }, [place._id, recordedImages]);
+
+  useEffect(() => {
+    // 이미지 높이는 90px로 고정, 너비는 원본 비율에 따라 조절
+    Image.getSize(SERVER_URL + place.image, (width, height) =>
+      setTempImageWidth(90 * (width / height))
+    );
   }, [place.image]);
+
+  useEffect(() => {
+    setRecordImageWidth([]);
+    if (recordImages.length) {
+      const getSizePromises = recordImages.map((image) => {
+        if (image.uri) {
+          return new Promise((resolve) => {
+            Image.getSize(
+              SERVER_URL + image.uri,
+              (width, height) => {
+                const widthValue = 90 * (width / height);
+                resolve(widthValue);
+              },
+              () => {
+                // 이미지 로딩에 실패할 경우, 0으로 처리
+                resolve(0);
+              }
+            );
+          });
+        }
+        return Promise.resolve(0);
+      });
+
+      Promise.all(getSizePromises).then((widths: any[]) => {
+        setRecordImageWidth(widths);
+      });
+    }
+  }, [recordImages]);
 
   return (
     <Container>
@@ -65,10 +247,12 @@ const PlaceContainer = ({ place, isLast = false }: PlaceContainerProps) => {
           <TextUnderLine>
             <PlaceText>{place.name}</PlaceText>
           </TextUnderLine>
-          <Image
-            source={require("@assets/icon/trash(black).png")}
-            style={{ width: 15, height: 15 }}
-          />
+          <PlaceDropCheckModal courseId={courseId} placeName={place.name}>
+            <Image
+              source={require("@assets/icon/trash(black).png")}
+              style={{ width: 15, height: 15 }}
+            />
+          </PlaceDropCheckModal>
         </View>
         <ScrollViewContainer>
           <ScrollView
@@ -76,15 +260,45 @@ const PlaceContainer = ({ place, isLast = false }: PlaceContainerProps) => {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {/* TODO: 사용자가 스스로 이미지를 추가할 수 있도록 수정 */}
-            <Pressable onPress={() => pickImage()}>
+            {recordImages.map((recordImage, index) => (
+              <ImageCheckModal
+                key={index}
+                pickImageChange={pickImageChange}
+                pickImageDrop={pickImageDrop}
+                imageIndex={index}
+                imageUri={SERVER_URL + recordImage.uri}
+              >
+                {loading && (
+                  <SpinnerContainer>
+                    <Spinner />
+                  </SpinnerContainer>
+                )}
+                <FastImage
+                  source={{
+                    uri: SERVER_URL + recordImage.uri,
+                    cache: FastImage.cacheControl.immutable,
+                  }}
+                  onLoadEnd={() => setLoading(false)}
+                  style={[
+                    {
+                      width: recordImageWidth[index],
+                      height: 90,
+                      borderRadius: 10,
+                    },
+                    loading ? { width: 0 } : {},
+                  ]}
+                  resizeMode="contain"
+                />
+              </ImageCheckModal>
+            ))}
+            <Pressable onPress={() => pickImagePush()}>
               <FastImage
                 source={{
                   uri: SERVER_URL + place.image,
                   cache: FastImage.cacheControl.immutable,
                 }}
                 style={{
-                  width: imageWidth[0],
+                  width: tempImageWidth,
                   height: "100%",
                   borderRadius: 10,
                 }}
@@ -210,6 +424,15 @@ const BottomRightCorner = styled(Corner)`
 
   border-bottom-width: 1px;
   border-right-width: 1px;
+`;
+
+const SpinnerContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+
+  width: 90px;
+  height: 90px;
+  border-radius: 6px;
 `;
 
 export default PlaceContainer;

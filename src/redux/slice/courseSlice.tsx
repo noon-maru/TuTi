@@ -20,11 +20,11 @@ const coursesSlice = createSlice({
     },
     updateCourse: (
       state,
-      action: PayloadAction<{ courseId: number; updatedCourse: Course }>
+      action: PayloadAction<{ courseIndex: number; updatedCourse: Course }>
     ) => {
-      const { courseId, updatedCourse } = action.payload;
+      const { courseIndex, updatedCourse } = action.payload;
       state.courses = state.courses.map((course, index) =>
-        index === courseId ? updatedCourse : course
+        index === courseIndex ? updatedCourse : course
       );
     },
     deleteCourse: (state, action: PayloadAction<number>) => {

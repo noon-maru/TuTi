@@ -69,25 +69,27 @@ const BoxScreen = ({ route }: any) => {
   const [wishPlaces, setWishPlaces] = useState<Place[]>();
   const [isCourse, setIsCourse] = useState<boolean>(!fromHome);
 
+  const dataSetting = useCallback(() => {
+    const fetchData = async () => {
+      try {
+        dispatch(setCourses(await getCourse(id)));
+        setWishPlaces(await getWishPlace(id));
+      } catch (error) {
+        console.error("네트워킹 오류:", error);
+        throw error;
+      }
+    };
+
+    fetchData();
+  }, [id, dispatch]);
+
+  useFocusEffect(dataSetting);
+
+  useEffect(() => dataSetting(), [dataSetting]);
+
   useEffect(() => {
     setIsCourse(!fromHome);
   }, [fromHome]);
-
-  useFocusEffect(
-    useCallback(() => {
-      const fetchData = async () => {
-        try {
-          dispatch(setCourses(await getCourse(id)));
-          setWishPlaces(await getWishPlace(id));
-        } catch (error) {
-          console.error("네트워킹 오류:", error);
-          throw error;
-        }
-      };
-
-      fetchData();
-    }, [id, dispatch])
-  );
 
   return (
     <>
