@@ -153,7 +153,7 @@ const PlaceDropCheckModal = ({
 
             <ButtonContainer>
               <SelectionButton onPress={() => setVisible(false)}>
-                <StyledText>코스 유지</StyledText>
+                <StyledText>장소 유지</StyledText>
               </SelectionButton>
 
               <SelectionButton
@@ -164,7 +164,7 @@ const PlaceDropCheckModal = ({
                   })();
                 }}
               >
-                <StyledText>코스 삭제</StyledText>
+                <StyledText>장소 삭제</StyledText>
               </SelectionButton>
             </ButtonContainer>
           </ModalWindowContainer>
