@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, Pressable } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,14 +14,22 @@ import { SERVER_URL, API } from "@env";
 import { RootState } from "@redux/reducers";
 import { updateCourse } from "@redux/slice/courseSlice";
 
+import getTravelTime from "@utils/getTravelTime";
+
 interface PlaceDropCheckModalProps {
   courseId: string;
   placeName: string;
-  pickImageChange?: (index: number) => Promise<void>;
-  pickImageDrop?: (index: number) => Promise<void>;
-  imageIndex?: number;
-  imageUri?: string;
   children: React.ReactNode;
+}
+
+interface CourseUpdateData {
+  _id: string;
+  courseName: string;
+  places?: Place[];
+  placesId?: string[];
+  travelTime: number[];
+  totalFee: number;
+  recordImages: string[];
 }
 
 const PlaceDropCheckModal = ({
@@ -33,32 +42,64 @@ const PlaceDropCheckModal = ({
   const { id: userId } = useSelector((state: RootState) => state.user);
   const { courses } = useSelector((state: RootState) => state.courses);
   const [visible, setVisible] = useState<boolean>(false);
-  const [currentCourse, setCurrentCourse] = useState<Course>({} as Course);
+  const [currentCourse, setCurrentCourse] = useState<CourseUpdateData>(
+    {} as CourseUpdateData
+  );
 
   const placeDrop = async () => {
+    if (currentCourse.places!.length <= 2) {
+      return Toast.show({
+        type: "error",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "장소 최소 개수 오류", // 메시지 제목
+        text2: "하나의 코스에는 최소 2개 이상의 장소가 있어야합니다!", // 메시지 내용
+        visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+      });
+    }
     try {
-      // places에서 해당하는 place를 제거하고 place._id 배열을 반환
-      setCurrentCourse((prev) => ({
-        ...prev,
-        places:
-          typeof prev.places === "string[]"
-            ? [prev.places]
-            : (prev.places as Place[])
-                .filter((place) => place.name !== placeName)
-                .map((place) => place._id),
-      }));
-
+      Toast.show({
+        type: "info",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "장소 삭제 중", // 메시지 제목
+        text2: `${placeName} 장소를 삭제 중입니다. 잠시만 기다려주세요!`, // 메시지 내용
+        visibilityTime: 10000, // 토스트 메시지 표시 시간 (밀리초)
+      });
       const courseIndex = courses.findIndex(
-        (course) => course.courseName === currentCourse.courseName
+        (course) => course._id === courseId
       );
 
-      console.log(currentCourse.places?.map((place) => place.name));
+      const dropIndex = currentCourse.places!.findIndex(
+        (place) => place.name === placeName
+      );
 
-      // dispatch(updateCourse({ courseIndex, updatedCourse: currentCourse }));
+      const places = currentCourse.places!.filter(
+        (_, index) => index !== dropIndex
+      );
+
+      const updatedCourse = {
+        ...currentCourse,
+        placesId: places?.map((place) => place._id),
+        travelTime: await getTravelTime(
+          places.map((place) => ({
+            x: place.longitude,
+            y: place.latitude,
+          }))
+        ),
+        totalFee: places
+          .map((place) =>
+            Number(place.tourismInfo.admissionFee.match(/\d+/g)[0])
+          )
+          .reduce((accumulator, currentValue) => accumulator + currentValue),
+        // 문자열을 /를 기준으로 분리하고, 현재 장소의 ID와 같은 placeId들만 필터링
+        recordImages: currentCourse.recordImages.filter(
+          (recordImage) =>
+            recordImage.split("/")[5] !== currentCourse.places![dropIndex]._id
+        ),
+      };
 
       const response = await axios.put(
         SERVER_URL + API + `/course/${userId}/${courseId}`,
-        JSON.stringify(currentCourse),
+        JSON.stringify(updatedCourse),
         {
           headers: {
             "Content-Type": "application/json",
@@ -66,7 +107,16 @@ const PlaceDropCheckModal = ({
         }
       );
 
-      console.log(response.data);
+      dispatch(
+        updateCourse({ courseIndex, updatedCourse: response.data.course })
+      );
+      Toast.show({
+        type: "success",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "장소 삭제 성공!", // 메시지 제목
+        text2: `정상적으로 ${placeName} 장소를 삭제했습니다!`, // 메시지 내용
+        visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+      });
     } catch (error) {
       console.error("네트워크 오류:", error);
       throw error;
@@ -98,7 +148,7 @@ const PlaceDropCheckModal = ({
             </BoldStyledText>
             <StyledText>
               {`주의) 하나의 코스에는
-최소 두개의 장소가 있어야 됩니다!`}
+최소 2개 이상의 장소가 있어야 됩니다!`}
             </StyledText>
 
             <ButtonContainer>
@@ -109,8 +159,8 @@ const PlaceDropCheckModal = ({
               <SelectionButton
                 onPress={() => {
                   (async () => {
-                    await placeDrop();
                     setVisible(false);
+                    await placeDrop();
                   })();
                 }}
               >
