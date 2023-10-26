@@ -81,7 +81,9 @@ const CourseScreen = () => {
 
   const [wishPlaces, setWishPlaces] = useState<Place[]>([]);
 
-  const [course, setCourse] = useState<Course>({} as Course);
+  const [course, setCourse] = useState<Course>({
+    places: [{} as Place, {} as Place],
+  } as Course);
 
   const handleContainerLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
