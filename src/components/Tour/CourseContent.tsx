@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, Image, LayoutChangeEvent, Pressable } from "react-native";
+import {
+  Animated,
+  Image,
+  LayoutChangeEvent,
+  Pressable,
+  View,
+} from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
@@ -9,6 +15,8 @@ import PlaceContainer from "./PlaceContainer";
 import { toggleCourse } from "redux/slice/courseSlice";
 import { useDispatch } from "react-redux";
 import CheckModal from "./CheckModal";
+
+import CourseDeleteCheckModal from "@components/Box/CourseDeleteCheckModal";
 
 interface CourseContentProps {
   course: Course;
@@ -128,6 +136,18 @@ const CourseContent = ({ course }: CourseContentProps) => {
             isLast={index === places.length - 1}
           />
         ))}
+
+        <View style={{ alignItems: "flex-end" }}>
+          <CourseDeleteCheckModal courseId={course._id}>
+            <CourseDeleteButton
+              colors={["#C8E0FD", "#CCF0EC"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <BoldStyledText>{"코스 삭제"}</BoldStyledText>
+            </CourseDeleteButton>
+          </CourseDeleteCheckModal>
+        </View>
       </ContentsBox>
     </Container>
   );
@@ -173,6 +193,12 @@ const EndButton = styled.View`
   border-radius: 7px;
 
   background-color: white;
+`;
+
+const CourseDeleteButton = styled(LinearGradient)`
+  padding: 5px 12px;
+
+  border-radius: 7px;
 `;
 
 export default CourseContent;

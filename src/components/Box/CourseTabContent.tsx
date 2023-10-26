@@ -1,10 +1,17 @@
 import { useRef, useState } from "react";
-import { Animated, Image, LayoutChangeEvent, Pressable } from "react-native";
+import {
+  Animated,
+  Image,
+  LayoutChangeEvent,
+  Pressable,
+  View,
+} from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
 import styled from "styled-components/native";
 import { BoldStyledText } from "styles/globalStyles";
 import PlaceContainer from "@components/Tour/PlaceContainer";
+import CourseDeleteCheckModal from "./CourseDeleteCheckModal";
 
 interface CourseContentProps {
   course: Course;
@@ -78,6 +85,17 @@ const CourseTabContent = ({ course }: CourseContentProps) => {
             isLast={index === places.length - 1}
           />
         ))}
+        <View style={{ alignItems: "flex-end" }}>
+          <CourseDeleteCheckModal courseId={course._id}>
+            <CourseDeleteButton
+              colors={["#C8E0FD", "#CCF0EC"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+            >
+              <BoldStyledText>{"코스 삭제"}</BoldStyledText>
+            </CourseDeleteButton>
+          </CourseDeleteCheckModal>
+        </View>
       </ContentsBox>
     </Container>
   );
@@ -107,10 +125,13 @@ const TitleTextContainer = styled.View`
 `;
 
 const ContentsBox = styled.View`
-  padding-top: 25px;
-  padding-bottom: 30px;
-  padding-left: 23px;
-  padding-right: 23px;
+  padding: 25px;
+`;
+
+const CourseDeleteButton = styled(LinearGradient)`
+  padding: 5px 12px;
+
+  border-radius: 7px;
 `;
 
 export default CourseTabContent;

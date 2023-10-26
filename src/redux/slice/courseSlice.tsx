@@ -28,9 +28,9 @@ const coursesSlice = createSlice({
       );
     },
     deleteCourse: (state, action: PayloadAction<number>) => {
-      const courseIdToDelete = action.payload;
+      const courseIndexToDelete = action.payload;
       state.courses = state.courses.filter(
-        (_, index) => index !== courseIdToDelete
+        (_, index) => index !== courseIndexToDelete
       );
     },
     toggleCourse: (state, action: PayloadAction<string>) => {
