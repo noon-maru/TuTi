@@ -38,9 +38,12 @@ const coursesSlice = createSlice({
         (course) => course.courseName === action.payload
       );
 
-      if (courseIndex !== -1)
+      if (courseIndex !== -1) {
         state.courses[courseIndex].isProgress =
           !state.courses[courseIndex].isProgress;
+        state.courses[courseIndex].isTermination =
+          !state.courses[courseIndex].isTermination;
+      }
     },
   },
 });

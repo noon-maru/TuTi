@@ -14,7 +14,7 @@ import { SERVER_URL, API } from "@env";
 import { RootState } from "@redux/reducers";
 import { deleteCourse } from "@redux/slice/courseSlice";
 
-interface CourseDeleteCheckModalProps {
+interface CourseSettingModalProps {
   courseId: string;
   children: React.ReactNode;
 }
@@ -29,10 +29,10 @@ interface CourseUpdateData {
   recordImages: string[];
 }
 
-const CourseDeleteCheckModal = ({
+const CourseSettingModal = ({
   courseId,
   children,
-}: CourseDeleteCheckModalProps) => {
+}: CourseSettingModalProps) => {
   const dispatch = useDispatch();
 
   const { id: userId } = useSelector((state: RootState) => state.user);
@@ -109,6 +109,17 @@ const CourseDeleteCheckModal = ({
                 onPress={() => {
                   (async () => {
                     setVisible(false);
+                    // ToDo: 코스 진행 함수 추가해야 됨.
+                  })();
+                }}
+              >
+                <StyledText>코스 진행</StyledText>
+              </SelectionButton>
+
+              <SelectionButton
+                onPress={() => {
+                  (async () => {
+                    setVisible(false);
                     await courseDrop();
                   })();
                 }}
@@ -162,4 +173,4 @@ const SelectionButton = styled.Pressable`
   background-color: white;
 `;
 
-export default CourseDeleteCheckModal;
+export default CourseSettingModal;

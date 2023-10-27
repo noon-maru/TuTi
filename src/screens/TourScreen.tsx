@@ -105,7 +105,7 @@ const TourScreen = () => {
               />
             </Header>
             {courses
-              .filter((course) => !course.isProgress)
+              .filter((course) => course.isTermination)
               .map((course, index) => (
                 <CourseContent course={course} key={index} />
               ))}

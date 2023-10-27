@@ -8,15 +8,22 @@ import {
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
+import { useDispatch, useSelector } from "react-redux";
+
+import axios from "axios";
+
 import styled from "styled-components/native";
-import { BoldStyledText, StyledText } from "styles/globalStyles";
+import { BoldStyledText, StyledText } from "@styles/globalStyles";
+
+import { SERVER_URL, API } from "@env";
+
+import { RootState } from "@redux/reducers";
+import { toggleCourse } from "@redux/slice/courseSlice";
+
+import CourseSettingModal from "@components/Box/CourseSettingModal";
+
 import PlaceContainer from "./PlaceContainer";
-
-import { toggleCourse } from "redux/slice/courseSlice";
-import { useDispatch } from "react-redux";
 import CheckModal from "./CheckModal";
-
-import CourseDeleteCheckModal from "@components/Box/CourseDeleteCheckModal";
 
 interface CourseContentProps {
   course: Course;
@@ -26,6 +33,8 @@ const CourseContent = ({ course }: CourseContentProps) => {
   const { courseName, travelTime, places, isProgress } = course;
 
   const dispatch = useDispatch();
+
+  const { id: userId } = useSelector((state: RootState) => state.user);
 
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [ContentsBoxHeight, setContentsBoxHeight] = useState<number>(0);
@@ -72,8 +81,28 @@ const CourseContent = ({ course }: CourseContentProps) => {
     setContentsBoxHeight(height);
   };
 
-  const handleCourseProgress = () => {
+  const handleCourseProgress = async () => {
     setExpanded(!expanded);
+
+    const updatedCourse = {
+      ...course,
+      placesId: places.map((place) => place._id),
+      isProgress: false,
+      isTermination: true,
+    };
+
+    const response = await axios.put(
+      SERVER_URL + API + `/course/${userId}/${course._id}`,
+      JSON.stringify(updatedCourse),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log(response.data);
+
     dispatch(toggleCourse(courseName));
   };
 
@@ -137,15 +166,15 @@ const CourseContent = ({ course }: CourseContentProps) => {
         ))}
 
         <View style={{ alignItems: "flex-end" }}>
-          <CourseDeleteCheckModal courseId={course._id}>
+          <CourseSettingModal courseId={course._id}>
             <CourseDeleteButton
               colors={["#C8E0FD", "#CCF0EC"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
             >
-              <BoldStyledText>{"코스 삭제"}</BoldStyledText>
+              <BoldStyledText>{"코스 설정"}</BoldStyledText>
             </CourseDeleteButton>
-          </CourseDeleteCheckModal>
+          </CourseSettingModal>
         </View>
       </ContentsBox>
     </Container>

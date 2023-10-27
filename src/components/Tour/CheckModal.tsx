@@ -6,7 +6,7 @@ import styled from "styled-components/native";
 import { StyledText } from "@styles/globalStyles";
 
 interface ModalProps {
-  handleCourseProgress: () => void;
+  handleCourseProgress: () => Promise<void>;
   children: React.ReactNode;
 }
 
@@ -34,8 +34,10 @@ const CheckModal = ({ handleCourseProgress, children }: ModalProps) => {
               </SelectionButton>
               <SelectionButton
                 onPress={() => {
-                  setVisible(false);
-                  handleCourseProgress();
+                  (async () => {
+                    setVisible(false);
+                    await handleCourseProgress();
+                  })();
                 }}
               >
                 <StyledText>코스 종료</StyledText>

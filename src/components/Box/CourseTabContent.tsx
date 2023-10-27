@@ -11,7 +11,7 @@ import LinearGradient from "react-native-linear-gradient";
 import styled from "styled-components/native";
 import { BoldStyledText } from "styles/globalStyles";
 import PlaceContainer from "@components/Tour/PlaceContainer";
-import CourseDeleteCheckModal from "./CourseDeleteCheckModal";
+import CourseSettingModal from "./CourseSettingModal";
 
 interface CourseContentProps {
   course: Course;
@@ -85,15 +85,15 @@ const CourseTabContent = ({ course }: CourseContentProps) => {
           />
         ))}
         <View style={{ alignItems: "flex-end" }}>
-          <CourseDeleteCheckModal courseId={course._id}>
+          <CourseSettingModal courseId={course._id}>
             <CourseDeleteButton
               colors={["#C8E0FD", "#CCF0EC"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
             >
-              <BoldStyledText>{"코스 삭제"}</BoldStyledText>
+              <BoldStyledText>{"코스 설정"}</BoldStyledText>
             </CourseDeleteButton>
-          </CourseDeleteCheckModal>
+          </CourseSettingModal>
         </View>
       </ContentsBox>
     </Container>
