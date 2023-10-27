@@ -106,6 +106,13 @@ const CourseScreen = () => {
     userId: string,
     courseName: string
   ) => {
+    Toast.show({
+      type: "info",
+      position: "bottom", // 토스트 메시지 위치 (top, bottom)
+      text1: "코스 등록 중", // 메시지 제목
+      text2: `${courseName} 코스를 등록 중입니다. 잠시만 기다려주세요!`, // 메시지 내용
+      visibilityTime: 10000, // 토스트 메시지 표시 시간 (밀리초)
+    });
     try {
       let url = "";
       if (isDevelopMode) url = DEVELOP_SERVER_URL + API + `/course/${userId}`;

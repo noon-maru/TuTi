@@ -115,7 +115,7 @@ const PlaceDropCheckModal = ({
         position: "bottom", // 토스트 메시지 위치 (top, bottom)
         text1: "장소 삭제 성공!", // 메시지 제목
         text2: `정상적으로 ${placeName} 장소를 삭제했습니다!`, // 메시지 내용
-        visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+        visibilityTime: 4000, // 토스트 메시지 표시 시간 (밀리초)
       });
     } catch (error) {
       console.error("네트워크 오류:", error);

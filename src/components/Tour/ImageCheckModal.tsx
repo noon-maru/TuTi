@@ -59,8 +59,8 @@ const ImageCheckModal = ({
               <SelectionButton
                 onPress={() => {
                   (async () => {
-                    await pickImageChange(imageIndex);
                     setVisible(false);
+                    await pickImageChange(imageIndex);
                   })();
                 }}
               >
@@ -69,8 +69,8 @@ const ImageCheckModal = ({
               <SelectionButton
                 onPress={() => {
                   (async () => {
-                    await pickImageDrop(imageIndex);
                     setVisible(false);
+                    await pickImageDrop(imageIndex);
                   })();
                 }}
               >

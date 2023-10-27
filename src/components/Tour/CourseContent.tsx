@@ -132,7 +132,6 @@ const CourseContent = ({ course }: CourseContentProps) => {
             key={index}
             courseId={course._id}
             place={place}
-            recordedImages={course.recordImages}
             isLast={index === places.length - 1}
           />
         ))}

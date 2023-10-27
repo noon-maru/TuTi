@@ -62,8 +62,10 @@ const CourseRegistrationModal = ({
               </SelectionButton>
               <SelectionButton
                 onPress={() => {
-                  setVisible(false);
-                  handleCourseRegistration(id, courseName);
+                  (async () => {
+                    setVisible(false);
+                    await handleCourseRegistration(id, courseName);
+                  })();
                 }}
               >
                 <StyledText>코스 등록</StyledText>

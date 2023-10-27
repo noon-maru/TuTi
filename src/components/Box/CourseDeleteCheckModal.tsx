@@ -44,6 +44,14 @@ const CourseDeleteCheckModal = ({
 
   const courseDrop = async () => {
     try {
+      Toast.show({
+        type: "info",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "코스 삭제 중", // 메시지 제목
+        text2: `${currentCourse.courseName} 코스를 삭제 중입니다. 잠시만 기다려주세요!`, // 메시지 내용
+        visibilityTime: 10000, // 토스트 메시지 표시 시간 (밀리초)
+      });
+
       const courseIndex = courses.findIndex(
         (course) => course._id === courseId
       );
@@ -57,7 +65,7 @@ const CourseDeleteCheckModal = ({
         position: "bottom", // 토스트 메시지 위치 (top, bottom)
         text1: "코스 삭제 성공!", // 메시지 제목
         text2: `정상적으로 ${currentCourse.courseName} 코스를 삭제했습니다!`, // 메시지 내용
-        visibilityTime: 6000, // 토스트 메시지 표시 시간 (밀리초)
+        visibilityTime: 4000, // 토스트 메시지 표시 시간 (밀리초)
       });
     } catch (error) {
       console.error("네트워크 오류:", error);

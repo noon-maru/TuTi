@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Image,
-  ImageURISource,
-  Pressable,
-  ScrollView,
-  View,
-} from "react-native";
+import { Image, Pressable, ScrollView, View } from "react-native";
 
 import FastImage from "react-native-fast-image";
 import {
@@ -15,6 +9,9 @@ import {
 } from "react-native-image-picker";
 
 import Icon from "react-native-vector-icons/AntDesign";
+import Toast from "react-native-toast-message";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import axios from "axios";
 
@@ -24,7 +21,8 @@ import { StyledText } from "@styles/globalStyles";
 import { SERVER_URL, API } from "@env";
 
 import { RootState } from "@redux/reducers";
-import { useSelector } from "react-redux";
+import { updateCourse } from "@redux/slice/courseSlice";
+
 import Spinner from "@components/Spinner";
 import ImageCheckModal from "./ImageCheckModal";
 import PlaceDropCheckModal from "./PlaceDropCheckModal";
@@ -32,25 +30,26 @@ import PlaceDropCheckModal from "./PlaceDropCheckModal";
 interface PlaceContainerProps {
   courseId: string;
   place: Place;
-  recordedImages: string[];
   isLast?: boolean;
 }
 
 const PlaceContainer = ({
   courseId,
   place,
-  recordedImages,
   isLast = false,
 }: PlaceContainerProps) => {
-  const { id: userId } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
 
-  const [recordImages, setRecordImages] = useState<ImageURISource[]>([]);
+  const { id: userId } = useSelector((state: RootState) => state.user);
+  const { courses } = useSelector((state: RootState) => state.courses);
+
+  const [courseIndex, setCourseIndex] = useState<number>(0);
   const [recordImageWidth, setRecordImageWidth] = useState<number[]>([]);
   const [tempImageWidth, setTempImageWidth] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
 
   const pickImageDrop = async (index: number) => {
-    const imageUrl = recordImages[index].uri;
+    const imageUrl = courses[courseIndex].recordImages[index];
     if (!imageUrl) {
       console.error("유효하지 않은 index입니다.");
       return;
@@ -58,20 +57,34 @@ const PlaceContainer = ({
     const imageName = imageUrl!.split("/")[6];
 
     try {
-      const response = await axios.delete(
+      await axios.delete(
         SERVER_URL +
           API +
           `/course/userimage/${userId}/${courseId}/${place._id}/${imageName}`
       );
-      if (response.status === 200) {
-        setRecordImages((prev) =>
-          prev.filter(
-            (imagePath) =>
-              imagePath.uri !==
-              `/static/userimage/${userId}/${courseId}/${place._id}/${imageName}`
-          )
-        );
-      }
+      // 이미지 정보를 수정하기 위해 기존 코스 객체를 복사
+      const courseToUpdate = courses[courseIndex];
+
+      // 업데이트 된 코스 정보
+      const updatedCourse = {
+        ...courseToUpdate,
+        recordImages: courseToUpdate.recordImages.filter(
+          (imagePath) =>
+            imagePath !==
+            `/static/userimage/${userId}/${courseId}/${place._id}/${imageName}`
+        ),
+      };
+
+      // 코스 정보 업데이트
+      dispatch(updateCourse({ courseIndex, updatedCourse }));
+
+      Toast.show({
+        type: "success",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "이미지 삭제 성공", // 메시지 제목
+        text2: `${place.name} 장소에서 이미지를 삭제했습니다!`, // 메시지 내용
+        visibilityTime: 3000, // 토스트 메시지 표시 시간 (밀리초)
+      });
     } catch (error) {
       console.error("네트워크 오류:", error);
       throw error;
@@ -79,7 +92,7 @@ const PlaceContainer = ({
   };
 
   const pickImageChange = async (index: number) => {
-    const imageUrl = recordImages[index].uri;
+    const imageUrl = courses[courseIndex].recordImages[index];
     if (!imageUrl) {
       console.error("유효하지 않은 index입니다.");
       return;
@@ -96,6 +109,13 @@ const PlaceContainer = ({
     } else if (result.errorCode) {
       console.error("ImagePicker Error: ", result.errorMessage);
     } else {
+      Toast.show({
+        type: "info",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "이미지 변경 중", // 메시지 제목
+        text2: `${place.name} 장소의 이미지를 변경 중입니다. 잠시만 기다려주세요!`, // 메시지 내용
+        visibilityTime: 10000, // 토스트 메시지 표시 시간 (밀리초)
+      });
       const source: Asset = result.assets![0];
 
       try {
@@ -118,11 +138,29 @@ const PlaceContainer = ({
         );
         setLoading(true);
         setTimeout(() => {
-          setRecordImages((prev) =>
-            prev.map((imageUri, i) =>
-              i === index ? { uri: response.data.recordImagePath } : imageUri
-            )
-          );
+          // 여기에서 다른 상태 업데이트와 작업을 수행
+          const updatedImagePath = response.data.recordImagePath as string;
+
+          // 기존 코스 객체를 복사해 새로운 이미지 정보 추가
+          const courseToUpdate = courses[courseIndex];
+
+          // 업데이트 된 코스 정보
+          const updatedCourse = {
+            ...courseToUpdate,
+            recordImages: courseToUpdate.recordImages.map((imageUri, i) =>
+              i === index ? updatedImagePath : imageUri
+            ),
+          };
+
+          dispatch(updateCourse({ courseIndex, updatedCourse }));
+
+          Toast.show({
+            type: "success",
+            position: "bottom", // 토스트 메시지 위치 (top, bottom)
+            text1: "이미지 변경 성공", // 메시지 제목
+            text2: `${place.name} 장소에 이미지를 변경했습니다!`, // 메시지 내용
+            visibilityTime: 5000, // 토스트 메시지 표시 시간 (밀리초)
+          });
         }, 500);
       } catch (error) {
         console.error("네트워크 오류:", error);
@@ -142,6 +180,14 @@ const PlaceContainer = ({
     } else if (result.errorCode) {
       console.error("ImagePicker Error: ", result.errorMessage);
     } else {
+      Toast.show({
+        type: "info",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "이미지 등록 중", // 메시지 제목
+        text2: `${place.name} 장소에 이미지를 등록 중입니다. 잠시만 기다려주세요!`, // 메시지 내용
+        visibilityTime: 10000, // 토스트 메시지 표시 시간 (밀리초)
+      });
+
       const source: Asset = result.assets![0];
 
       try {
@@ -164,10 +210,27 @@ const PlaceContainer = ({
         );
         setLoading(true);
         setTimeout(() => {
-          setRecordImages((prev) => [
-            ...prev,
-            { uri: response.data.recordImage },
-          ]);
+          // 여기에서 다른 상태 업데이트와 작업을 수행
+          const updatedImage = response.data.recordImage as string;
+
+          // 기존 코스 객체를 복사해 새로운 이미지 정보 추가
+          const courseToUpdate = courses[courseIndex];
+
+          // 업데이트 된 코스 정보
+          const updatedCourse = {
+            ...courseToUpdate,
+            recordImages: [...courseToUpdate.recordImages, updatedImage],
+          };
+
+          dispatch(updateCourse({ courseIndex, updatedCourse }));
+
+          Toast.show({
+            type: "success",
+            position: "bottom",
+            text1: "이미지 등록 성공",
+            text2: `${place.name} 장소에 이미지를 등록했습니다!`,
+            visibilityTime: 5000,
+          });
         }, 500);
       } catch (error) {
         console.error("네트워크 오류:", error);
@@ -177,59 +240,47 @@ const PlaceContainer = ({
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const filteredRecordedImage = recordedImages.filter(
-          (recordedImageUrl) =>
-            // 문자열을 /를 기준으로 분리하고, 현재 장소의 ID와 같은 placeId들만 필터링
-            place._id === recordedImageUrl.split("/")[5]
-        );
-        if (!filteredRecordedImage.length) return;
-
-        setRecordImages(filteredRecordedImage.map((uri) => ({ uri })));
-      } catch (error) {
-        console.error("네트워킹 오류:", error);
-        throw error;
-      }
-    };
-
-    fetchData();
-  }, [place._id, recordedImages]);
-
-  useEffect(() => {
     // 이미지 높이는 90px로 고정, 너비는 원본 비율에 따라 조절
     Image.getSize(SERVER_URL + place.image, (width, height) =>
       setTempImageWidth(90 * (width / height))
     );
   }, [place.image]);
 
+  useEffect(
+    () =>
+      setCourseIndex(courses.findIndex((course) => course._id === courseId)),
+    [courseId, courses]
+  );
+
   useEffect(() => {
     setRecordImageWidth([]);
-    if (recordImages.length) {
-      const getSizePromises = recordImages.map((image) => {
-        if (image.uri) {
-          return new Promise((resolve) => {
-            Image.getSize(
-              SERVER_URL + image.uri,
-              (width, height) => {
-                const widthValue = 90 * (width / height);
-                resolve(widthValue);
-              },
-              () => {
-                // 이미지 로딩에 실패할 경우, 0으로 처리
-                resolve(0);
-              }
-            );
-          });
+    if (courses[courseIndex].recordImages.length) {
+      const getSizePromises = courses[courseIndex].recordImages.map(
+        (imagePath) => {
+          if (imagePath) {
+            return new Promise((resolve) => {
+              Image.getSize(
+                SERVER_URL + imagePath,
+                (width, height) => {
+                  const widthValue = 90 * (width / height);
+                  resolve(widthValue);
+                },
+                () => {
+                  // 이미지 로딩에 실패할 경우, 0으로 처리
+                  resolve(0);
+                }
+              );
+            });
+          }
+          return Promise.resolve(0);
         }
-        return Promise.resolve(0);
-      });
+      );
 
       Promise.all(getSizePromises).then((widths: any[]) => {
         setRecordImageWidth(widths);
       });
     }
-  }, [recordImages]);
+  }, [courses, courseIndex]);
 
   return (
     <Container>
@@ -260,37 +311,39 @@ const PlaceContainer = ({
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {recordImages.map((recordImage, index) => (
-              <ImageCheckModal
-                key={index}
-                pickImageChange={pickImageChange}
-                pickImageDrop={pickImageDrop}
-                imageIndex={index}
-                imageUri={SERVER_URL + recordImage.uri}
-              >
-                {loading && (
-                  <SpinnerContainer>
-                    <Spinner />
-                  </SpinnerContainer>
-                )}
-                <FastImage
-                  source={{
-                    uri: SERVER_URL + recordImage.uri,
-                    cache: FastImage.cacheControl.immutable,
-                  }}
-                  onLoadEnd={() => setLoading(false)}
-                  style={[
-                    {
-                      width: recordImageWidth[index],
-                      height: 90,
-                      borderRadius: 10,
-                    },
-                    loading ? { width: 0 } : {},
-                  ]}
-                  resizeMode="contain"
-                />
-              </ImageCheckModal>
-            ))}
+            {courses[courseIndex].recordImages
+              .filter((recordImage) => recordImage.split("/")[5] === place._id)
+              .map((recordImage, index) => (
+                <ImageCheckModal
+                  key={index}
+                  pickImageChange={pickImageChange}
+                  pickImageDrop={pickImageDrop}
+                  imageIndex={index}
+                  imageUri={SERVER_URL + recordImage}
+                >
+                  {loading && (
+                    <SpinnerContainer>
+                      <Spinner />
+                    </SpinnerContainer>
+                  )}
+                  <FastImage
+                    source={{
+                      uri: SERVER_URL + recordImage,
+                      cache: FastImage.cacheControl.immutable,
+                    }}
+                    onLoadEnd={() => setLoading(false)}
+                    style={[
+                      {
+                        width: recordImageWidth[index],
+                        height: 90,
+                        borderRadius: 10,
+                      },
+                      loading ? { width: 0 } : {},
+                    ]}
+                    resizeMode="contain"
+                  />
+                </ImageCheckModal>
+              ))}
             <Pressable onPress={() => pickImagePush()}>
               <FastImage
                 source={{
