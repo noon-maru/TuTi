@@ -91,7 +91,7 @@ const CourseContent = ({ course }: CourseContentProps) => {
       isTermination: true,
     };
 
-    const response = await axios.put(
+    await axios.put(
       SERVER_URL + API + `/course/${userId}/${course._id}`,
       JSON.stringify(updatedCourse),
       {
@@ -100,8 +100,6 @@ const CourseContent = ({ course }: CourseContentProps) => {
         },
       }
     );
-
-    console.log(response.data);
 
     dispatch(toggleCourse(courseName));
   };
