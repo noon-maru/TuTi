@@ -66,7 +66,7 @@ const BoxScreen = ({ route }: any) => {
   const { id } = useSelector((state: RootState) => state.user);
   const { courses } = useSelector((state: RootState) => state.courses);
 
-  const [wishPlaces, setWishPlaces] = useState<Place[]>();
+  const [wishPlaces, setWishPlaces] = useState<Place[]>([]);
   const [isCourse, setIsCourse] = useState<boolean>(!fromHome);
 
   const dataSetting = useCallback(() => {
@@ -153,8 +153,8 @@ const BoxScreen = ({ route }: any) => {
               {wishPlaces?.map((wishPlace, index) => (
                 <WishTabContent
                   key={index}
-                  title={wishPlace.name}
-                  address={wishPlace.address}
+                  wishPlace={wishPlace}
+                  setWishPlaces={setWishPlaces}
                 />
               ))}
             </TabContentsContainer>
