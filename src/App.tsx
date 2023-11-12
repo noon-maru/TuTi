@@ -4,15 +4,18 @@
 
 import { useState } from "react";
 import { StatusBar, ImageBackground, Linking } from "react-native";
-import { useSelector } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import changeNavigationBarColor from "react-native-navigation-bar-color";
+
 import { NavigationContainer } from "@react-navigation/native";
 
-import { RootState } from "redux/reducers";
+import { useSelector } from "react-redux";
 
-import NavigationDrawer from "navigators/NavigationDrawer";
-import SignInMethodScreen from "screens/SignInMethodScreen";
-import LoadingScreen from "screens/LoadingScreen";
+import { RootState } from "@redux/reducers";
+
+import NavigationDrawer from "@navigators/NavigationDrawer";
+import SignInMethodScreen from "@screens/SignInMethodScreen";
+import LoadingScreen from "@screens/LoadingScreen";
 
 const config = {
   initialRouteName: "Main", // 초기 화면 설정
@@ -67,6 +70,9 @@ const linking = {
 
 // App 컴포넌트에는 앱 전반에 적용되는 레이아웃 등을 넣어준다.
 const App = () => {
+  // 안드로이드 하단 네비게이션 바 색상 제거
+  changeNavigationBarColor("transparent");
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const user = useSelector((state: RootState) => state.user);
 
