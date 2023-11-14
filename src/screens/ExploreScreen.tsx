@@ -4,13 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import styled from "styled-components/native";
 
-import { RootState } from "redux/reducers";
-import { setExploreContainerHeight } from "redux/slice/drawerSlice";
+import { RootState } from "@redux/reducers";
+import { setExploreContainerHeight } from "@redux/slice/drawerSlice";
 
-import SearchBox from "components/SearchBox";
-import KakaoMapWebView from "components/Explore/KakaoMapWebView";
-import ExploreDrawer from "components/Explore/ExploreDrawer";
-import InformBox from "components/Explore/InformBox";
+import SearchBox from "@components/Explore/SearchBox";
+import KakaoMapWebView from "@components/Explore/KakaoMapWebView";
+import ExploreDrawer from "@components/Explore/ExploreDrawer";
+import InformBox from "@components/Explore/InformBox";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 

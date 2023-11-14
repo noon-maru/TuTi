@@ -99,7 +99,7 @@ const HomeDrawer = ({ flingCount, setFlingCount }: HomeDrawerProps) => {
         direction={Directions.DOWN}
         onHandlerStateChange={onDownFlingGesture}
       >
-        <ContentsContainer style={{ transform: [{ translateY: translateY }] }}>
+        <ContentsContainer style={{ transform: [{ translateY }] }}>
           <DrawerKnob />
           <WishContainer onLayout={handleWishContainerLayout}>
             <WishPlace />
