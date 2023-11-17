@@ -91,10 +91,15 @@ const CourseSettingModal = ({
     // 이미지 정보를 수정하기 위해 기존 코스 객체를 복사
     const courseToUpdate = courses[courseIndex];
 
+    const currentDate = new Date();
+
+    const startDate = `${currentDate.getFullYear()}/${currentDate.getMonth()}/${currentDate.getDate()}`;
+
     // 업데이트 된 코스 정보
     const updatedCourse = {
       ...courseToUpdate,
       placesId: courseToUpdate.places.map((place) => place._id),
+      startDate,
       isProgress: true,
       isTermination: false,
     } as Course;
