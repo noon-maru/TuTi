@@ -6,6 +6,7 @@ interface Course {
   totalFee: number;
   startDate: string;
   recordImages: string[];
+  postContent: string;
   isProgress: boolean;
   isTermination: boolean;
   isRecommended: boolean;

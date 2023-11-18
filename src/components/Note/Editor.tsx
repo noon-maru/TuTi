@@ -6,10 +6,21 @@ import {
   RichEditor,
   RichToolbar,
 } from "react-native-pell-rich-editor";
+import Toast from "react-native-toast-message";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import axios from "axios";
+
+import { API, SERVER_URL } from "@env";
 
 import styled from "styled-components/native";
 
 import { StyledText } from "@styles/globalStyles";
+
+import { RootState } from "@redux/reducers";
+import { updateCourse } from "@redux/slice/courseSlice";
+
 import TitleImage from "./TitleImage";
 
 const handleHead1 = ({ tintColor }: { tintColor: ColorValue }) => (
@@ -27,15 +38,19 @@ interface EditorProps {
 }
 
 const Editor = ({ courseName }: EditorProps) => {
+  const dispatch = useDispatch();
+
+  const { id: userId } = useSelector((state: RootState) => state.user);
+  const { courses } = useSelector((state: RootState) => state.courses);
+
   const richText = useRef<RichEditor | null>(null);
   const dynamicHeight = useRef(new Animated.Value(0)).current;
 
+  const [course, setCourse] = useState<Course>();
+  const [courseIndex, setCourseIndex] = useState<number>(0);
+  const [postContent, setPostContent] = useState<string>();
   const [lock, setLock] = useState<boolean>(true);
   const [editorHeight, setEditorHeight] = useState<number>(0);
-
-  const handleHeightChange = (newHeight: number) => {
-    setEditorHeight(newHeight);
-  };
 
   const animatedStyle = {
     height: dynamicHeight.interpolate({
@@ -43,6 +58,57 @@ const Editor = ({ courseName }: EditorProps) => {
       outputRange: [200, 50 + editorHeight], // 버튼의 높이를 확장하려면 이 값을 조절
     }),
   };
+
+  const handleHeightChange = (newHeight: number) => {
+    setEditorHeight(newHeight);
+  };
+
+  const handlePostSave = async () => {
+    try {
+      if (!course) {
+        return;
+      }
+
+      // 업데이트 된 코스 정보
+      const updatedCourse = {
+        ...course,
+        placesId: course.places.map((place) => place._id),
+        postContent,
+      } as Course;
+
+      await axios.put(
+        SERVER_URL + API + `/course/${userId}/${course._id}`,
+        JSON.stringify(updatedCourse),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      dispatch(updateCourse({ courseIndex, updatedCourse }));
+
+      Toast.show({
+        type: "success",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "저장 성공!", // 메시지 제목
+        text2: `${courseName} 코스의 노트에 작성한 내용을 저장했습니다!`, // 메시지 내용
+        visibilityTime: 4000, // 토스트 메시지 표시 시간 (밀리초)
+      });
+    } catch (error) {
+      console.error("네트워크 오류:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const foundCourseIndex = courses.findIndex(
+      (item) => item.courseName === courseName
+    );
+    setCourseIndex(foundCourseIndex);
+    setCourse(courses[foundCourseIndex]);
+    setPostContent(courses[foundCourseIndex].postContent);
+  }, [courseName, courses]);
 
   useEffect(() => {
     // 애니메이션 값 변경
@@ -63,6 +129,8 @@ const Editor = ({ courseName }: EditorProps) => {
       >
         <StyledEditor
           ref={richText}
+          initialContentHTML={postContent}
+          onChange={(content) => setPostContent(content)}
           placeholder={
             "여행 중 또는 여행이 끝나고, 기록하고 싶은 것들을 적어보세요!"
           }
@@ -73,7 +141,15 @@ const Editor = ({ courseName }: EditorProps) => {
       <TitleImageContainer>
         <TitleImage courseName={courseName} />
       </TitleImageContainer>
-      <LockButton onPress={() => setLock((prev) => !prev)}>
+      {/* 트래픽이 어느정도가 될지 알 수가 없어, 일단은 lock을 할 때마다 저장하도록 설정 */}
+      <LockButton
+        onPress={async () => {
+          if (!lock) {
+            await handlePostSave();
+          }
+          setLock((prev) => !prev);
+        }}
+      >
         {lock ? (
           <Image
             source={require("@assets/icon/lock.png")}
