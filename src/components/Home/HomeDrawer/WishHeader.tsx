@@ -13,7 +13,7 @@ const WishHeader = () => {
   return (
     <Container>
       <WishPlacesTextContainer>
-        <WishIcon source={require("@assets/icon/heart(color).png")} />
+        <WishIcon source={require("@assets/icon/heart(red-gra).png")} />
         <WishPlacesText>{"찜 한 장소 보기"}</WishPlacesText>
       </WishPlacesTextContainer>
       <TouchableOpacity

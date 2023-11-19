@@ -131,11 +131,11 @@ const CourseDrawer = ({ setCourse }: CourseDrawerProps) => {
               <ContentsContainer>
                 <HeaderTitle>
                   <Image
-                    source={require("@assets/icon/star.png")}
+                    source={require("@assets/icon/star(color).png")}
                     style={{ width: 15, height: 15 }}
                   />
                   <StyledText style={{ fontSize: 15, width: "100%" }}>
-                    추천 코스
+                    {"추천 코스"}
                   </StyledText>
                 </HeaderTitle>
                 <GradientLine

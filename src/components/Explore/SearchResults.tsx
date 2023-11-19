@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable, View } from "react-native";
 import FastImage from "react-native-fast-image";
 
+import { useDispatch } from "react-redux";
+
 import { SERVER_URL, API } from "@env";
 import axios from "axios";
 
 import styled from "styled-components/native";
 
 import { BoldStyledText, StyledText } from "@styles/globalStyles";
-import { useDispatch } from "react-redux";
 import { postMessage } from "@redux/slice/messageSlice";
 
 interface SearchResultsProps {

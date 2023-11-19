@@ -15,10 +15,14 @@ import { RootState } from "@redux/reducers";
 import { setMarkerInfo, toggleWishClick } from "@redux/slice/markerSlice";
 import { postMessage } from "@redux/slice/messageSlice";
 
+interface MyNavigation {
+  navigate: (screen: string, params: { placeName: string }) => void;
+}
+
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 const InformBox = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<MyNavigation>();
 
   const dispatch = useDispatch();
   const marker = useSelector((state: RootState) => state.marker);
@@ -85,7 +89,11 @@ const InformBox = () => {
           }}
         >
           <HeaderContainer>
-            <Pressable onPress={() => navigation.navigate("Sponser" as never)}>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("Sponser", { placeName: marker.markerName })
+              }
+            >
               <BoldStyledText style={{ fontSize: 20 }}>
                 {marker.markerName}
               </BoldStyledText>
@@ -147,7 +155,11 @@ const InformBox = () => {
                 )}
               </Pressable>
               <Pressable
-                onPress={() => navigation.navigate("PlaceImage" as never)}
+                onPress={() =>
+                  navigation.navigate("PlaceImage", {
+                    placeName: marker.markerName,
+                  })
+                }
               >
                 <Icon source={require("@assets/icon/photo(black).png")} />
               </Pressable>

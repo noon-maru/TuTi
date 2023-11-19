@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import styled from "styled-components/native";
 
 import STT from "../STT";
-import SearchResults from "./ExploreDrawer/SearchResults";
+import SearchResults from "./SearchResults";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 

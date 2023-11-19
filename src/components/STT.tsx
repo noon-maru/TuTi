@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import styled from "styled-components/native";
 import Voice from "@react-native-voice/voice";
+import { useFocusEffect } from "@react-navigation/native";
 
 const STT = ({
   setSearchText,
@@ -34,12 +35,20 @@ const STT = ({
     }
   };
 
-  const onSpeechResultsHandler = (event: any) => {
-    const results = event.value;
-    setSearchText(results.join(" "));
-  };
+  const onSpeechResultsHandler = useCallback(
+    (event: any) => {
+      const results = event.value;
+      setSearchText(results[0]);
+    },
+    [setSearchText]
+  );
 
-  Voice.onSpeechResults = onSpeechResultsHandler;
+  useFocusEffect(
+    useCallback(() => {
+      Voice.onSpeechResults = onSpeechResultsHandler;
+      return () => Voice.destroy().then(Voice.removeAllListeners);
+    }, [onSpeechResultsHandler])
+  );
 
   return (
     <Container

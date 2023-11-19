@@ -40,9 +40,11 @@ const TitleImage = ({ courseName }: TitleImageProps) => {
             contentContainerStyle={{ gap: 10 }}
           >
             {foundCourse?.recordImages.map((imageUri, index) => (
-              <Pressable onPress={async () => await handleImageSelect(index)}>
+              <Pressable
+                key={index}
+                onPress={async () => await handleImageSelect(index)}
+              >
                 <FastImage
-                  key={index}
                   source={{
                     uri: SERVER_URL + imageUri,
                     cache: FastImage.cacheControl.immutable,

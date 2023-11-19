@@ -104,7 +104,7 @@ const WishPlacesByRegion = ({
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
           >
-            <StyledText>{`□ ${wishPlace.name}`}</StyledText>
+            <StyledText>{wishPlace.name}</StyledText>
             <ButtonContainer>
               <ButtonBox
                 style={{ borderColor: "#00C8A9" }}

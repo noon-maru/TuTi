@@ -2,11 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { Modal, FlatList, Pressable, View } from "react-native";
 import { Shadow } from "react-native-shadow-2";
 import Icon from "react-native-vector-icons/FontAwesome";
+import FastImage from "react-native-fast-image";
 
 import axios from "axios";
 
 import styled from "styled-components/native";
-import { StyledText } from "@styles/globalStyles";
+import { BoldStyledText, StyledText } from "@styles/globalStyles";
 
 import { SERVER_URL, DEVELOP_SERVER_URL, DEVELOP_MODE, API } from "@env";
 
@@ -118,7 +119,7 @@ const AddPlacetoCourseModal = ({
                 </View>
               </Shadow>
             </SearchBoxContainer>
-            <View style={{ height: 300 }}>
+            <View style={{ width: "100%", height: 300 }}>
               <FlatList
                 data={filteredPlaces}
                 renderItem={(items) => (
@@ -133,7 +134,40 @@ const AddPlacetoCourseModal = ({
                       setVisible(false);
                     }}
                   >
-                    <StyledText>{items.item.name}</StyledText>
+                    <ItemContainer>
+                      <FastImage
+                        source={{ uri: SERVER_URL + items.item.image }}
+                        style={{ width: 60, height: 60, borderRadius: 10 }}
+                      />
+                      <View style={{ flex: 1, gap: 3 }}>
+                        <BoldStyledText>{items.item.name}</BoldStyledText>
+                        <View style={{ flexDirection: "row", gap: 3 }}>
+                          {items.item.tags.map((tag, i) => (
+                            <StyledText
+                              style={{ fontSize: 13, color: "#6B6B6B" }}
+                              key={i}
+                            >
+                              {`#${tag.tagName}`}
+                            </StyledText>
+                          ))}
+                        </View>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          gap: 3,
+                          alignItems: "center",
+                        }}
+                      >
+                        <FastImage
+                          source={require("@assets/icon/heart(line).png")}
+                          style={{ width: 10, height: 10 }}
+                        />
+                        <StyledText style={{ fontSize: 12, color: "#7FCFE9" }}>
+                          {items.item.numberHearts}
+                        </StyledText>
+                      </View>
+                    </ItemContainer>
                   </Pressable>
                 )}
                 ItemSeparatorComponent={renderSeparator}
@@ -159,6 +193,8 @@ const ModalWindowContainer = styled.Pressable`
   justify-content: center;
   align-items: center;
 
+  width: 85%;
+
   border-radius: 30px;
   border-width: 0.5px;
   border-color: #efeff0;
@@ -182,6 +218,20 @@ const SearchInput = styled.TextInput`
   margin: 0;
   font-family: "SpoqaHanSansNeo-Regular";
   font-size: 17px;
+`;
+
+const ItemContainer = styled.View`
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+
+  border-width: 1px;
+  border-color: #7fcfe9;
+  border-radius: 10px;
+
+  background-color: white;
+
+  padding: 10px;
 `;
 
 export default AddPlacetoCourseModal;

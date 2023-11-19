@@ -12,6 +12,7 @@ import { RootState } from "redux/reducers";
 
 import WishHeader from "./WishHeader";
 import WishItem from "./WishItem";
+import { StyledText } from "@styles/globalStyles";
 
 const isDevelopMode = DEVELOP_MODE === "true";
 
@@ -56,17 +57,41 @@ const WishPlace = () => {
   return (
     <>
       <WishHeader />
-      <WishPlacesContainer>
-        {wishPlaces.map((value, index) => (
-          <WishItem key={index} imageUrl={value.image} name={value.name} />
-        ))}
-      </WishPlacesContainer>
+      {wishPlaces.length !== 0 ? (
+        <WishPlacesContainer>
+          {wishPlaces.map((value, index) => (
+            <WishItem key={index} imageUrl={value.image} name={value.name} />
+          ))}
+        </WishPlacesContainer>
+      ) : (
+        <EmptyWishPlaceContainer>
+          <Icon source={require("@assets/icon/heart(red-gra).png")} />
+          <StyledText style={{ textAlign: "center" }}>
+            {`찜 한 장소가 없습니다.
+관심 있는 장소에 하트를 눌러보세요.`}
+          </StyledText>
+        </EmptyWishPlaceContainer>
+      )}
     </>
   );
 };
 
 const WishPlacesContainer = styled.View`
   margin-top: 30px;
+`;
+
+const EmptyWishPlaceContainer = styled.View`
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 150px;
+`;
+
+const Icon = styled.Image`
+  width: 30px;
+  height: 30px;
 `;
 
 export default WishPlace;

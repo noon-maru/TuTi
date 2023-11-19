@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { Modal, Pressable } from "react-native";
+import { Modal, Pressable, View } from "react-native";
+import Icon from "react-native-vector-icons/Feather";
+import LinearGradient from "react-native-linear-gradient";
 
 import { useSelector } from "react-redux";
 
 import styled from "styled-components/native";
-import { StyledText } from "@styles/globalStyles";
+import { BoldStyledText, StyledText } from "@styles/globalStyles";
 
 import { RootState } from "@redux/reducers";
+import GradientText from "@components/GradientText";
+import { useNavigation } from "@react-navigation/native";
 
 interface CourseRegistrationModalProps {
   handleCourseRegistration: (
@@ -21,9 +25,12 @@ const CourseRegistrationModal = ({
   handleCourseRegistration,
   children,
 }: CourseRegistrationModalProps) => {
+  const navigation = useNavigation();
   const { id } = useSelector((state: RootState) => state.user);
 
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [isRegistrationClicked, setIsRegistrationClicked] =
+    useState<boolean>(false);
   const [courseName, setCourseName] = useState<string>("");
 
   return (
@@ -45,33 +52,69 @@ const CourseRegistrationModal = ({
         onRequestClose={() => setVisible(false)}
         statusBarTranslucent
       >
-        <Container onPress={() => setVisible(false)}>
-          <ModalWindowContainer>
-            <StyledText style={{ fontSize: 16 }}>
-              {"등록할 코스의 이름을 지어주세요!"}
-            </StyledText>
-            <CourseNameInput
-              placeholder="ex) 맑은 날 한강공원 나들이"
-              placeholderTextColor={"#3C3C43"}
-              onChangeText={(text: string) => setCourseName(text)}
-              value={courseName}
-            />
-            <ButtonContainer>
-              <SelectionButton onPress={() => setVisible(false)}>
-                <StyledText>취소</StyledText>
-              </SelectionButton>
-              <SelectionButton
+        <Container
+          onPress={() => {
+            setVisible(false);
+            setIsRegistrationClicked(false);
+          }}
+        >
+          {isRegistrationClicked ? (
+            <View style={{ alignItems: "center", gap: 10 }}>
+              <Logo source={require("@assets/icon/logo/logo(white).png")} />
+              <BoldStyledText style={{ color: "white" }}>
+                {"코스 등록 성공!"}
+              </BoldStyledText>
+              <Pressable
+                onPress={() => {
+                  setVisible(false);
+                  setIsRegistrationClicked(false);
+                  navigation.navigate("Box" as never);
+                }}
+                style={{
+                  borderRadius: 10,
+                  backgroundColor: "white",
+                  paddingHorizontal: 17,
+                  paddingVertical: 7,
+                }}
+              >
+                <StyledText>{"보관함으로"}</StyledText>
+              </Pressable>
+            </View>
+          ) : (
+            <ModalWindowContainer>
+              <ExitButton onPress={() => setVisible(false)}>
+                <Icon name={"x"} size={17} color={"#7B7B7B"} />
+              </ExitButton>
+              <GradientText
+                colors={["#5395FD", "#68E9D3"]}
+                style={{ fontFamily: "SpoqaHanSansNeo-Bold", marginTop: 7 }}
+              >
+                {"등록할 코스의 이름을 정해주세요!"}
+              </GradientText>
+              <CourseNameInput
+                placeholder={"ex) 맑은 날 한강공원 나들이"}
+                placeholderTextColor={"#3C3C43"}
+                onChangeText={(text: string) => setCourseName(text)}
+                value={courseName}
+              />
+              <Pressable
                 onPress={() => {
                   (async () => {
-                    setVisible(false);
                     await handleCourseRegistration(id, courseName);
+                    setIsRegistrationClicked(true);
                   })();
                 }}
               >
-                <StyledText>코스 등록</StyledText>
-              </SelectionButton>
-            </ButtonContainer>
-          </ModalWindowContainer>
+                <RegistrationButton
+                  colors={["#91C2F9", "#99E0DA"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                >
+                  <StyledText>{"등록"}</StyledText>
+                </RegistrationButton>
+              </Pressable>
+            </ModalWindowContainer>
+          )}
         </Container>
       </Modal>
     </>
@@ -82,7 +125,13 @@ const Container = styled.Pressable`
   flex: 1;
   justify-content: center;
   align-items: center;
+
   background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const Logo = styled.Image`
+  width: 50px;
+  height: 50px;
 `;
 
 const ModalWindowContainer = styled.Pressable`
@@ -100,32 +149,42 @@ const ModalWindowContainer = styled.Pressable`
   background-color: white;
 `;
 
+const ExitButton = styled.Pressable`
+  position: absolute;
+  top: -7px;
+  right: -7px;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 30px;
+  height: 30px;
+
+  border-radius: 15px;
+
+  background-color: #d9d9d9;
+`;
+
 const CourseNameInput = styled.TextInput`
   font-family: "SpoqaHanSansNeo-Regular";
-  font-size: 17px;
+  font-size: 15px;
 
   width: 250px;
 
   border-radius: 20px;
 
   background-color: #e4e4e4;
+
+  padding: 10px 15px;
 `;
 
-const ButtonContainer = styled.View`
-  flex-direction: row;
-  gap: 20px;
-`;
-
-const SelectionButton = styled.Pressable`
+const RegistrationButton = styled(LinearGradient)`
   justify-content: center;
   align-items: center;
 
-  padding: 10px;
+  padding: 7px 30px;
 
-  border: 1px solid #7fcfe9;
-  border-radius: 7px;
-
-  background-color: white;
+  border-radius: 12px;
 `;
 
 export default CourseRegistrationModal;

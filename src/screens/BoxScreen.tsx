@@ -57,7 +57,7 @@ const getWishPlace = async (userId: string) => {
   }
 };
 
-const BoxScreen = ({ route }: any) => {
+const BoxScreen = ({ navigation, route }: any) => {
   const { fromHome } = route.params;
   const insets = useSafeAreaInsets();
 
@@ -133,17 +133,40 @@ const BoxScreen = ({ route }: any) => {
             </Pressable>
           </TabButtonContainer>
           {isCourse ? (
-            <TabContentsContainer
-              contentContainerStyle={{ gap: 10 }}
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-              scrollEventThrottle={16}
-            >
-              {courses.map((course, index) => (
-                <CourseTabContent course={course} key={index} />
-              ))}
-            </TabContentsContainer>
-          ) : (
+            courses.length !== 0 ? (
+              <TabContentsContainer
+                contentContainerStyle={{ gap: 10 }}
+                bounces={false}
+                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={16}
+              >
+                {courses.map((course, index) => (
+                  <CourseTabContent course={course} key={index} />
+                ))}
+              </TabContentsContainer>
+            ) : (
+              <EmptyTabContentsContainer>
+                <Icon source={require("@assets/icon/route(color).png")} />
+                <StyledText
+                  style={{ textAlign: "center" }}
+                >{`저장한 코스가 없습니다.
+원하는 코스를 저장해 보세요!`}</StyledText>
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("Course");
+                  }}
+                >
+                  <RecommendedButton
+                    colors={["#90BEFB", "#99E0D8"]} // 그라데이션 색상 배열
+                    start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
+                    end={{ x: 1, y: 1 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
+                  >
+                    <StyledText>{"추천 코스 보러가기"}</StyledText>
+                  </RecommendedButton>
+                </Pressable>
+              </EmptyTabContentsContainer>
+            )
+          ) : wishPlaces.length !== 0 ? (
             <TabContentsContainer
               contentContainerStyle={{ gap: 10 }}
               bounces={false}
@@ -158,6 +181,27 @@ const BoxScreen = ({ route }: any) => {
                 />
               ))}
             </TabContentsContainer>
+          ) : (
+            <EmptyTabContentsContainer>
+              <Icon source={require("@assets/icon/heart(line-red).png")} />
+              <StyledText
+                style={{ textAlign: "center" }}
+              >{`찜 한 장소가 없습니다
+관심 있는 장소에 하트를 눌러보세요`}</StyledText>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("Home");
+                }}
+              >
+                <RecommendedButton
+                  colors={["#90BEFB", "#99E0D8"]} // 그라데이션 색상 배열
+                  start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
+                  end={{ x: 1, y: 1 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
+                >
+                  <StyledText>{"추천 장소 보러가기"}</StyledText>
+                </RecommendedButton>
+              </Pressable>
+            </EmptyTabContentsContainer>
           )}
         </MainContentsContainer>
       </Container>
@@ -207,6 +251,32 @@ const TabContentsContainer = styled.ScrollView`
   flex: 1;
 
   margin-top: 8px;
+`;
+
+const EmptyTabContentsContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  width: 100%;
+  height: 90%;
+
+  border-width: 1px;
+  border-color: #7fcfe9;
+  border-radius: 10px;
+
+  margin-top: 10%;
+`;
+
+const Icon = styled.Image`
+  width: 30px;
+  height: 30px;
+`;
+
+const RecommendedButton = styled(LinearGradient)`
+  padding: 8px 43px;
+
+  border-radius: 10px;
 `;
 
 export default BoxScreen;

@@ -225,13 +225,21 @@ const CourseScreen = () => {
                   <CourseRegistrationModal
                     handleCourseRegistration={handleCourseRegistration}
                   >
-                    <AddStopoverButton
-                      colors={["#C8E0FD", "#CCF0EC"]}
+                    <LinearGradient
+                      colors={["#90C0F9", "#98DFD9"]}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 0 }}
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: 95,
+                        height: 35,
+
+                        borderRadius: 7,
+                      }}
                     >
                       <BoldStyledText>{"코스 등록"}</BoldStyledText>
-                    </AddStopoverButton>
+                    </LinearGradient>
                   </CourseRegistrationModal>
                 ) : (
                   <View style={{ height: 50 }} />

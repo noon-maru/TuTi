@@ -56,7 +56,7 @@ const RecommendedPlaces = () => {
   return (
     <>
       <HeaderTextContainer>
-        <StarIcon source={require("@assets/icon/star.png")} />
+        <StarIcon source={require("@assets/icon/star(color).png")} />
         <StyledText>{"추천 장소 보기"}</StyledText>
       </HeaderTextContainer>
       <RecommendedPlaceScrollContainer

@@ -17,7 +17,11 @@ import SponserDrawer from "@components/Sponser/SponserDrawer";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("screen");
 
-const SponserScreen = () => {
+const SponserScreen = ({ route }: any) => {
+  const { placeName } = route.params;
+
+  console.log(placeName);
+
   const insets = useSafeAreaInsets();
   const dispatch = useDispatch();
 
