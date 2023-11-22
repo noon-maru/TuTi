@@ -58,13 +58,17 @@ const PlaceList = () => {
         break;
       case "highHeart":
         setPlaceDataArray(
-          [...placeDataArray].sort((a, b) => b.numberHearts - a.numberHearts)
+          [...placeDataArray].sort(
+            (a, b) => b.wishPlaceCount - a.wishPlaceCount
+          )
         );
         setSortOrder("하트 높은 순");
         break;
       case "lowHeart":
         setPlaceDataArray(
-          [...placeDataArray].sort((a, b) => a.numberHearts - b.numberHearts)
+          [...placeDataArray].sort(
+            (a, b) => a.wishPlaceCount - b.wishPlaceCount
+          )
         );
         setSortOrder("하트 낮은 순");
         break;

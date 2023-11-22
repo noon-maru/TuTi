@@ -164,7 +164,7 @@ const AddPlacetoCourseModal = ({
                           style={{ width: 10, height: 10 }}
                         />
                         <StyledText style={{ fontSize: 12, color: "#7FCFE9" }}>
-                          {items.item.numberHearts}
+                          {items.item.wishPlaceCount}
                         </StyledText>
                       </View>
                     </ItemContainer>

@@ -67,13 +67,13 @@ const Place = ({ placeData }: { placeData: Place }) => {
       </InformContainer>
       <HeartContainer>
         <Heart source={require("assets/icon/heart(line).png")} />
-        <PlaceNumberHearts
+        <WishPlaceCount
           colors={["#8EFF5A", "#605CFF"]} // 그라데이션 색상 배열
           start={{ x: 0, y: 0 }} // 그라데이션 시작점 (왼쪽 상단) (범위: 0~1)
           end={{ x: 1, y: 1 }} // 그라데이션 끝점 (오른쪽 상단) (범위: 0~1)
         >
-          {placeData.numberHearts}
-        </PlaceNumberHearts>
+          {placeData.wishPlaceCount}
+        </WishPlaceCount>
       </HeartContainer>
     </Container>
   );
@@ -146,7 +146,7 @@ const Heart = styled.Image`
   height: 10px;
 `;
 
-const PlaceNumberHearts = styled(GradientText)`
+const WishPlaceCount = styled(GradientText)`
   font-size: 13px;
 `;
 

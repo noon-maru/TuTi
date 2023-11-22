@@ -6,7 +6,7 @@ interface Place {
   latitude: number;
   longitude: number;
   image: string;
-  numberHearts: number;
+  wishPlaceCount: number;
   tourismInfo: any;
   tags: tag[];
 }
