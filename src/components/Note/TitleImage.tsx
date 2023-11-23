@@ -1,21 +1,27 @@
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView } from "react-native";
 import FastImage from "react-native-fast-image";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+
+import axios from "axios";
 
 import styled from "styled-components/native";
 
-import { SERVER_URL } from "@env";
+import { API, SERVER_URL } from "@env";
 
 import { RootState } from "@redux/reducers";
-import { Pressable, ScrollView } from "react-native";
-import { useState } from "react";
+import { updateCourse } from "@redux/slice/courseSlice";
 
 interface TitleImageProps {
   courseName: string;
 }
 
 const TitleImage = ({ courseName }: TitleImageProps) => {
+  const dispatch = useDispatch();
+
   const { courses } = useSelector((state: RootState) => state.courses);
+  const { id: userId } = useSelector((state: RootState) => state.user);
 
   const [isScrollOpen, setIsScrollOpen] = useState<boolean>(false);
   const [titleImageIndex, setTitleImageIndex] = useState<number>(0);
@@ -25,10 +31,35 @@ const TitleImage = ({ courseName }: TitleImageProps) => {
   );
 
   const handleImageSelect = async (index: number) => {
+    const updatedCourse = {
+      ...foundCourse,
+      mainRecordImageIndex: index,
+    } as Course;
+
+    await axios.put(
+      SERVER_URL + API + `/course/${userId}/${foundCourse?._id}`,
+      JSON.stringify(updatedCourse),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const courseIndex = courses.findIndex(
+      (course) => course.courseName === courseName
+    );
+    dispatch(updateCourse({ courseIndex, updatedCourse }));
+
     setTitleImageIndex(index);
-    // TODO: 서버에 선택한 이미지 추가하는 로직 추가
     setIsScrollOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (foundCourse) {
+      setTitleImageIndex(foundCourse.mainRecordImageIndex);
+    }
+  }, [foundCourse]);
 
   return (
     <Container>

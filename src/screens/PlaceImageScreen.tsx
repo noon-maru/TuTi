@@ -1,7 +1,7 @@
+import { useState } from "react";
 import styled from "styled-components/native";
 
 import { StyledText } from "@styles/globalStyles";
-import { useState } from "react";
 
 const PlaceImageScreen = ({ route }: any) => {
   const { placeName } = route.params;
