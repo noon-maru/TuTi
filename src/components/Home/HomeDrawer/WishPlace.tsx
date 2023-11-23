@@ -60,7 +60,12 @@ const WishPlace = () => {
       {wishPlaces.length !== 0 ? (
         <WishPlacesContainer>
           {wishPlaces.map((value, index) => (
-            <WishItem key={index} imageUrl={value.image} name={value.name} />
+            <WishItem
+              key={index}
+              imageUrl={value.image}
+              name={value.name}
+              coordinate={{ x: value.longitude, y: value.latitude }}
+            />
           ))}
         </WishPlacesContainer>
       ) : (

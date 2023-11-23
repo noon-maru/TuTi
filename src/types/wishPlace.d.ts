@@ -1,7 +1,12 @@
 interface WishPlace {
   _id: string;
-  address: string;
-  image: string;
-  name: string;
   region: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  image: string;
+  wishPlaceCount: number;
+  tourismInfo: any;
+  tags: tag[];
 }
