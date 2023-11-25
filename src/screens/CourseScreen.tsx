@@ -134,7 +134,9 @@ const CourseScreen = () => {
         // 각 첫번째 값(일반적으로 성인 요금)을 숫자로 변환하여 더해준다.
         totalFee: course.places
           .map((place) =>
-            Number(place.tourismInfo.admissionFee.match(/\d+/g)[0])
+            place.tourismInfo.admissionFee.match(/\d+/g) === null
+              ? 0
+              : Number(place.tourismInfo.admissionFee.match(/\d+/g)[0])
           )
           .reduce((accumulator, currentValue) => accumulator + currentValue),
       };
